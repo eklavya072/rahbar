@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Workflow, X } from "lucide-react";
 import { CaseProvider, useCase } from "@/lib/case/CaseProvider";
@@ -21,12 +21,18 @@ function Stepper() {
   const { state, dispatch } = useCase();
   const { t } = useLang();
   const cur = STEPS.indexOf(state.step);
+  const active = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    active.current?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [cur]);
   return (
-    <nav className="no-print -mx-1 overflow-x-auto pb-1" aria-label="Progress">
+    <nav className="no-print -mx-1 overflow-x-auto pb-1 [scrollbar-width:none]" aria-label="Progress">
       <ol className="flex min-w-max items-center gap-1 px-1">
         {STEPS.map((s, i) => (
           <li key={s} className="flex items-center gap-1">
             <button
+              ref={i === cur ? active : undefined}
               onClick={() => i <= cur && dispatch({ type: "step", step: s })}
               disabled={i > cur}
               aria-current={i === cur ? "step" : undefined}

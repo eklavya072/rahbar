@@ -1,7 +1,7 @@
 "use client";
 
-import { ExternalLink, GitCommitHorizontal, Scale } from "lucide-react";
-import { Header } from "@/components/ui";
+import { ExternalLink, GitCommitHorizontal } from "lucide-react";
+import { Footer, Header } from "@/components/ui";
 import { useLang } from "@/lib/i18n";
 import { CHANGELOG, registry, RULES_VERSION } from "@/lib/api/v1";
 import { FACT_LABELS } from "@/lib/engine/factLabels";
@@ -16,13 +16,12 @@ export default function RulesPage() {
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-8 px-4 py-8">
         <div>
-          <span className="chip bg-accent-soft text-accent"><Scale size={12} /> Rules registry · v{RULES_VERSION}</span>
-          <h1 className="mt-3 font-display text-3xl font-semibold">{hi ? "हर नियम, उसका स्रोत और उसकी समय-सीमा" : "Every rule, its source, and its clock"}</h1>
+          <h1 className="font-display text-3xl font-semibold">{hi ? "हर नियम, उसका स्रोत और उसकी समय-सीमा" : "Every rule, its source, and its clock"}</h1>
           <p className="mt-2 max-w-3xl text-ink-2">
             {hi
               ? "AfterCrash में पात्रता और राशि यहीं के नियमों से तय होती है — AI से नहीं। हर नियम पर स्रोत और अंतिम जाँच की तारीख है। मशीन-पठनीय रूप:"
               : "Eligibility and amounts in AfterCrash come only from these rules — never from the AI. Each carries its legal source and the date it was last verified. Machine-readable:"}{" "}
-            <a className="underline" href="/api/v1/rules">/api/v1/rules</a>
+            <a className="underline" href="/api/v1/rules">/api/v1/rules</a> · v{RULES_VERSION}
           </p>
         </div>
 
@@ -78,6 +77,7 @@ export default function RulesPage() {
           ))}
         </section>
       </main>
+      <Footer />
     </>
   );
 }

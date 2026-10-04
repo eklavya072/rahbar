@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useSyncExternalStore } from "react";
-import { Camera, FileImage, Loader2, Lock, Mic, MicOff, Trash2, Upload } from "lucide-react";
+import { Camera, FileImage, Loader2, Lock, Mic, MicOff, Play, Trash2, Upload } from "lucide-react";
 import { useCase } from "@/lib/case/CaseProvider";
 import { useLang } from "@/lib/i18n";
 import { SAMPLE_CASES } from "@/lib/samples/cases";
@@ -182,45 +182,14 @@ export function StepDocs() {
         <p className="text-xs text-muted">{hi ? "फ़ोटो इसी डिवाइस पर पढ़ी जाती हैं, अपलोड नहीं होतीं।" : "Photos are read on this device. They are not uploaded."}</p>
       </div>
 
-      {state.docs.length > 0 && (
-        <ul className="grid gap-3 sm:grid-cols-3">
-          {state.docs.map((d) => (
-            <li key={d.id} className="card overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={d.src} alt={d.label} className="h-36 w-full object-cover object-top" />
-              <div className="flex items-center gap-2 p-2.5">
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-medium">{d.label}</div>
-                  <div className="text-xs text-muted">
-                    {d.status === "queued" && (hi ? "पढ़ने के लिए तैयार" : "Ready to read")}
-                    {d.status === "reading" && `${hi ? "पढ़ रहे हैं" : "Reading"} ${Math.round(d.progress * 100)}%`}
-                    {d.status === "parsed" && `${d.parsed?.kind ?? "read"} · ${Object.keys(d.parsed?.facts ?? {}).length} ${hi ? "तथ्य" : "facts"}`}
-                    {d.status === "error" && (hi ? "नहीं पढ़ पाए" : "Couldn't read")}
-                  </div>
-                  {d.status === "reading" && (
-                    <div className="mt-1 h-1 overflow-hidden rounded bg-line">
-                      <div className="h-full bg-accent transition-all" style={{ width: `${Math.round(d.progress * 100)}%` }} />
-                    </div>
-                  )}
-                </div>
-                {!busy && (
-                  <button className="btn btn-ghost !p-1.5" aria-label={`Remove ${d.label}`} onClick={() => dispatch({ type: "removeDoc", id: d.id })}>
-                    <Trash2 size={14} />
-                  </button>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap sm:gap-3 [&>*]:w-full sm:[&>*]:w-auto">
         <button className="btn btn-ghost" onClick={() => dispatch({ type: "step", step: "tell" })} disabled={busy}>
           {hi ? "पीछे" : "Back"}
         </button>
         {state.sampleId && !busy && (
           <button className="btn btn-ghost" onClick={play}>
-            ▶ {hi ? "पूरा केस अपने-आप चलाएँ (जज मोड)" : "Auto-play the whole case (judge mode)"}
+            <Play size={15} /> {hi ? "अपने-आप चलाएँ (जज मोड)" : "Auto-play (judge mode)"}
           </button>
         )}
         {state.docs.length > 0 ? (
@@ -234,6 +203,39 @@ export function StepDocs() {
           </button>
         )}
       </div>
+
+      {state.docs.length > 0 && (
+        <ul className="grid grid-cols-3 gap-2 sm:gap-3">
+          {state.docs.map((d) => (
+            <li key={d.id} className="card overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={d.src} alt={d.label} className="h-24 w-full border-b border-line object-cover object-top sm:h-36" />
+              <div className="flex items-center gap-1 p-2 sm:gap-2 sm:p-2.5">
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-xs font-medium sm:text-sm">{d.label}</div>
+                  <div className="truncate text-[11px] text-muted sm:text-xs">
+                    {d.status === "queued" && (hi ? "पढ़ने के लिए तैयार" : "Ready to read")}
+                    {d.status === "reading" && `${hi ? "पढ़ रहे हैं" : "Reading"} ${Math.round(d.progress * 100)}%`}
+                    {d.status === "parsed" && `${d.parsed?.kind ?? "read"} · ${Object.keys(d.parsed?.facts ?? {}).length} ${hi ? "तथ्य" : "facts"}`}
+                    {d.status === "error" && (hi ? "नहीं पढ़ पाए" : "Couldn't read")}
+                  </div>
+                  {d.status === "reading" && (
+                    <div className="mt-1 h-1 overflow-hidden rounded bg-line">
+                      <div className="h-full bg-accent transition-all" style={{ width: `${Math.round(d.progress * 100)}%` }} />
+                    </div>
+                  )}
+                </div>
+                {!busy && (
+                  <button className="btn btn-ghost hidden !p-1.5 sm:inline-flex" aria-label={`Remove ${d.label}`} onClick={() => dispatch({ type: "removeDoc", id: d.id })}>
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
     </div>
   );
 }

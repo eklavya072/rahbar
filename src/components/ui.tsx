@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLang } from "@/lib/i18n";
 import type { FactSource, Status } from "@/lib/engine/types";
-import { Bot, FileText, MessageCircle, ShieldCheck } from "lucide-react";
+import { Bot, FileText, Menu, MessageCircle, ShieldCheck } from "lucide-react";
 
 export function LangToggle() {
   const { lang, setLang } = useLang();
@@ -14,12 +14,36 @@ export function LangToggle() {
           key={l}
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
-          className={`rounded-full px-3 py-1 font-semibold ${lang === l ? "bg-ink text-white" : "text-muted"}`}
+          className={`min-h-9 min-w-11 rounded-full px-3 font-semibold transition-colors ${lang === l ? "bg-ink text-white" : "text-muted hover:text-ink"}`}
         >
           {l === "en" ? "EN" : "हिं"}
         </button>
       ))}
     </div>
+  );
+}
+
+const NAV = [
+  { href: "/offer", label: "Offer check" },
+  { href: "/rules", label: "Rules" },
+  { href: "/developers", label: "API" },
+  { href: "/evals", label: "Evals" },
+];
+
+export function Footer() {
+  const { lang } = useLang();
+  const hi = lang === "hi";
+  return (
+    <footer className="no-print border-t border-line">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 text-sm text-muted">
+        <span>AfterCrash · {hi ? "जानकारी, कानूनी सलाह नहीं" : "information, not legal advice"}</span>
+        <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
+          {NAV.map((n) => <Link key={n.href} href={n.href} className="hover:text-ink">{n.label}</Link>)}
+          <a href="tel:15100" className="hover:text-ink">NALSA 15100</a>
+          <a href="tel:14416" className="hover:text-ink">Tele-MANAS 14416</a>
+        </nav>
+      </div>
+    </footer>
   );
 }
 
@@ -35,13 +59,18 @@ export function Header({ right }: { right?: React.ReactNode }) {
         </Link>
         <div className="flex items-center gap-2">
           {right}
-          <nav className="hidden items-center gap-4 text-sm font-medium text-muted md:flex" aria-label="Main">
-            <Link href="/offer" className="hover:text-ink">Offer check</Link>
-            <Link href="/rules" className="hover:text-ink">Rules</Link>
-            <Link href="/developers" className="hover:text-ink">API</Link>
-            <Link href="/evals" className="hover:text-ink">Evals</Link>
+          <nav className="hidden items-center gap-5 text-sm font-medium text-muted md:flex" aria-label="Main">
+            {NAV.map((n) => <Link key={n.href} href={n.href} className="hover:text-ink">{n.label}</Link>)}
           </nav>
           <LangToggle />
+          <details className="relative md:hidden">
+            <summary className="grid h-9 w-9 cursor-pointer list-none place-items-center rounded-full border border-line bg-surface" aria-label="Menu">
+              <Menu size={16} />
+            </summary>
+            <nav className="absolute right-0 top-11 z-40 w-48 rounded-xl border border-line bg-surface p-1.5 shadow-[0_12px_30px_-12px_rgba(29,27,22,.3)]" aria-label="Main">
+              {NAV.map((n) => <Link key={n.href} href={n.href} className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-surface-2">{n.label}</Link>)}
+            </nav>
+          </details>
         </div>
       </div>
     </header>

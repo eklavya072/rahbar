@@ -21,11 +21,14 @@ export function EntitlementCard({ r }: { r: EntitlementResult }) {
   const { lang, b, t } = useLang();
   const [open, setOpen] = useState(r.status !== "not_eligible");
   const hi = lang === "hi";
-  const tone = r.status === "eligible" ? "border-l-accent" : r.status === "possible" ? "border-l-amber" : "border-l-slate";
+  const tone = r.status === "eligible" ? "bg-accent-soft text-accent" : r.status === "possible" ? "bg-amber-soft text-amber" : "bg-slate-soft text-slate";
 
   return (
-    <article className={`card rise border-l-4 ${tone} overflow-hidden`}>
+    <article className="card rise overflow-hidden">
       <button className="flex w-full items-start gap-3 p-4 text-left" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span className={`mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full ${tone}`} aria-hidden>
+          {r.status === "eligible" ? <Check size={15} /> : r.status === "possible" ? <HelpCircle size={15} /> : <X size={15} />}
+        </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="font-semibold">{b(r.name)}</h3>

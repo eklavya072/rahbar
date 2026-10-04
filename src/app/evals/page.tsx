@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, CircleX, FlaskConical, Loader2, Play, ShieldCheck } from "lucide-react";
-import { Header } from "@/components/ui";
+import { CheckCircle2, CircleX, Loader2, Play, ShieldCheck } from "lucide-react";
+import { Footer, Header } from "@/components/ui";
 import { PROPERTIES, runGolden, runSafety, type GoldenRow, type SafetyRow } from "@/lib/evals/run";
 import { shield } from "@/lib/privacy/pii";
 import { RULES } from "@/lib/engine/rules";
@@ -48,8 +48,7 @@ export default function EvalsPage() {
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-8 px-4 py-8">
         <div>
-          <span className="chip bg-accent-soft text-accent"><FlaskConical size={12} /> Evaluation harness</span>
-          <h1 className="mt-3 font-display text-3xl font-semibold">Does it work consistently? Check it yourself.</h1>
+          <h1 className="font-display text-3xl font-semibold">Does it work consistently? Check it yourself.</h1>
           <p className="mt-2 max-w-3xl text-ink-2">
             Every rupee in AfterCrash comes from {RULES.length} rules-as-code entitlements with citations — never from the language model. These checks run live in your browser; the same suite runs in CI with Vitest.
           </p>
@@ -134,6 +133,7 @@ export default function EvalsPage() {
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

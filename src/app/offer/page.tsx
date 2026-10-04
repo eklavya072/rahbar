@@ -1,6 +1,6 @@
 "use client";
 
-import { Header } from "@/components/ui";
+import { Footer, Header } from "@/components/ui";
 import { CaseProvider } from "@/lib/case/CaseProvider";
 import { MactPanel } from "@/components/case/Money";
 import { SupportCard } from "@/components/case/Support";
@@ -24,6 +24,7 @@ export default function OfferPage() {
         <MactPanel standalone />
         <SupportCard />
       </main>
+      <Footer />
     </CaseProvider>
   );
 }

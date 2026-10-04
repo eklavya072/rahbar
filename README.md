@@ -74,6 +74,22 @@ flowchart LR
 - **Zero-database caseworker handoff.** A QR/URL carries the case facts (no names or documents) in the `#fragment`, compressed with lz-string. Browsers never send fragments to servers.
 - **Judge mode.** One click runs a full case with scripted answers, visible step by step.
 
+### Built for the months after the first letter
+| Feature | Why it exists (research) |
+|---|---|
+| **Settlement Offer Auditor** (`/offer`) — just compensation by Sarla Verma multipliers, Pranay Sethi future prospects, Magma consortium (+10% every 3 years), head by head; audits an insurer's s.149 offer and drafts a reply | Accepted s.149 offers are final; tribunals and Lok Adalats often under-value (one High Court raised ₹33,666 to ₹8.9 lakh) |
+| **Income Evidence Builder** — rebuilds monthly income from salary/payout credits in the passbook, with each line highlighted; shows the rupee value of every ₹1,000/month proven | Informal workers default to minimum wage; Delhi HC (2026): minimum wage is "only a guiding benchmark" |
+| **Claim Tracker + Escalation Engine** — each institution's statutory clock (IRDAI 30/45 days + 14-day grievances; PMSBY 30+30; hit-and-run 30/15/15; DAR 90 days; RBI 15 days) and its escalation ladder (GRO → Bima Bharosa/Ombudsman; RBI Ombudsman; RTI; DLSA), with drafted letters | Claims stall silently; interest for delay (Bank Rate + 2% / + 4%) goes unclaimed |
+| **"When the money arrives"** cash-flow timeline | 69% of road-injury households borrow or sell assets while waiting |
+| **Encrypted case vault** — AES-256-GCM, PBKDF2-SHA-256 (310k), on device or as an encrypted file for a caseworker | Claims take months; caseworkers handle many families |
+| **Tamper-evident packet** — SHA-256 of every document and approved letter, plus a packet fingerprint QR | SC-ordered SITs on fake claims make insurers distrust genuine families |
+| **Deceased's bank balance** rule from the passbook's closing balance (RBI 2025: 15 days, ₹15 lakh simplified procedure) | Savings get stuck too |
+| **First 48 hours** guide, **read-aloud**, **Tele-MANAS 14416 / NALSA 15100** support | 32.4% of crash survivors show PTSD (Uttarakhand study); early mistakes cost the most |
+| **Public API** (`/api/v1/evaluate`, `/compensation`, `/rules`, OpenAPI 3.1) and **rules registry with changelog** (`/rules`) | Hospitals, DLSAs and NGOs can integrate; rules are governed and versioned |
+| **Offline PWA** — rules engine, OCR engine and sample documents cached | Rural connectivity |
+
+Full mapping: [`docs/FEATURES.md`](docs/FEATURES.md)
+
 ### Compared with what exists
 | Option | What it does | Gap AfterCrash fills |
 |---|---|---|
@@ -118,16 +134,19 @@ cd aftercrash
 cp .env.example .env.local   # add a free Groq key (optional — the app works in no-AI mode without it)
 npm install
 npm run dev                  # http://localhost:3000
-npm test                     # 27 tests incl. property-based invariants
+npm test                     # 39 tests incl. property-based invariants
 ```
 
 Re-render the synthetic sample documents: `PLAYWRIGHT_PATH=<path to playwright> node scripts/render-samples.mjs`
 
 ## Project layout
 ```
-src/lib/engine/      rules.ts (9 cited entitlements) · evaluate.ts · questions.ts (value of information) · planner.ts · merge.ts
+src/lib/engine/      rules.ts (10 cited entitlements) · mact.ts (Sarla Verma/Pranay Sethi/Magma + offer audit) · tracker.ts (statutory clocks, escalation) · evaluate.ts · questions.ts (value of information) · planner.ts · merge.ts
 src/lib/docs/        ocr.ts (Tesseract, rule removal) · parsers.ts (passbook/policy/FIR, row rebuild)
 src/lib/privacy/     pii.ts (Verhoeff Aadhaar, tokenise/rehydrate)
+src/lib/vault.ts     AES-256-GCM case vault, SHA-256 manifest
+src/lib/docs/income.ts  income evidence from passbook credits
+src/app/api/v1/      public API (evaluate · compensation · rules · openapi.json)
 src/lib/agents/      guard.ts (injection) · verifier.ts (amounts/dates)
 src/lib/ai/          router.ts (free-tier fallback, cache, rate limit) · schemas.ts · prompts.ts
 src/app/api/agent/   extract · guard · draft · ask (tool-using case agent)

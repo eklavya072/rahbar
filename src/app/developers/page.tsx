@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Code2, Loader2, Play } from "lucide-react";
-import { Header } from "@/components/ui";
+import { Loader2, Play } from "lucide-react";
+import { Footer, Header } from "@/components/ui";
 
 const EXAMPLES = {
   evaluate: {
@@ -38,8 +38,7 @@ export default function Developers() {
       <Header />
       <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8">
         <div>
-          <span className="chip bg-accent-soft text-accent"><Code2 size={12} /> Public API · v1</span>
-          <h1 className="mt-3 font-display text-3xl font-semibold">Build on AfterCrash</h1>
+          <h1 className="font-display text-3xl font-semibold">Build on AfterCrash</h1>
           <p className="mt-2 text-ink-2">
             Hospital helpdesks, DLSA case-management tools, NGOs and gig platforms can call the same rules engine the app uses. Deterministic, cited, CORS-enabled, rate-limited, and it stores nothing. Send non-identifying facts only.
           </p>
@@ -58,6 +57,7 @@ export default function Developers() {
         <button className="btn btn-primary" onClick={run} disabled={busy}>{busy ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} />} Try it live</button>
         {out && <pre className="mono max-h-[28rem] overflow-auto rounded-xl border border-line bg-surface p-4 text-xs">{out}</pre>}
       </main>
+      <Footer />
     </>
   );
 }

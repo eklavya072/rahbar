@@ -49,6 +49,12 @@ body {
 }
 :lang(hi) body, .hi { line-height: 1.7; }
 
+::selection { background: #cfe4dc; color: var(--ink); }
+html { scrollbar-color: #cfc7b8 transparent; caret-color: var(--accent); }
+a { text-underline-offset: 3px; }
+.tabular-nums, table td { font-variant-numeric: tabular-nums; }
+h1, h2, h3 { text-wrap: balance; }
+
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
 
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
