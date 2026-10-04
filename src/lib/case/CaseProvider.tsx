@@ -25,6 +25,7 @@ interface Ctx {
   addFiles: (files: FileList | File[]) => void;
   readDocuments: () => Promise<void>;
   confirmFacts: () => void;
+  autoPlay: () => Promise<void>;
   trace: (agent: AgentName, title: string, patch?: Partial<TraceEvent>) => string;
   traceUpdate: (id: string, patch: Partial<TraceEvent>) => void;
 }
@@ -222,9 +223,31 @@ export function CaseProvider({ children }: { children: ReactNode }) {
     trace("Human", "Confirmed the facts read from the papers", { status: "done" });
   }, [trace]);
 
+  /** Judge mode: run every agent, then answer the questioner with the sample family's scripted answers. */
+  const autoPlay = useCallback(async () => {
+    const c = SAMPLE_CASES.find((x) => x.id === stateRef.current.sampleId);
+    if (!c) return;
+    await readDocuments();
+    await new Promise((r) => setTimeout(r, 600));
+    confirmFacts();
+    dispatch({ type: "step", step: "questions" });
+    for (const [k, v] of Object.entries(c.answers)) {
+      if (k === "state") {
+        dispatch({ type: "answer", key: "state", value: v as string });
+        continue;
+      }
+      await new Promise((r) => setTimeout(r, 450));
+      dispatch({ type: "answer", key: k as keyof Facts, value: v as Facts[keyof Facts] });
+      trace("Human", `Answered "${k}" = ${String(v)} (scripted sample answer)`, { status: "done" });
+    }
+    await new Promise((r) => setTimeout(r, 300));
+    trace("Rules", "Evaluated all entitlements (rules-as-code)", { status: "done" });
+    dispatch({ type: "step", step: "results" });
+  }, [readDocuments, confirmFacts, trace]);
+
   const value = useMemo<Ctx>(
-    () => ({ state, dispatch, facts, provenance, summary, plan, today, loadSample, addFiles, readDocuments, confirmFacts, trace, traceUpdate }),
-    [state, facts, provenance, summary, plan, today, loadSample, addFiles, readDocuments, confirmFacts, trace, traceUpdate],
+    () => ({ state, dispatch, facts, provenance, summary, plan, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, trace, traceUpdate }),
+    [state, facts, provenance, summary, plan, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, trace, traceUpdate],
   );
   return <C.Provider value={value}>{children}</C.Provider>;
 }

@@ -114,10 +114,18 @@ export function StepTell() {
 }
 
 export function StepDocs() {
-  const { state, dispatch, addFiles, readDocuments } = useCase();
+  const { state, dispatch, addFiles, readDocuments, autoPlay } = useCase();
   const { lang } = useLang();
   const hi = lang === "hi";
   const [busy, setBusy] = useState(false);
+  const play = async () => {
+    setBusy(true);
+    try {
+      await autoPlay();
+    } finally {
+      setBusy(false);
+    }
+  };
   const fileRef = useRef<HTMLInputElement>(null);
   const camRef = useRef<HTMLInputElement>(null);
 
@@ -199,6 +207,11 @@ export function StepDocs() {
         <button className="btn btn-ghost" onClick={() => dispatch({ type: "step", step: "tell" })} disabled={busy}>
           {hi ? "पीछे" : "Back"}
         </button>
+        {state.sampleId && !busy && (
+          <button className="btn btn-ghost" onClick={play}>
+            ▶ {hi ? "पूरा केस अपने-आप चलाएँ (जज मोड)" : "Auto-play the whole case (judge mode)"}
+          </button>
+        )}
         {state.docs.length > 0 ? (
           <button className="btn btn-primary" onClick={run} disabled={busy}>
             {busy ? <Loader2 size={16} className="animate-spin" /> : null}
