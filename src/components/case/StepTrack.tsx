@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AlarmClock, Download, KeyRound, Lock, Save, Trash2, Upload } from "lucide-react";
+import { ActionBar, Extras, More, StepIntro } from "./Flow";
 import { useCase } from "@/lib/case/CaseProvider";
 import { useLang } from "@/lib/i18n";
 import { CLOCKS, escalationLetter, payoutWindow, trackStatus, type Stage } from "@/lib/engine/tracker";
@@ -33,8 +34,8 @@ function CashFlow({ items }: { items: EntitlementResult[] }) {
   const within90 = rows.filter(({ r, w }) => w[1] <= 90 && r.amount.value && r.id !== "RAHAT").reduce((a, { r }) => a + (r.amount.value ?? 0), 0);
 
   return (
-    <section className="card p-4">
-      <h3 className="font-semibold">{hi ? "पैसा कब आएगा" : "When the money is likely to arrive"}</h3>
+    <section className="card p-4 sm:p-5">
+      <h2 className="h-sec">{hi ? "पैसा कब आ सकता है" : "When the money may arrive"}</h2>
       <p className="mt-1 text-sm text-muted">
         {hi
           ? `लगभग ${formatINRShort(within90, lang)} 90 दिनों में आ सकता है। 69% परिवार इलाज के लिए ऊँचे ब्याज पर उधार लेते हैं — इन दावों को पहले जमा करें।`
@@ -49,7 +50,7 @@ function CashFlow({ items }: { items: EntitlementResult[] }) {
             <div key={r.id} className="grid grid-cols-[minmax(0,9rem)_1fr] items-center gap-3 text-xs sm:grid-cols-[minmax(0,12rem)_1fr]">
               <div className="truncate font-medium text-ink-2" title={b(r.short)}>{b(r.short)}</div>
               <div className="relative h-5 rounded-full bg-surface-2">
-                <div className={`absolute top-0 h-5 rounded-full ${state.tracks[r.id]?.stage === "paid" ? "bg-accent" : fast ? "bg-accent/70" : "bg-amber/60"}`} style={{ left: `${left}%`, width: `${width}%` }} title={`${w[0]}–${w[1]} days`} />
+                <div className={`absolute top-0 h-5 rounded-full ${state.tracks[r.id]?.stage === "paid" ? "bg-accent" : fast ? "bg-key-bright" : "bg-line-strong"}`} style={{ left: `${left}%`, width: `${width}%` }} title={`${w[0]}–${w[1]} days`} />
               </div>
             </div>
           );
@@ -81,23 +82,32 @@ function Tracker({ r }: { r: EntitlementResult }) {
   const canEscalate = st.nextStep && st.nextStepFrom && st.nextStepFrom <= today;
 
   return (
-    <div className="card p-4">
+    <div className="card p-4 sm:p-5">
       <div className="flex flex-wrap items-start gap-3">
         <div className="min-w-0 flex-1">
           <div className="font-semibold">{b(r.short)}</div>
           <div className="text-xs text-muted">{b(clock.tatLabel)}</div>
         </div>
-        <select
-          className="input !w-auto !py-1.5 text-sm"
-          value={t.stage}
-          onChange={(e) => {
-            const stage = e.target.value as Stage;
-            dispatch({ type: "track", id: r.id, patch: { stage, ...(stage === "filed" && !t.filedOn ? { filedOn: today } : {}), ...(stage === "paid" ? { paidOn: today } : {}) } });
-            trace("Human", `Marked ${r.id} as ${stage}`, { status: "done" });
-          }}
-        >
-          {STAGES.map((s) => <option key={s.v} value={s.v}>{hi ? s.hi : s.en}</option>)}
-        </select>
+      </div>
+      <div role="radiogroup" aria-label={hi ? "स्थिति" : "Status"} className="mt-3 grid grid-cols-4 gap-1 rounded-xl bg-surface-2 p-1">
+        {STAGES.map((s) => {
+          const on = t.stage === s.v;
+          return (
+            <button
+              key={s.v}
+              role="radio"
+              aria-checked={on}
+              className={`min-h-10 rounded-lg px-1.5 text-xs font-medium transition sm:text-sm ${on ? (s.v === "paid" ? "bg-accent text-white" : s.v === "rejected" ? "bg-rose text-white" : "bg-surface text-ink shadow-sm ring-1 ring-line") : "text-muted hover:text-ink"}`}
+              onClick={() => {
+                const stage = s.v;
+                dispatch({ type: "track", id: r.id, patch: { stage, ...(stage === "filed" && !t.filedOn ? { filedOn: today } : {}), ...(stage === "paid" ? { paidOn: today } : {}) } });
+                trace("Human", `Marked ${r.id} as ${stage}`, { status: "done" });
+              }}
+            >
+              {hi ? s.hi : s.en}
+            </button>
+          );
+        })}
       </div>
 
       {t.stage === "filed" && (
@@ -144,7 +154,7 @@ type VaultPayload = Pick<CaseState, "victimName" | "claimantName" | "relation" |
   docs: { id: string; label: string; parsed: CaseState["docs"][number]["parsed"]; lines: CaseState["docs"][number]["lines"] }[];
 };
 
-function Vault() {
+function Vault({ bare = false }: { bare?: boolean }) {
   const { state, dispatch, trace } = useCase();
   const { lang } = useLang();
   const hi = lang === "hi";
@@ -198,9 +208,9 @@ function Vault() {
   };
 
   return (
-    <section className="card p-4">
-      <div className="flex items-center gap-2 font-semibold"><Lock size={16} className="text-accent" /> {hi ? "एन्क्रिप्टेड केस तिजोरी" : "Encrypted case vault"}</div>
-      <p className="mt-1 text-sm text-muted">
+    <section className={bare ? "" : "card p-4"}>
+      {!bare && <div className="flex items-center gap-2 font-semibold"><Lock size={16} className="text-accent" /> {hi ? "एन्क्रिप्टेड केस तिजोरी" : "Encrypted case vault"}</div>}
+      <p className={`${bare ? "" : "mt-1 "}text-sm text-muted`}>
         {hi
           ? "केस महीनों चलते हैं। पासफ़्रेज़ से एन्क्रिप्ट करके इसी डिवाइस पर सेव करें या फ़ाइल के रूप में केसवर्कर को दें। हमारा सर्वर कभी नहीं देखता।"
           : "Claims take months. Encrypt the case with a passphrase and keep it on this device, or hand the file to a caseworker. Our server never sees it."}
@@ -253,21 +263,41 @@ export function StepTrack() {
   const hi = lang === "hi";
   const items = summary.results.filter((r) => r.status !== "not_eligible" && (r.id === "BANK_BALANCE" || !r.informational));
   const total = summary.confirmedTotal;
+  const openVault = () => {
+    const el = document.getElementById("vault") as HTMLDetailsElement | null;
+    if (!el) return;
+    el.open = true;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h2 className="font-display text-2xl font-semibold">{hi ? "दावों पर नज़र और शिकायत" : "Track every claim — and escalate on time"}</h2>
-        <p className="mt-1 text-muted">
-          {hi
-            ? `हर संस्था की कानूनी समय-सीमा यहाँ दर्ज है। देर होने पर ऐप अगला शिकायत पत्र तैयार करता है। कुल पक्का: ${formatINR(total)}।`
-            : `Every institution's legal deadline is built in. When one is late, the app drafts the next escalation with the legal basis. Confirmed total: ${formatINR(total)}.`}
-        </p>
-      </div>
+    <div>
+      <StepIntro
+        title={hi ? "हर दावे पर नज़र रखें" : "Follow up on every claim"}
+        lead={
+          hi
+            ? `जमा करने पर निशान लगाएँ। कोई दफ़्तर देर करे, तो रहबर अगला शिकायत पत्र लिख देता है — टूटे नियम के साथ। कुल पक्का: ${formatINR(total)}।`
+            : `Mark each claim when you file it. If an office is late, Rahbar writes the next complaint — with the rule it broke. Confirmed total: ${formatINR(total)}.`
+        }
+      />
       <CashFlow items={items} />
-      <div className="space-y-3">{items.map((r) => <Tracker key={r.id} r={r} />)}</div>
-      <Vault />
-      <SupportCard />
+      <section className="mt-10">
+        <h2 className="h-sec mb-4">{hi ? "आपके दावे" : "Your claims"}</h2>
+        <div className="stagger space-y-3">{items.map((r) => <Tracker key={r.id} r={r} />)}</div>
+      </section>
+
+      <ActionBar back="plan">
+        <button className="btn btn-primary btn-lg" onClick={openVault}>
+          <Lock size={17} /> {hi ? "केस सुरक्षित सेव करें" : "Save this case safely"}
+        </button>
+      </ActionBar>
+
+      <Extras title={hi ? "बाद के लिए" : "For later"}>
+        <More id="vault" icon={<Lock size={18} />} title={hi ? "केस को ताले में सेव करें" : "Save the case under lock"} hint={hi ? "पासफ़्रेज़ से एन्क्रिप्टेड — सिर्फ़ आप खोल सकते हैं" : "Encrypted with your passphrase — only you can open it"}>
+          <Vault bare />
+        </More>
+        <SupportCard />
+      </Extras>
     </div>
   );
 }

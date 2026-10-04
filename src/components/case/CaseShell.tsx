@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Check, Eye, EyeOff, FileText, Play, Workflow, X } from "lucide-react";
+import { Check, EyeOff, FileText, Play, Workflow, X } from "lucide-react";
 import { CaseProvider, useCase } from "@/lib/case/CaseProvider";
 import { STEPS, stepPath, type Step } from "@/lib/case/state";
+import { useCurrentStep } from "./Flow";
 import { useLang } from "@/lib/i18n";
 import type { Bilingual } from "@/lib/engine/types";
 import { Header } from "../ui";
@@ -22,72 +22,62 @@ export const STEP_META: Record<Step, { title: Bilingual; hint: Bilingual }> = {
 
 function Progress() {
   const { state } = useCase();
-  const { b } = useLang();
-  const path = usePathname();
-  const current = STEPS.find((s) => path?.startsWith(stepPath(s))) ?? "story";
+  const { b, lang } = useLang();
+  const current = useCurrentStep();
   const reached = STEPS.indexOf(state.step);
   const curIdx = STEPS.indexOf(current);
-  const active = useRef<HTMLAnchorElement>(null);
-  useEffect(() => {
-    active.current?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
-  }, [curIdx]);
+  const furthest = Math.max(reached, curIdx);
+  const fill = `calc((100% - 100% / 6) * ${curIdx / (STEPS.length - 1)})`;
 
   return (
-    <nav className="no-print" aria-label="Progress">
-      <div className="mb-3 h-1 overflow-hidden rounded-full bg-line" aria-hidden>
-        <div className="h-full rounded-full bg-accent transition-[width] duration-300" style={{ width: `${((curIdx + 1) / STEPS.length) * 100}%` }} />
+    <nav className="no-print" aria-label={lang === "hi" ? "प्रगति" : "Progress"}>
+      {/* Phones: six segments (the page title says where you are) */}
+      <div className="md:hidden">
+        <div className="segs" aria-hidden>
+          {STEPS.map((s, i) => <span key={s} className={`seg ${i === curIdx ? "is-cur" : i <= furthest ? "is-done" : ""}`} />)}
+        </div>
       </div>
-      <div className="-mx-1 overflow-x-auto px-1 pb-1 [scrollbar-width:none]">
-      <ol className="flex min-w-max gap-1 lg:min-w-0">
+      {/* Larger screens: the road */}
+      <div className="road hidden md:grid" role="list">
+        <span className="road-track" aria-hidden />
+        <span className="road-fill" style={{ width: fill }} aria-hidden />
         {STEPS.map((s, i) => {
-          const done = i < curIdx || (i <= reached && i !== curIdx);
           const isCur = i === curIdx;
-          const open = i <= Math.max(reached, curIdx);
+          const done = !isCur && i <= furthest;
+          const cls = `road-stop ${isCur ? "is-cur" : done ? "is-done" : ""}`;
           const inner = (
             <>
-              <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full text-[11px] font-semibold ${isCur ? "bg-ink text-white" : done ? "bg-accent text-white" : "bg-slate-soft text-muted"}`}>
-                {done && !isCur ? <Check size={12} /> : i + 1}
-              </span>
-              <span className="leading-tight">
-                <span className="block text-sm font-medium">{b(STEP_META[s].title)}</span>
-                <span className="hidden text-[11px] text-muted lg:block">{b(STEP_META[s].hint)}</span>
-              </span>
+              <span className="road-dot">{done ? <Check size={14} /> : i + 1}</span>
+              <span className="road-label">{b(STEP_META[s].title)}</span>
             </>
           );
           return (
-            <li key={s} className="shrink-0 lg:flex-1">
-              {open ? (
-                <Link
-                  ref={isCur ? active : undefined}
-                  href={stepPath(s)}
-                  aria-current={isCur ? "step" : undefined}
-                  className={`flex items-center gap-2 rounded-xl px-2.5 py-2 transition-colors ${isCur ? "bg-surface ring-1 ring-line" : "hover:bg-surface"}`}
-                >
-                  {inner}
-                </Link>
+            <div key={s} role="listitem" className="contents">
+              {i <= furthest && !isCur ? (
+                <Link href={stepPath(s)} className={cls}>{inner}</Link>
               ) : (
-                <span className="flex cursor-not-allowed items-center gap-2 rounded-xl px-2.5 py-2 opacity-60">{inner}</span>
+                <span className={cls} aria-current={isCur ? "step" : undefined}>{inner}</span>
               )}
-            </li>
+            </div>
           );
         })}
-      </ol>
       </div>
     </nav>
   );
 }
 
-// "Behind the scenes" preference, remembered per browser.
+// "Behind the scenes" preference, remembered per browser. Hidden by default so a
+// family sees only their task; judges and caseworkers open it from the pill.
 const TRACE_KEY = "rahbar-trace";
 const traceListeners = new Set<() => void>();
 function readTracePref(): boolean {
   try {
-    return localStorage.getItem(TRACE_KEY) !== "hidden";
+    return localStorage.getItem(TRACE_KEY) === "shown";
   } catch {
-    return true;
+    return false;
   }
 }
-function writeTracePref(show: boolean) {
+export function writeTracePref(show: boolean) {
   try {
     localStorage.setItem(TRACE_KEY, show ? "shown" : "hidden");
   } catch {}
@@ -98,30 +88,38 @@ function Shell({ children }: { children: ReactNode }) {
   const { state } = useCase();
   const { lang } = useLang();
   const hi = lang === "hi";
+  const step = useCurrentStep();
   const showTrace = useSyncExternalStore(
     (cb) => {
       traceListeners.add(cb);
       return () => traceListeners.delete(cb);
     },
     readTracePref,
-    () => true,
+    () => false,
   );
   const [drawer, setDrawer] = useState(false);
+  const working = state.trace.some((e) => e.status === "running");
 
   return (
     <>
       <Header
         right={
-          <button className="btn btn-ghost !px-3 !py-1.5 text-sm lg:hidden" onClick={() => setDrawer(true)} aria-label={hi ? "पर्दे के पीछे" : "Behind the scenes"}>
-            <Workflow size={14} /> {state.trace.length}
+          <button
+            className="no-print grid h-10 min-w-10 grid-flow-col place-items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 text-xs md:hidden"
+            onClick={() => setDrawer(true)}
+            aria-label={hi ? "पर्दे के पीछे" : "Behind the scenes"}
+          >
+            <span className={`h-1.5 w-1.5 rounded-full ${working ? "pulse bg-key-bright" : "bg-accent"}`} aria-hidden />
+            <Workflow size={14} />
+            <span className="mono text-muted">{state.trace.length}</span>
           </button>
         }
       />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-5">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-6 pt-5 sm:px-5 md:pt-8">
         <Progress />
-        <div className={`mt-5 grid gap-6 ${showTrace ? "lg:grid-cols-[minmax(0,1fr)_340px]" : ""}`}>
-          <div className="min-w-0">{children}</div>
-          {showTrace ? (
+        <div className={`mt-7 md:mt-10 ${showTrace ? "grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]" : ""}`}>
+          <div key={step} className={`step-enter min-w-0 ${showTrace ? "" : "mx-auto max-w-3xl"}`}>{children}</div>
+          {showTrace && (
             <div className="no-print hidden lg:block">
               <div className="sticky top-20 space-y-2">
                 <button className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-ink" onClick={() => writeTracePref(false)}>
@@ -130,18 +128,25 @@ function Shell({ children }: { children: ReactNode }) {
                 <TracePanel />
               </div>
             </div>
-          ) : (
-            <button className="no-print fixed bottom-5 right-5 hidden items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium shadow-[0_10px_24px_-14px_rgba(29,27,22,.45)] lg:flex" onClick={() => writeTracePref(true)}>
-              <Eye size={14} /> {hi ? "पर्दे के पीछे देखें" : "Show behind the scenes"} · {state.trace.length}
-            </button>
           )}
         </div>
       </main>
+
+      {/* The pill: how many agent steps ran, pulsing while they work. */}
+      <button
+        className={`no-print fixed bottom-6 right-6 z-30 hidden items-center gap-2 rounded-full border border-line bg-surface/95 px-3.5 py-2 text-sm font-medium shadow-[0_12px_28px_-16px_rgba(21,23,28,.55)] backdrop-blur md:flex ${showTrace ? "lg:hidden" : ""}`}
+        onClick={() => (window.innerWidth >= 1024 ? writeTracePref(true) : setDrawer(true))}
+      >
+        <span className={`h-2 w-2 rounded-full ${working ? "pulse bg-key-bright" : "bg-accent"}`} aria-hidden />
+        <Workflow size={14} />
+        <span>{hi ? "पर्दे के पीछे" : "Behind the scenes"}</span>
+        <span className="mono text-xs text-muted">{state.trace.length}</span>
+      </button>
       {drawer && (
-        <div className="no-print fixed inset-0 z-40 flex flex-col bg-black/40 lg:hidden" onClick={() => setDrawer(false)}>
-          <div className="mt-auto max-h-[85vh] rounded-t-2xl bg-bg p-3" onClick={(e) => e.stopPropagation()}>
+        <div className="no-print fixed inset-0 z-50 flex flex-col bg-black/40 lg:hidden" onClick={() => setDrawer(false)}>
+          <div className="rise mt-auto max-h-[85vh] rounded-t-2xl bg-bg p-3" onClick={(e) => e.stopPropagation()}>
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-semibold">{hi ? "पर्दे के पीछे" : "Behind the scenes"}</span>
+              <span className="text-sm font-semibold">{hi ? "पर्दे के पीछे — हर एजेंट का काम" : "Behind the scenes — every agent step"}</span>
               <button className="btn btn-ghost !p-2" onClick={() => setDrawer(false)} aria-label="Close"><X size={16} /></button>
             </div>
             <TracePanel />
@@ -169,12 +174,12 @@ export function NeedsCase({ children }: { children: ReactNode }) {
   const empty = !state.docs.length && !Object.keys(state.answers).length && !Object.values(facts).some((v) => v !== null);
   if (!empty) return <>{children}</>;
   return (
-    <div className="card mx-auto max-w-xl p-6 text-center">
-      <FileText className="mx-auto text-muted" />
-      <h2 className="mt-3 font-display text-2xl font-semibold">{hi ? "अभी यहाँ कुछ नहीं है" : "Nothing here yet"}</h2>
-      <p className="mt-2 text-muted">{hi ? "पहले बताइए क्या हुआ, या एक सैंपल केस देखें।" : "Start by telling us what happened, or open a sample case."}</p>
-      <div className="mt-5 flex flex-wrap justify-center gap-3">
-        <Link href={stepPath("story")} className="btn btn-primary">{hi ? "शुरू करें" : "Start"}</Link>
+    <div className="mx-auto max-w-xl py-10 text-center">
+      <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-key-soft text-key"><FileText /></span>
+      <h2 className="h-sec mt-4">{hi ? "अभी यहाँ कुछ नहीं है" : "Nothing here yet"}</h2>
+      <p className="lead mx-auto mt-2">{hi ? "यह पन्ना आपके केस से भरता है। पहले बताइए क्या हुआ, या एक सैंपल केस देखें।" : "This page fills in from your case. Start by telling us what happened, or open a sample case."}</p>
+      <div className="mt-6 flex flex-wrap justify-center gap-3">
+        <Link href={stepPath("story")} className="btn btn-primary btn-lg">{hi ? "शुरू करें" : "Start"}</Link>
         <button className="btn btn-ghost" onClick={() => loadSample("sunita")}><Play size={15} /> {hi ? "सैंपल केस" : "Sample case"}</button>
       </div>
     </div>

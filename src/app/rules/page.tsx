@@ -6,6 +6,7 @@ import { useLang } from "@/lib/i18n";
 import { CHANGELOG, registry, RULES_VERSION } from "@/lib/api/v1";
 import { FACT_LABELS } from "@/lib/engine/factLabels";
 import { DOCS } from "@/lib/engine/documents";
+import { PageIntro } from "@/components/case/Flow";
 
 export default function RulesPage() {
   const { b, lang } = useLang();
@@ -14,19 +15,16 @@ export default function RulesPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 space-y-8 px-4 py-8">
-        <div>
-          <h1 className="font-display text-3xl font-semibold">{hi ? "हर नियम, उसका स्रोत और उसकी समय-सीमा" : "Every rule, its source, and its clock"}</h1>
-          <p className="mt-2 max-w-3xl text-ink-2">
+      <main className="mx-auto w-full max-w-5xl flex-1 space-y-10 px-4 py-10 sm:px-5 md:py-14">
+        <PageIntro kicker={hi ? "नियम" : "Rules"} title={hi ? "हर नियम, उसका स्रोत और उसकी समय-सीमा" : "Every rule, its source, and its clock"}>
             {hi
               ? "Rahbar में पात्रता और राशि यहीं के नियमों से तय होती है — AI से नहीं। हर नियम पर स्रोत और अंतिम जाँच की तारीख है। मशीन-पठनीय रूप:"
               : "Eligibility and amounts in Rahbar come only from these rules — never from the AI. Each carries its legal source and the date it was last verified. Machine-readable:"}{" "}
             <a className="underline" href="/api/v1/rules">/api/v1/rules</a> · v{RULES_VERSION}
-          </p>
-        </div>
+        </PageIntro>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">{hi ? "बदलाव का इतिहास" : "Changelog"}</h2>
+          <h2 className="h-sec">{hi ? "बदलाव का इतिहास" : "Changelog"}</h2>
           <ol className="card divide-y divide-line">
             {CHANGELOG.map((c) => (
               <li key={c.date + c.en} className="flex gap-3 p-3 text-sm">
@@ -40,7 +38,7 @@ export default function RulesPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">{hi ? `${rules.length} हक़` : `${rules.length} entitlements`}</h2>
+          <h2 className="h-sec">{hi ? `${rules.length} हक़` : `${rules.length} entitlements`}</h2>
           {rules.map((r) => (
             <article key={r.id} className="card p-4" id={r.id}>
               <div className="flex flex-wrap items-center gap-2">
@@ -68,7 +66,7 @@ export default function RulesPage() {
               </div>
               <div className="mt-3 flex flex-wrap gap-1.5">{r.documents.map((d) => <span key={d} className="chip bg-surface-2 text-ink-2 ring-1 ring-line">{b(DOCS[d].name)}</span>)}</div>
               <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
-                {[...r.citations, r.clock.basis].map((c) => (
+                {[...r.citations, r.clock.basis].filter((c, i, all) => all.findIndex((x) => x.url === c.url) === i).map((c) => (
                   <a key={c.url + c.title} href={c.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline">{c.title} <ExternalLink size={10} /></a>
                 ))}
                 <span>· {hi ? "अंतिम जाँच" : "last verified"} {r.lastVerified}</span>

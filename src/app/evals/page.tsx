@@ -6,6 +6,7 @@ import { Footer, Header } from "@/components/ui";
 import { PROPERTIES, runGolden, runSafety, type GoldenRow, type SafetyRow } from "@/lib/evals/run";
 import { shield } from "@/lib/privacy/pii";
 import { RULES } from "@/lib/engine/rules";
+import { PageIntro } from "@/components/case/Flow";
 
 function Pass({ ok }: { ok: boolean }) {
   return ok ? <CheckCircle2 size={16} className="text-accent" aria-label="pass" /> : <CircleX size={16} className="text-rose" aria-label="fail" />;
@@ -46,22 +47,21 @@ export default function EvalsPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-5xl flex-1 space-y-8 px-4 py-8">
+      <main className="mx-auto w-full max-w-5xl flex-1 space-y-10 px-4 py-10 sm:px-5 md:py-14">
         <div>
-          <h1 className="font-display text-3xl font-semibold">Does it work consistently? Check it yourself.</h1>
-          <p className="mt-2 max-w-3xl text-ink-2">
+          <PageIntro kicker="Tests" title="Does it work consistently? Check it yourself.">
             Every rupee in Rahbar comes from {RULES.length} rules-as-code entitlements with citations — never from the language model. These checks run live in your browser; the same suite runs in CI with Vitest.
-          </p>
+          </PageIntro>
           <div className="mt-4 flex flex-wrap gap-2 text-sm">
             <span className="chip bg-slate-soft text-ink-2">Golden cases: {goldenPass}/{golden.length}</span>
             <span className="chip bg-slate-soft text-ink-2">Safety checks: {safetyPass}/{safety.length}</span>
             <span className="chip bg-slate-soft text-ink-2">Property invariants: {props.filter((p) => p.ok).length}/{props.length}</span>
-            <span className="chip bg-slate-soft text-ink-2">27 unit tests (Vitest)</span>
+            <span className="chip bg-slate-soft text-ink-2">40 unit tests (Vitest)</span>
           </div>
         </div>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">1 · Golden cases (synthetic documents → parsers → rules)</h2>
+          <h2 className="h-sec">1 · Golden cases (synthetic documents → parsers → rules)</h2>
           {golden.map((g) => (
             <div key={g.caseId} className="card p-4">
               <div className="flex flex-wrap items-center gap-2">
@@ -82,7 +82,7 @@ export default function EvalsPage() {
 
         <section className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-lg font-semibold">2 · Property-based invariants (fast-check, random cases)</h2>
+            <h2 className="h-sec">2 · Property-based invariants (fast-check, random cases)</h2>
             <div className="flex items-center gap-2">
               <select className="input !w-auto !py-1.5 text-sm" value={runs} onChange={(e) => setRuns(Number(e.target.value))} aria-label="Random cases per property">
                 {[200, 500, 2000, 5000].map((n) => <option key={n} value={n}>{n.toLocaleString()} cases each</option>)}
@@ -107,7 +107,7 @@ export default function EvalsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-lg font-semibold">3 · Safety: prompt injection and the verifier</h2>
+          <h2 className="h-sec">3 · Safety: prompt injection and the verifier</h2>
           <div className="card divide-y divide-line">
             {safety.map((s) => (
               <div key={s.name} className="flex items-start gap-3 px-4 py-3 text-sm">

@@ -17,7 +17,7 @@ const EMP: { v: Employment; en: string; hi: string }[] = [
 ];
 
 /** Reconstructed income from passbook credits — evidence against a minimum-wage assumption. */
-export function IncomeEvidenceCard() {
+export function IncomeEvidenceCard({ bare = false }: { bare?: boolean }) {
   const { income, state, facts } = useCase();
   const { lang } = useLang();
   const hi = lang === "hi";
@@ -27,9 +27,9 @@ export function IncomeEvidenceCard() {
   const doc = state.docs.find((d) => d.id === docId);
 
   return (
-    <section className="card p-4">
-      <div className="flex items-center gap-2 font-semibold"><TrendingUp size={17} className="text-accent" /> {hi ? "आय का सबूत — पासबुक से" : "Income evidence — from the passbook"}</div>
-      <p className="mt-1 text-sm text-muted">
+    <section className={bare ? "" : "card p-4"}>
+      {!bare && <div className="flex items-center gap-2 font-semibold"><TrendingUp size={17} className="text-accent" /> {hi ? "आय का सबूत — पासबुक से" : "Income evidence — from the passbook"}</div>}
+      <p className={`${bare ? "" : "mt-1 "}text-sm text-muted`}>
         {hi
           ? "बिना सैलरी स्लिप के ट्रिब्यूनल अक्सर न्यूनतम मज़दूरी मान लेते हैं। नियमित क्रेडिट असली कमाई का सबूत हैं (दिल्ली HC, 2026: न्यूनतम मज़दूरी सिर्फ़ एक पैमाना है)।"
           : "Without payslips, tribunals often assume minimum wage. Regular credits are evidence of real earnings (Delhi HC, 2026: minimum wage is only a guiding benchmark)."}
@@ -37,7 +37,7 @@ export function IncomeEvidenceCard() {
       <div className="mt-3 flex flex-wrap items-end gap-x-6 gap-y-2">
         <div>
           <div className="text-xs text-muted">{hi ? "औसत मासिक आय" : "Monthly income shown"}</div>
-          <div className="font-display text-2xl font-semibold">{formatINR(income.monthly)}</div>
+          <div className="num-serif text-3xl">{formatINR(income.monthly)}</div>
         </div>
         <div className="text-sm text-ink-2">
           {income.credits.length} {hi ? "क्रेडिट" : "credits"} · {income.months.length} {hi ? "महीने" : "months"} · {income.payers.join(", ")}
@@ -69,7 +69,7 @@ function Num({ label, value, onChange, min = 0 }: { label: string; value: number
 }
 
 /** Just-compensation estimate (death) + Settlement Offer Auditor. Usable inside a case or standalone. */
-export function MactPanel({ standalone = false }: { standalone?: boolean }) {
+export function MactPanel({ standalone = false, bare = false }: { standalone?: boolean; bare?: boolean }) {
   const ctx = useCase();
   const { lang, b } = useLang();
   const hi = lang === "hi";
@@ -100,10 +100,10 @@ export function MactPanel({ standalone = false }: { standalone?: boolean }) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <section className="card overflow-hidden">
+    <section className={bare ? "-mx-[1.1rem] -mb-[1.15rem] overflow-hidden rounded-b-[14px] border-t border-line" : "card overflow-hidden"}>
       <div className="border-b border-line p-4">
-        <div className="flex items-center gap-2 font-semibold"><Calculator size={17} className="text-accent" /> {hi ? "उचित मुआवज़ा (MACT) और बीमा प्रस्ताव की जाँच" : "Just compensation (MACT) & insurer offer check"}</div>
-        <p className="mt-1 text-sm text-muted">
+        {!bare && <div className="flex items-center gap-2 font-semibold"><Calculator size={17} className="text-accent" /> {hi ? "उचित मुआवज़ा (MACT) और बीमा प्रस्ताव की जाँच" : "Just compensation (MACT) & insurer offer check"}</div>}
+        <p className={`${bare ? "" : "mt-1 "}text-sm text-muted`}>
           {hi
             ? "बीमा कंपनी को 30 दिन में प्रस्ताव देना होता है (धारा 149)। मानने के बाद मामला बंद। पहले सुप्रीम कोर्ट के सूत्रों से जाँचें।"
             : "The insurer must make an offer within 30 days (s.149). Once accepted, the claim is closed. Check it against Supreme Court formulas first."}
@@ -141,7 +141,7 @@ export function MactPanel({ standalone = false }: { standalone?: boolean }) {
             ))}
             <tr className="bg-accent-soft">
               <td className="p-3 font-semibold text-accent">{hi ? "अनुमानित उचित मुआवज़ा" : "Estimated just compensation"}</td>
-              <td className="p-3 text-right font-display text-lg font-semibold tabular-nums text-accent">{formatINR(est.total)}</td>
+              <td className="num-serif p-3 text-right text-xl text-accent">{formatINR(est.total)}</td>
             </tr>
           </tbody>
         </table>

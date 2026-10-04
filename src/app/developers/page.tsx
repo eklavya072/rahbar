@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, Play } from "lucide-react";
 import { Footer, Header } from "@/components/ui";
+import { PageIntro } from "@/components/case/Flow";
 
 const EXAMPLES = {
   evaluate: {
@@ -36,12 +37,11 @@ export default function Developers() {
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8">
+      <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-10 sm:px-5 md:py-14">
         <div>
-          <h1 className="font-display text-3xl font-semibold">Build on Rahbar</h1>
-          <p className="mt-2 text-ink-2">
+          <PageIntro kicker="API" title="Build on Rahbar">
             Hospital helpdesks, DLSA case-management tools, NGOs and gig platforms can call the same rules engine the app uses. Deterministic, cited, CORS-enabled, rate-limited, and it stores nothing. Send non-identifying facts only.
-          </p>
+          </PageIntro>
           <div className="mt-3 flex flex-wrap gap-2 text-sm">
             <a className="chip bg-slate-soft text-ink-2" href="/api/v1/openapi.json">OpenAPI 3.1 spec</a>
             <a className="chip bg-slate-soft text-ink-2" href="/api/v1/rules">GET /api/v1/rules</a>

@@ -57,7 +57,7 @@ export function SupportCard() {
 }
 
 /** Reads text aloud in Hindi or English (browser speech synthesis — no server). */
-export function ReadAloud({ text }: { text: string }) {
+export function ReadAloud({ text, className = "btn btn-ghost !px-3 !py-1.5 text-sm" }: { text: string; className?: string }) {
   const { lang } = useLang();
   const [speaking, setSpeaking] = useState(false);
   const [ok, setOk] = useState(false);
@@ -84,7 +84,7 @@ export function ReadAloud({ text }: { text: string }) {
     setSpeaking(true);
   };
   return (
-    <button className="btn btn-ghost !px-3 !py-1.5 text-sm" onClick={toggle} aria-pressed={speaking}>
+    <button className={className} onClick={toggle} aria-pressed={speaking}>
       {speaking ? <VolumeX size={15} /> : <Volume2 size={15} />} {speaking ? (lang === "hi" ? "रोकें" : "Stop") : lang === "hi" ? "सुनें" : "Listen"}
     </button>
   );
