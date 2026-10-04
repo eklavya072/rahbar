@@ -24,7 +24,7 @@ Rahbar is an agent that reads the family's own papers (FIR, passbook, vehicle po
 
 Why nobody fixed it: the entitlements are split across MoRTH, NHA, insurers, NPCI, banks, ESIC, Labour Commissioners, MACT courts and SDMs, with mutual exclusions, set-offs and deadlines. This is **administrative burden** (Moynihan, Herd & Harvey 2015): learning costs, compliance costs and psychological costs. Rahbar attacks all three.
 
-Full research: [`docs/RESEARCH.md`](docs/RESEARCH.md) · Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+Every page and button explained: [`docs/PRODUCT_GUIDE.md`](docs/PRODUCT_GUIDE.md) · Full research: [`docs/RESEARCH.md`](docs/RESEARCH.md) · Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
 ---
 
