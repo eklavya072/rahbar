@@ -1,29 +1,45 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useLang } from "@/lib/i18n";
 import type { FactSource, Status } from "@/lib/engine/types";
-import { Bot, FileText, Menu, MessageCircle, ShieldCheck } from "lucide-react";
+import { Bot, FileText, Menu, MessageCircle } from "lucide-react";
 
-export function LangToggle() {
+/** The Rahbar mark: a road converging on a brass sunrise — the way forward. */
+export function RahbarMark({ size = 32, tone = "paper" }: { size?: number; tone?: "paper" | "void" }) {
+  const stroke = tone === "void" ? "#f2f1ec" : "#15171c";
+  return (
+    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="11" r="4.2" fill="#cea850" />
+      <path d="M17.6 19.5 L6 35 M22.4 19.5 L34 35" stroke={stroke} strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M20 23 v2.6 M20 29 v3.4" stroke="#cea850" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function LangToggle({ dark = false }: { dark?: boolean }) {
   const { lang, setLang } = useLang();
+  const ring = dark ? "border-white/25 bg-white/5 text-[#f2f1ec]" : "border-line bg-surface";
   return (
     <>
       {/* Phones: one compact button that switches to the other language */}
       <button
         onClick={() => setLang(lang === "en" ? "hi" : "en")}
-        className="grid h-9 min-w-10 place-items-center rounded-full border border-line bg-surface px-2.5 text-sm font-semibold sm:hidden"
+        className={`grid h-10 min-w-10 place-items-center rounded-full border px-2.5 text-sm font-semibold sm:hidden ${ring}`}
         aria-label={lang === "en" ? "हिंदी में देखें" : "View in English"}
       >
         {lang === "en" ? "हिं" : "EN"}
       </button>
-      <div className="hidden rounded-full border border-line bg-surface p-0.5 text-sm sm:inline-flex" role="group" aria-label="Language">
+      <div className={`hidden rounded-full border p-0.5 text-sm sm:inline-flex ${ring}`} role="group" aria-label="Language">
         {(["en", "hi"] as const).map((l) => (
           <button
             key={l}
             onClick={() => setLang(l)}
             aria-pressed={lang === l}
-            className={`min-h-9 min-w-11 rounded-full px-3 font-semibold transition-colors ${lang === l ? "bg-ink text-white" : "text-muted hover:text-ink"}`}
+            className={`min-h-9 min-w-11 rounded-full px-3 font-semibold transition-colors ${
+              lang === l ? (dark ? "bg-[#f2f1ec] text-[#0a0c10]" : "bg-ink text-white") : dark ? "text-white/60 hover:text-white" : "text-muted hover:text-ink"
+            }`}
           >
             {l === "en" ? "EN" : "हिं"}
           </button>
@@ -34,52 +50,97 @@ export function LangToggle() {
 }
 
 const NAV = [
-  { href: "/offer", label: "Offer check" },
-  { href: "/rules", label: "Rules" },
-  { href: "/developers", label: "API" },
-  { href: "/evals", label: "Evals" },
+  { href: "/offer", en: "Offer check", hi: "प्रस्ताव जाँच" },
+  { href: "/rules", en: "Rules", hi: "नियम" },
+  { href: "/developers", en: "API", hi: "API" },
+  { href: "/evals", en: "Tests", hi: "जाँच" },
 ];
 
-export function Footer() {
+export function Footer({ dark = false }: { dark?: boolean }) {
   const { lang } = useLang();
   const hi = lang === "hi";
   return (
-    <footer className="no-print border-t border-line">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 text-sm text-muted">
-        <span>Rahbar · {hi ? "जानकारी, कानूनी सलाह नहीं" : "information, not legal advice"}</span>
+    <footer className={`no-print relative z-10 border-t ${dark ? "border-white/10 bg-[#06080b] text-white/60" : "border-line text-muted"}`}>
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-7 text-sm">
+        <span className="flex items-center gap-2">
+          <RahbarMark size={20} tone={dark ? "void" : "paper"} /> Rahbar · {hi ? "जानकारी, कानूनी सलाह नहीं" : "information, not legal advice"}
+        </span>
         <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
-          {NAV.map((n) => <Link key={n.href} href={n.href} className="hover:text-ink">{n.label}</Link>)}
-          <a href="tel:15100" className="hover:text-ink">NALSA 15100</a>
-          <a href="tel:14416" className="hover:text-ink">Tele-MANAS 14416</a>
+          {NAV.map((n) => <Link key={n.href} href={n.href} className={dark ? "hover:text-white" : "hover:text-ink"}>{hi ? n.hi : n.en}</Link>)}
+          <a href="tel:15100" className={dark ? "hover:text-white" : "hover:text-ink"}>NALSA 15100</a>
+          <a href="tel:14416" className={dark ? "hover:text-white" : "hover:text-ink"}>Tele-MANAS 14416</a>
         </nav>
       </div>
     </footer>
   );
 }
 
-export function Header({ right }: { right?: React.ReactNode }) {
+/** Header: "film" floats over the landing's dark film; "paper" is the calm working header. */
+/**
+ * Over the film the header is a dark veil; once paper slides under it, it turns
+ * to paper too. The tone comes from whichever [data-surface] section sits under
+ * the bar, checked on scroll and on a slow poll (smooth-scroll safe).
+ */
+function useSurfaceUnderHeader(enabled: boolean) {
+  const [tone, setTone] = useState<"film" | "dark" | "light">("film");
+  useEffect(() => {
+    if (!enabled) return;
+    const check = () => {
+      const y = 36;
+      let under: HTMLElement | null = null;
+      for (const el of document.querySelectorAll<HTMLElement>("[data-surface]")) {
+        const r = el.getBoundingClientRect();
+        if (r.top <= y && r.bottom > y) under = el;
+      }
+      const surface = under?.dataset.surface ?? "void";
+      const next = surface.startsWith("paper") ? "light" : !under || under.classList.contains("l-scrub") ? "film" : "dark";
+      setTone((t) => (t === next ? t : next));
+    };
+    const first = setTimeout(check, 0);
+    window.addEventListener("scroll", check, { passive: true });
+    const poll = setInterval(check, 300);
+    return () => {
+      clearTimeout(first);
+      window.removeEventListener("scroll", check);
+      clearInterval(poll);
+    };
+  }, [enabled]);
+  return tone;
+}
+
+export function Header({ right, variant = "paper" }: { right?: React.ReactNode; variant?: "paper" | "film" }) {
+  const { lang } = useLang();
+  const hi = lang === "hi";
+  const film = variant === "film";
+  const tone = useSurfaceUnderHeader(film);
+  const dark = film && tone !== "light";
+  const shell = !film
+    ? "sticky top-0 border-b border-line bg-bg/85 backdrop-blur-md"
+    : tone === "light"
+      ? "fixed inset-x-0 top-0 border-b border-line bg-bg/88 text-ink backdrop-blur-md"
+      : tone === "dark"
+        ? "fixed inset-x-0 top-0 border-b border-white/10 bg-[#0a0c10]/80 text-[#f2f1ec] backdrop-blur-md"
+        : "fixed inset-x-0 top-0 border-b border-transparent bg-gradient-to-b from-[#06080b]/85 to-transparent text-[#f2f1ec]";
   return (
-    <header className="no-print sticky top-0 z-30 border-b border-line bg-bg/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-3">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-accent text-white">
-            <ShieldCheck size={18} />
-          </span>
-          <span className="font-display text-xl font-semibold tracking-tight">Rahbar</span>
-          <span className="hidden text-sm text-muted sm:inline" lang="hi">रहबर</span>
+    <header className={`no-print z-40 transition-[background-color,border-color,color] duration-300 ${shell}`}>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-5">
+        <Link href="/" className="flex items-center gap-2.5" aria-label="Rahbar home">
+          <RahbarMark size={30} tone={dark ? "void" : "paper"} />
+          <span className="font-brand text-lg font-semibold tracking-tight">Rahbar</span>
+          <span className={`hidden font-display text-base sm:inline ${dark ? "text-white/55" : "text-muted"}`} lang="hi">रहबर</span>
         </Link>
         <div className="flex items-center gap-1.5 sm:gap-2">
           {right}
-          <nav className="hidden items-center gap-5 text-sm font-medium text-muted md:flex" aria-label="Main">
-            {NAV.map((n) => <Link key={n.href} href={n.href} className="hover:text-ink">{n.label}</Link>)}
+          <nav className={`hidden items-center gap-6 text-sm font-medium md:flex ${dark ? "text-white/70" : "text-muted"}`} aria-label="Main">
+            {NAV.map((n) => <Link key={n.href} href={n.href} className={`link-swipe ${dark ? "hover:text-white" : "hover:text-ink"}`}>{hi ? n.hi : n.en}</Link>)}
           </nav>
-          <LangToggle />
+          <LangToggle dark={dark} />
           <details className="relative md:hidden">
-            <summary className="grid h-9 w-9 cursor-pointer list-none place-items-center rounded-full border border-line bg-surface" aria-label="Menu">
+            <summary className={`grid h-10 w-10 cursor-pointer list-none place-items-center rounded-full border ${dark ? "border-white/25 bg-white/5" : "border-line bg-surface"}`} aria-label="Menu">
               <Menu size={16} />
             </summary>
-            <nav className="absolute right-0 top-11 z-40 w-48 rounded-xl border border-line bg-surface p-1.5 shadow-[0_12px_30px_-12px_rgba(29,27,22,.3)]" aria-label="Main">
-              {NAV.map((n) => <Link key={n.href} href={n.href} className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-surface-2">{n.label}</Link>)}
+            <nav className="absolute right-0 top-12 z-50 w-52 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-[0_16px_34px_-14px_rgba(21,23,28,.35)]" aria-label="Main">
+              {NAV.map((n) => <Link key={n.href} href={n.href} className="block rounded-lg px-3 py-3 text-sm font-medium hover:bg-surface-2">{hi ? n.hi : n.en}</Link>)}
             </nav>
           </details>
         </div>
