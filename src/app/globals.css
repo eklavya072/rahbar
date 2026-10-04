@@ -316,3 +316,8 @@ h1, h2, h3 { text-wrap: balance; }
   .letter { break-after: page; border: none !important; box-shadow: none !important; }
 }
 .print-only { display: none; }
+
+/* Tracking breaks Devanagari conjuncts apart: spaced mono labels set solid in Hindi. */
+html[lang="hi"] .step-label,
+html[lang="hi"] .l-attrib,
+html[lang="hi"] .l-scroll-cue { letter-spacing: 0; font-size: 0.8rem; }
