@@ -118,6 +118,7 @@ Full mapping: [`docs/FEATURES.md`](docs/FEATURES.md)
 | Layer | Choice |
 |---|---|
 | App | Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 — deployed on Vercel Hobby |
+| Interface | Scroll-scrubbed canvas film (night road → dawn, drawn live, no video file) · Lenis smooth scroll · Motion (preloader) · self-hosted Newsreader, Schibsted Grotesk, Public Sans, IBM Plex Mono, Unbounded + Noto/Tiro Devanagari · one task per screen, sticky thumb-reach actions, reduced-motion fallbacks |
 | Agents / GenAI | Vercel AI SDK v7 — `generateText` + `Output.object` (zod-typed outputs), tool calling with `stopWhen` |
 | LLMs | Groq free tier `openai/gpt-oss-120b` → `gpt-oss-20b` → Gemini (anonymised only) → no-AI mode |
 | Safety model | `meta-llama/llama-prompt-guard-2-86m` on Groq |

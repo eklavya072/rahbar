@@ -19,7 +19,15 @@
 | `/developers` | Public API (evaluate, compensation, rules) with live "Try it" |
 | `/evals` | Live test harness judges can run in the browser |
 
-The **header** on every page has: the Rahbar logo (→ home), **Offer check / Rules / API / Evals** links (a ☰ menu on phones), and the **EN / हिं** language switch (one compact button on phones). The whole app is bilingual.
+The **header** on every page has: the Rahbar logo (→ home), **Offer check / Rules / API / Tests** links (a ☰ menu on phones), and the **EN / हिं** language switch (one compact button on phones). On the home page the header floats over the film and changes from dark to paper as light sections slide under it. The whole app is bilingual.
+
+**Design language** (after the Meridian project): a dark "night road" surface for the story, warm ivory paper for the work, one brass accent for "the way forward". Fonts: Newsreader (serif headings and money), Schibsted Grotesk (hero), Public Sans (body), IBM Plex Mono (labels), Unbounded (wordmark), Noto Sans / Tiro Devanagari for Hindi. Motion is calm and purposeful: words rise from behind a mask, numbers count up, the progress bar is a road. Everything respects *reduce motion*.
+
+**How every case page reads, for someone who has never seen it:**
+- A **road** across the top (six segments on phones) shows where you are.
+- **"Step 2 of 6"** and one big question as the title, then one plain sentence saying what to do.
+- **One main button** at the bottom. On phones it stays pinned within thumb reach; **← Back** sits beside it.
+- Anything optional (asking the agent, income proof, court formula, fingerprints, the vault) sits in a **drawer with a plain name and a one-line reason**, closed until wanted.
 
 ---
 
@@ -28,33 +36,34 @@ The **header** on every page has: the Rahbar logo (→ home), **Offer check / Ru
 ### Home (`/`)
 | Element | What it does |
 |---|---|
-| **Start a case** | Opens `/case/story` |
-| **Try a sample case** | Loads the "Sunita" sample (hit-and-run, synthetic papers) and opens `/case/papers` |
-| Hero passbook image | A real sample passbook with two lines highlighted: a ₹20 "PMSBY" debit → ₹2 lakh accident cover; a RuPay card swipe 12 days before the accident → ₹2 lakh card cover. This is the product's core idea in one picture |
-| Evidence list (205 · 70% · 90% · 69%) | Each number links to its source (Supreme Court, World Bank, Crashfree India, BMC) |
-| How it works | The 5-stage pipeline: read papers → hide identity → apply the law → draft letters → you approve |
-| "Claims take months" list | Links to Offer check, Track & escalate, Encrypted vault, API |
-| Sample case cards (3) | Open each sample: **hit-and-run** (₹21 lakh found), **injured pillion rider** (small, honest result), **red-team** (an FIR with a hidden attack on the AI) |
+| Entrance | The mark rises, "Rahbar" sets letter by letter, a brass line draws like a road, then seven dark slabs sweep up and away like stairs to reveal the film (skipped with *reduce motion*; never shown twice in a visit) |
+| **The film (hero)** | A night road drawn live on a canvas and *scrubbed by scrolling*: rain and red tail-lights at night; as you scroll, street lamps switch on one by one (claims found), the lane dashes turn brass, and dawn rises at the end. Five captions assemble word by word over it: **After an accident, the way forward** → **The money exists. Families never reach it** (205 · 70% · 90%, sourced) → **One accident. Up to ten claims** → **Every rupee comes with a reason** (the 5-step pipeline) → **Let Rahbar show the way** with **Start — it's free** and **Watch a sample case**. On phones (and with reduced motion) the five captions stack over a still dawn frame |
+| **Three steps. That's all.** | Each step beside the product's own screen animating itself: the passbook being scanned with the ₹20 PMSBY line and the card swipe lighting up; the "What you're owed" total counting up to ₹21,00,000; a claim letter writing itself with "checked by a second AI" ticks |
+| **Built so you can trust it** (dark) | Four promises (papers stay on the phone, the law decides the money, every letter checked twice, nothing happens without you) under a cursor spotlight, and counters: 21/21 facts read correctly in live AI tests, 40 automated tests, 10 kinds of claims, ₹0 cost. **Run the tests yourself** → `/evals` |
+| Sample case cards (3) | **Hit-and-run** (₹21 lakh found), **injured pillion rider** (small, honest result), **red-team** (an FIR with a hidden attack on the AI) |
+| **Helping someone else?** | For paralegals, hospital helpdesks, NGOs and lawyers: Offer check, Rules, API |
+| Close | "You don't have to do this alone." **Start** and tap-to-call **free legal aid 15100** |
 | Footer | Links + tap-to-call **NALSA 15100** (free legal aid) and **Tele-MANAS 14416** (mental health) |
 
 ### Step 1 — Your story (`/case/story`)
 | Element | What it does |
 |---|---|
 | "Did this happen in the last few days?" | Expands the **First 48 hours** guide: PM RAHAT cashless treatment, free FIR copy (BNSS s.173(2)), post-mortem copies, photos and witnesses, *never sign blank papers or give away a share of compensation*, Form II rights notice, Good Samaritan protection and ₹25,000 Rah-Veer reward |
-| Name of the person / Your name | Kept only on this device; used to mask names before AI and to fill letters back in on the device |
-| Relation | Wife, husband, mother… or **caseworker/paralegal** (the app is built for helpers too) |
-| What happened? + **Speak** | Free text, or speak in Hindi/English (browser speech recognition) |
-| **Next: add papers** | Goes to step 2 |
-| Sample cards | Load a synthetic case |
+| **Who are you to them?** | Big buttons: Wife, Husband, Mother, Father, Son, Daughter, **It happened to me**, **I'm helping a family** (the app is built for helpers too) |
+| Name of the person / Your name | Kept only on this device; used to mask names before AI and to fill letters back in on the device. If it happened to you, only one name is asked |
+| What happened? + **Speak instead** | Free text, or speak in Hindi/English (browser speech recognition) |
+| **Next: your papers** | Goes to step 2 |
+| **Just looking?** sample cards | Open a synthetic family's case |
 
 ### Step 2 — Your papers (`/case/papers`)
 | Element | What it does |
 |---|---|
-| **Choose photos** / **Camera** / drag-and-drop | Adds photos of the FIR, passbook or statement, and vehicle policy. Nothing is uploaded |
+| **What helps most** | Three tiles naming the papers that matter and why: police report (FIR), bank passbook page ("can show insurance you didn't know about"), vehicle policy ("often includes ₹15 lakh owner-driver cover") |
+| **Take a photo** (phones) / **Choose photos** / drag-and-drop | Adds photos. Nothing is uploaded |
 | Trash icon | Removes a photo |
-| **Read my papers** | Runs the agent pipeline (below) and opens step 3 |
-| **Auto-play (judge mode)** (samples only) | Runs the entire case in ~20 s: reads the papers, confirms facts, answers the questions with the sample family's scripted answers, and lands on "What you're owed" |
-| No papers? **Continue with questions** | Skips to step 3; the app works from answers alone |
+| **Read my N papers** | Runs the agent pipeline (below) and opens step 3. While it runs, a **"Rahbar is working"** checklist ticks through the same pipeline in plain words: reading the photos on this phone → hiding names and numbers → checking for hidden tricks → understanding the papers → matching against 10 kinds of claims |
+| **Auto-play** (samples only, in the gold banner) | Runs the entire case in ~20 s: reads the papers, confirms facts, answers the questions with the sample family's scripted answers, and lands on "What you're owed". It also opens *Behind the scenes* |
+| No papers? **Answer questions instead** | Skips to step 3; the app works from answers alone |
 
 **What happens under the hood when you press Read my papers** (watch it live in *Behind the scenes*):
 1. **Reader** — Tesseract.js OCR runs *in the browser* (English + Hindi). It erases ruled table lines first and rebuilds table rows, so passbooks read correctly (92% confidence on the samples).
@@ -66,57 +75,61 @@ The **header** on every page has: the Rahbar logo (→ home), **Offer check / Ru
 ### Step 3 — Check & fill gaps (`/case/check`)
 | Element | What it does |
 |---|---|
-| AI summary | Two-line plain summary; real names are filled back in on the device |
+| Title | "Is this right?" when papers were read; "Just a few questions" when not |
+| AI summary | Two-line plain summary set as a quote; real names are filled back in on the device |
 | Red warning box (if any) | "We found hidden instructions to the AI inside a document — they were ignored", showing the struck-out lines |
-| Fact list | Every fact with its source badge: **From papers** / **AI read** / **Your answer** |
+| Fact list (a receipt) | Every fact with its source badge: **From papers** / **AI read** / **Your answer**. The first six show; **Show all N things we read** opens the rest |
 | Quote under a fact | Opens the document with that exact line **highlighted** |
-| **Edit** | Change any fact; a human answer always wins over the AI and the documents |
-| **See exactly what was sent to the AI** | The privacy lens: shows the anonymised text with every masked token highlighted, plus counts |
+| **Fix** | Change any fact; a human answer always wins over the AI and the documents |
+| **What the AI actually saw** (drawer, "For peace of mind") | The privacy lens: shows the anonymised text with every masked token highlighted, plus counts |
 | **Yes, this is right** | Human confirmation; until then AI-read facts don't count as evidence |
-| Questions with **unlocks: …** chips | The app asks only what unlocks the most money or the nearest deadline (value-of-information ranking), and says what each answer unlocks |
-| **I don't know** | Skips a question; the claim stays "possible — needs checking" |
-| **Show what we're owed** | Runs the rules engine and opens step 4 |
+| **Found so far** | Running total that grows as you answer |
+| One question at a time | The app asks only what unlocks the most money or the nearest deadline (value-of-information ranking). Big Yes/No or choice buttons, "about N left", and "Helps decide: …" naming the claims it affects |
+| **I don't know — skip** | Skips a question; the claim stays "possible — needs checking" |
+| **See what you're owed** | Runs the rules engine and opens step 4 |
 
 ### Step 4 — What you're owed (`/case/owed`)
 | Element | What it does |
 |---|---|
-| Green total | Money **confirmed** from the papers, plus "more possible" |
-| Counts | confirmed / to check / not available |
+| Dark total panel | Money **confirmed** from the papers counts up in large serif figures, plus "more possible after one more check"; a brass rule draws beneath it |
+| Counts | Ready to claim / To check / Not available |
 | **Listen** | Reads the result aloud in Hindi or English |
-| Claim cards (3 buckets) | **Confirmed from your papers**, **Possible — needs checking**, **Not available — and why**. Tap a card to see **Why** (each condition ✓/✗/? with its source), the **deadline** and days left, **where to apply**, **documents**, notes, **sources** and "rule last verified" |
-| **Income evidence** card | Rebuilds monthly income from salary or payout credits in the passbook (tap a line to see it highlighted). Tribunals often assume minimum wage without payslips; this is proof |
-| **Just compensation & offer check** (death cases) | Age, monthly income (pre-filled from the passbook), work type and family. Shows the head-by-head court formula (Sarla Verma, Pranay Sethi, Magma) with citations, and "every ₹1,000/month of proven income adds ≈ ₹X" |
+| Claim cards | **Ready to claim**, **Needs one more check**, and a closed drawer **Not available — and why, so no one can mislead you**. Each card shows the amount, days left and "proved by your papers"; **Why & how** opens each condition ✓/✗/? with its source, the **deadline**, **where to apply**, **documents**, notes, **sources** and "rule last verified" |
+| **Next: your plan & letters** | Opens step 5 |
+| **More help (optional)** drawers | The four items below, closed until wanted |
+| **Proof of income from the passbook** | Rebuilds monthly income from salary or payout credits in the passbook (tap a line to see it highlighted). Tribunals often assume minimum wage without payslips; this is proof |
+| **Court compensation estimate & insurer offer check** (death cases) | Age, monthly income (pre-filled from the passbook), work type and family. Shows the head-by-head court formula (Sarla Verma, Pranay Sethi, Magma) with citations, and "every ₹1,000/month of proven income adds ≈ ₹X" |
 | **Got an offer from the insurer?** | Enter the offer, the income they used, multiplier, future prospects and consortium count. You get a verdict (fair / low / far too low), each flaw with its rupee impact, and a **Copy**-able reply for a legal-aid lawyer |
-| **Ask about your case** | Chat with the case agent. It calls the rules engine as tools (`listEntitlements`, `simulateWhatIf`, `getPlan`), so "What if police find the truck?" is answered by re-running the law, not guessing. Tool calls show as chips |
+| **Ask anything about your case** | Chat with the case agent. It calls the rules engine as tools (`listEntitlements`, `simulateWhatIf`, `getPlan`), so "What if police find the truck?" is answered by re-running the law, not guessing. Tool calls show as chips |
 | Support card | Tap-to-call Tele-MANAS 14416, NALSA 15100, 112 |
-| **Make the plan & letters** | Opens step 5 |
 
 ### Step 5 — Plan & letters (`/case/plan`)
 | Element | What it does |
 |---|---|
-| Numbered claim list | Ordered **earliest deadline first**, with date, days left, the deadline rule, the office, and a **Google Calendar** link per claim |
-| Papers to collect | De-duplicated across claims ("FIR × 6 copies, needed for 5 claims"), with where to get each one free |
-| **Draft N letters** | For each confirmed claim: the AI drafts → a **second, independent model fact-checks it** against the case facts → one redraft if needed → the deterministic **verifier** checks every ₹ amount and date. Without AI, a fixed template is used |
+| **What to do** (a vertical road) | Claims ordered **earliest deadline first**, the first stop in brass, with date, days left, the deadline rule, the office, and **Add to Google Calendar** per claim |
+| Papers to collect | De-duplicated across claims ("FIR × 6, 5 claims"), with where to get each one free. The first five show; **Show all** opens the rest |
+| **Write N letters** | For each confirmed claim: the AI drafts → a **second, independent model fact-checks it** against the case facts → one redraft if needed → the deterministic **verifier** checks every ₹ amount and date. Without AI, a fixed template is used |
 | Letter chips | AI draft (model) or template · **Verified: N amounts, N dates** or **Blocked by verifier** · warnings (e.g. promising an outcome) |
 | Approval checkbox | "I've read this letter and it's correct". Only approved letters go into the print packet; blocked letters can't be approved |
-| **Print / save approved letters as PDF** | Prints the claim packet (correct Hindi rendering) |
-| **Add all deadlines to my calendar** | Downloads a `.ics` file with 7-day and 1-day reminders |
-| **Share the plan on WhatsApp** | Opens WhatsApp with the plan text |
-| **QR handoff for a caseworker** | A QR code and link carrying the case *facts only* (no names or documents) in the link's `#fragment`, which browsers never send to a server |
-| **Tamper-evident manifest** | SHA-256 fingerprint of every document and approved letter, a packet fingerprint, and its QR. Anyone can re-hash a file to prove nothing was altered |
-| **Track the claims** | Opens step 6 |
+| **Save and share** tiles | Four large tiles: |
+| **Print or save approved letters** | Prints the claim packet (correct Hindi rendering), ending with its fingerprint manifest |
+| **All deadlines to my calendar** | Downloads a `.ics` file with 7-day and 1-day reminders |
+| **Send the plan on WhatsApp** | Opens WhatsApp with the plan text |
+| **QR code for a caseworker** | A QR code and link carrying the case *facts only* (no names or documents) in the link's `#fragment`, which browsers never send to a server |
+| **Tamper-proof fingerprint** (drawer, "For officials") | SHA-256 fingerprint of every document and approved letter, a packet fingerprint, and its QR. Anyone can re-hash a file to prove nothing was altered |
+| **Next: follow up on claims** | Opens step 6 |
 
 ### Step 6 — Follow up (`/case/track`)
 | Element | What it does |
 |---|---|
 | **When the money is likely to arrive** | Timeline (weeks → years) of each claim's expected payout window, and how much could land within 90 days, so families can avoid high-interest loans |
-| Stage menu per claim | Not filed yet / Filed / Paid / Rejected |
+| Status buttons per claim | Not filed yet / Filed / Paid / Rejected (one tap) |
 | Filed on (date) | Starts that institution's **legal clock** (e.g. insurer 30 days; hit-and-run 30+15+15; bank 15 days) and shows "due …" or "N days overdue", plus late-payment interest where the law gives it |
 | **Next escalation** + **Draft the escalation** | Unlocks when the deadline passes; drafts a letter to the next level (e.g. insurer's grievance officer → Bima Bharosa / Ombudsman; bank → RBI Ombudsman; DAR not filed → RTI to police; → free DLSA lawyer), citing the rule and days of delay |
-| **Encrypted case vault** | Name + passphrase → **Save on this device** or **Encrypted file** (AES-256-GCM, PBKDF2 310k). **Open a file** / **Unlock** restores a case on any device. Our server never sees it |
+| **Save this case safely** → **Save the case under lock** drawer | Name + passphrase → **Save on this device** or **Encrypted file** (AES-256-GCM, PBKDF2 310k). **Open a file** / **Unlock** restores a case on any device. Our server never sees it |
 
-### Behind the scenes (right panel on desktop; the trace button with a step count on phones)
-A live trace of every agent step: who ran (Reader, Parser, Shield, Guard, Extractor, Rules, Questioner, Planner, Drafter, Verifier, Human, Case Agent), what it did, the model used, time, tokens, and **cost ₹0**. **Hide / Show** remembers your choice.
+### Behind the scenes (hidden by default; a pill bottom-right on desktop, a small button in the header on phones)
+A live trace of every agent step: who ran (Reader, Parser, Shield, Guard, Extractor, Rules, Questioner, Planner, Drafter, Verifier, Human, Case Agent), what it did, the model used, time, tokens, and **cost ₹0**. The pill shows the step count and pulses while agents work. Families never need it, so it starts closed; **Auto-play** opens it for judges, and **Hide / Show** remembers your choice.
 
 ### Other pages
 - **`/offer`** — the compensation and offer checker on its own, for families, lawyers and paralegals who already have an offer.
@@ -160,10 +173,10 @@ On-device OCR (Tesseract.js + table-line removal + row rebuild) · deterministic
 
 ## 4. Three-minute demo path
 1. Home → point at the highlighted passbook (5 s).
-2. **Try a sample case** → **Auto-play (judge mode)**; keep *Behind the scenes* visible: OCR, masking, Prompt Guard, AI extraction, ₹0 cost.
-3. **What you're owed** → ₹21,00,000; open the owner-driver card → **Why** → tap the policy quote to show the highlight.
-4. Scroll to the **offer check** → type ₹9,00,000 / ₹7,000 / multiplier 15 → "far too low, 32%" + reply.
-5. **Ask**: "What if the police find the truck?" → tool chip `simulateWhatIf`.
-6. **Plan & letters** → Draft → show the fact-checker and verifier chips → approve → manifest fingerprint.
-7. **Follow up** → mark one claim Filed → show its legal clock and escalation; save to the encrypted vault.
+2. Scroll the film once (night → dawn) → **Watch a sample case** → **Auto-play** (it opens *Behind the scenes*): OCR, masking, Prompt Guard, AI extraction, ₹0 cost.
+3. **What you're owed** → ₹21,00,000 counts up; open the owner-driver card → **Why & how**; back on *Check*, tap the policy quote to show the highlight.
+4. Open the **Court compensation estimate & insurer offer check** drawer → type ₹9,00,000 / ₹7,000 / multiplier 15 → "far too low, 32%" + reply.
+5. **Ask anything about your case**: "What if the police find the truck?" → tool chip `simulateWhatIf`.
+6. **Plan & letters** → **Write 5 letters** → show the fact-checker and verifier chips → tick one → **Tamper-proof fingerprint**.
+7. **Follow up** → tap **Filed** on one claim → show its legal clock and escalation; **Save this case safely**.
 8. End on the red-team sample: the hidden instruction struck out in red; the total stays ₹7 lakh, not ₹50 lakh.
