@@ -3,6 +3,9 @@
 import { EMPTY_FACTS, type Facts, type FactKey, type ProvenanceMap } from "../engine/types";
 import type { ParsedDoc, OcrLine } from "../docs/parsers";
 import type { Extraction } from "../ai/schemas";
+import type { ClaimTrack } from "../engine/tracker";
+import type { Employment, OfferInput } from "../engine/mact";
+import type { EntitlementId } from "../engine/types";
 
 export type AgentName =
   | "Reader"
@@ -46,8 +49,8 @@ export interface CaseDoc {
   height?: number;
 }
 
-export type Step = "tell" | "docs" | "facts" | "questions" | "results" | "plan";
-export const STEPS: Step[] = ["tell", "docs", "facts", "questions", "results", "plan"];
+export type Step = "tell" | "docs" | "facts" | "questions" | "results" | "plan" | "track";
+export const STEPS: Step[] = ["tell", "docs", "facts", "questions", "results", "plan", "track"];
 
 export interface CaseState {
   step: Step;
@@ -70,6 +73,20 @@ export interface CaseState {
   piiTokens: Record<string, string>;
   skipped: FactKey[];
   approvedLetters: string[];
+  tracks: Partial<Record<EntitlementId, ClaimTrack>>;
+  family: Family;
+  offer: OfferInput | null;
+  docHashes: Record<string, string>;
+}
+
+export interface Family {
+  married: boolean;
+  spouse: boolean;
+  children: number;
+  parents: number;
+  others: number;
+  employment: Employment;
+  monthlyIncomeOverride: number | null;
 }
 
 export const INITIAL: CaseState = {
@@ -91,6 +108,10 @@ export const INITIAL: CaseState = {
   piiTokens: {},
   skipped: [],
   approvedLetters: [],
+  tracks: {},
+  family: { married: true, spouse: true, children: 0, parents: 0, others: 0, employment: "fixed_wage", monthlyIncomeOverride: null },
+  offer: null,
+  docHashes: {},
 };
 
 export type Action =
@@ -101,6 +122,7 @@ export type Action =
   | { type: "updateDoc"; id: string; patch: Partial<CaseDoc> }
   | { type: "removeDoc"; id: string }
   | { type: "answer"; key: FactKey; value: Facts[FactKey] }
+  | { type: "track"; id: EntitlementId; patch: Partial<ClaimTrack> }
   | { type: "trace"; event: TraceEvent }
   | { type: "traceUpdate"; id: string; patch: Partial<TraceEvent> };
 
@@ -120,6 +142,10 @@ export function reducer(s: CaseState, a: Action): CaseState {
       return { ...s, docs: s.docs.filter((d) => d.id !== a.id) };
     case "answer":
       return { ...s, answers: { ...s.answers, [a.key]: a.value } };
+    case "track": {
+      const prev = s.tracks[a.id] ?? { id: a.id, stage: "not_started" as const };
+      return { ...s, tracks: { ...s.tracks, [a.id]: { ...prev, ...a.patch } } };
+    }
     case "trace":
       return { ...s, trace: [...s.trace, a.event] };
     case "traceUpdate":

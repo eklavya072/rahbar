@@ -41,6 +41,9 @@ export interface Facts {
   gigWorkerOnTrip: Tri;
 
   hospitalisedWithin24h: Tri;
+
+  deceasedBankBalance: number | null; // closing balance read from the passbook
+  passbookHasNominee: Tri;
 }
 
 export type FactKey = keyof Facts;
@@ -72,7 +75,8 @@ export type EntitlementId =
   | "MACT"
   | "RAHAT"
   | "EMPLOYER"
-  | "GIG";
+  | "GIG"
+  | "BANK_BALANCE";
 
 export type Status = "eligible" | "possible" | "not_eligible";
 
@@ -200,4 +204,6 @@ export const EMPTY_FACTS: Facts = {
   esicInsured: null,
   gigWorkerOnTrip: null,
   hospitalisedWithin24h: null,
+  deceasedBankBalance: null,
+  passbookHasNominee: null,
 };

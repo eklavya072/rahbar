@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QRCode from "qrcode";
-import { CalendarPlus, CheckCircle2, FileCheck2, Loader2, MessageCircle, PenLine, Printer, QrCode, ShieldX } from "lucide-react";
+import { ArrowRight, CalendarPlus, CheckCircle2, FileCheck2, Fingerprint, Loader2, MessageCircle, PenLine, Printer, QrCode, ShieldX } from "lucide-react";
+import { sha256Hex } from "@/lib/vault";
 import { useCase } from "@/lib/case/CaseProvider";
 import { useLang } from "@/lib/i18n";
 import { formatDate } from "@/lib/engine/dates";
@@ -53,6 +54,70 @@ function LetterView({ l, approved, onApprove }: { l: Letter; approved: boolean; 
         {hi ? "मैंने यह पत्र पढ़ लिया है और यह सही है (प्रिंट पैकेट में जोड़ें)" : "I've read this letter and it's correct (add to the print packet)"}
       </label>
     </div>
+  );
+}
+
+/** Tamper-evident manifest: SHA-256 of every document and approved letter, plus a packet fingerprint. */
+function Manifest({ letters }: { letters: Record<string, Letter> }) {
+  const { state, trace } = useCase();
+  const { lang } = useLang();
+  const hi = lang === "hi";
+  const [rows, setRows] = useState<{ name: string; hash: string }[]>([]);
+  const [fingerprint, setFingerprint] = useState<string>("");
+  const [qr, setQr] = useState<string | null>(null);
+  const approved = state.approvedLetters.filter((id) => letters[id]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const out: { name: string; hash: string }[] = [];
+      for (const d of state.docs) if (state.docHashes[d.id]) out.push({ name: `${hi ? "दस्तावेज़" : "Document"}: ${d.label}`, hash: state.docHashes[d.id] });
+      for (const id of approved) {
+        const l = letters[id];
+        out.push({ name: `${hi ? "पत्र" : "Letter"}: ${l.subject.slice(0, 70)}`, hash: await sha256Hex([l.to, l.subject, ...l.body, ...l.enclosures, ...l.signature].join("\n")) });
+      }
+      const fp = out.length ? await sha256Hex(out.map((r) => r.hash).join("")) : "";
+      const q = fp ? await QRCode.toDataURL(`aftercrash:packet:sha256:${fp}`, { margin: 1, width: 140 }) : null;
+      if (!cancelled) {
+        setRows(out);
+        setFingerprint(fp);
+        setQr(q);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [state.docs, state.docHashes, approved.join(","), letters, hi]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!rows.length) return null;
+  return (
+    <section className="card letter p-4">
+      <div className="flex items-center gap-2 font-semibold"><Fingerprint size={16} className="text-accent" /> {hi ? "छेड़छाड़-रोधी सूची (SHA-256)" : "Tamper-evident packet manifest (SHA-256)"}</div>
+      <p className="mt-1 text-xs text-muted">
+        {hi
+          ? "हर दस्तावेज़ और पत्र का डिजिटल फ़िंगरप्रिंट। कोई भी फ़ाइल दोबारा हैश करके पुष्टि कर सकता है कि कुछ बदला नहीं गया — असली दावों को फ़र्ज़ी दावों से अलग दिखाने में मदद।"
+          : "A digital fingerprint of every document and letter. Anyone can re-hash a file to confirm nothing was altered — helping genuine claims stand apart from fabricated ones."}
+      </p>
+      <div className="mt-3 flex flex-wrap items-start gap-4">
+        <ul className="min-w-0 flex-1 space-y-1">
+          {rows.map((r) => (
+            <li key={r.name} className="text-xs">
+              <div className="truncate font-medium">{r.name}</div>
+              <div className="mono break-all text-muted">{r.hash}</div>
+            </li>
+          ))}
+          <li className="pt-1 text-xs">
+            <div className="font-semibold">{hi ? "पैकेट फ़िंगरप्रिंट" : "Packet fingerprint"}</div>
+            <div className="mono break-all text-accent">{fingerprint}</div>
+          </li>
+        </ul>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {qr && <img src={qr} alt="Packet fingerprint QR" className="h-28 w-28 rounded border border-line" />}
+      </div>
+      <button className="no-print mt-2 text-xs text-muted underline" onClick={() => trace("Verifier", "Computed SHA-256 manifest for the claim packet", { status: "done", detail: `${rows.length} items · fingerprint ${fingerprint.slice(0, 16)}…` })}>
+        {hi ? "ट्रेस में दर्ज करें" : "Log to trace"}
+      </button>
+    </section>
   );
 }
 
@@ -206,6 +271,15 @@ export function StepPlan() {
           </div>
         )}
       </section>
+
+      <Manifest letters={letters} />
+
+      <div className="no-print flex flex-wrap gap-3">
+        <button className="btn btn-ghost" onClick={() => dispatch({ type: "step", step: "results" })}>{hi ? "पीछे" : "Back"}</button>
+        <button className="btn btn-primary" onClick={() => dispatch({ type: "step", step: "track" })}>
+          {hi ? "दावों पर नज़र रखें" : "Track the claims"} <ArrowRight size={16} />
+        </button>
+      </div>
     </div>
   );
 }

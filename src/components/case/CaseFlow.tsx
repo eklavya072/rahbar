@@ -12,9 +12,10 @@ import { StepDocs, StepTell } from "./StepIntake";
 import { StepFacts, StepQuestions } from "./StepReview";
 import { StepResults } from "./StepResults";
 import { StepPlan } from "./StepPlan";
+import { StepTrack } from "./StepTrack";
 import { TracePanel } from "./TracePanel";
 
-const LABEL: Record<Step, UIKey> = { tell: "steps_tell", docs: "steps_docs", facts: "steps_facts", questions: "steps_questions", results: "steps_results", plan: "steps_plan" };
+const LABEL: Record<Step, UIKey> = { tell: "steps_tell", docs: "steps_docs", facts: "steps_facts", questions: "steps_questions", results: "steps_results", plan: "steps_plan", track: "steps_track" };
 
 function Stepper() {
   const { state, dispatch } = useCase();
@@ -82,6 +83,7 @@ function Inner() {
             {state.step === "questions" && <StepQuestions />}
             {state.step === "results" && <StepResults />}
             {state.step === "plan" && <StepPlan />}
+            {state.step === "track" && <StepTrack />}
           </div>
           <div className="no-print hidden lg:block">
             <div className="sticky top-20">

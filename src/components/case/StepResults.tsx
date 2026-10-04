@@ -8,6 +8,8 @@ import { formatDate, formatINR, formatINRShort } from "@/lib/engine/dates";
 import { DOCS } from "@/lib/engine/documents";
 import type { EntitlementResult, Facts, Status } from "@/lib/engine/types";
 import { DaysLeft, SourceBadge, StatusChip } from "../ui";
+import { IncomeEvidenceCard, MactPanel } from "./Money";
+import { ReadAloud, SupportCard } from "./Support";
 
 function CondIcon({ r }: { r: boolean | null }) {
   if (r === true) return <Check size={14} className="text-accent" />;
@@ -170,8 +172,8 @@ export function AskAgent() {
 }
 
 export function StepResults() {
-  const { summary, state, dispatch, trace, plan } = useCase();
-  const { lang, t } = useLang();
+  const { summary, state, dispatch, trace, plan, facts } = useCase();
+  const { lang, t, b } = useLang();
   const hi = lang === "hi";
   const by = (s: Status) => summary.results.filter((r) => r.status === s);
   const docsRead = state.docs.filter((d) => d.parsed).length;
@@ -195,11 +197,25 @@ export function StepResults() {
         </div>
       </div>
 
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm text-muted">{hi ? "हर दावे में 'क्यों' खोलकर देखें कि कौन-सी शर्त किस काग़ज़ से साबित हुई।" : "Open 'Why' on any claim to see which paper proves each condition."}</p>
+        <ReadAloud
+          text={
+            (hi ? `अब तक पक्का: ${formatINR(summary.confirmedTotal)}। ` : `Confirmed so far: ${formatINR(summary.confirmedTotal)}. `) +
+            by("eligible").filter((r) => !r.informational).map((r) => `${b(r.short)}: ${b(r.amount.label)}.`).join(" ")
+          }
+        />
+      </div>
+
       <Bucket status="eligible" items={by("eligible")} />
       <Bucket status="possible" items={by("possible")} />
       <Bucket status="not_eligible" items={by("not_eligible")} />
 
+      <IncomeEvidenceCard />
+      {facts.incidentType === "death" && <MactPanel />}
+
       <AskAgent />
+      <SupportCard />
 
       <div className="flex flex-wrap gap-3">
         <button className="btn btn-ghost" onClick={() => dispatch({ type: "step", step: "questions" })}>{hi ? "पीछे" : "Back"}</button>

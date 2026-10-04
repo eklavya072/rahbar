@@ -137,6 +137,22 @@ export function parsePassbook(docId: string, label: string, lines: OcrLine[], ac
     }
   }
 
+  // Closing balance (last money amount on the last dated row) and nominee — for the deceased's own savings.
+  const dated = lines.filter((l) => datesIn(l.text).length && /\d+\.\d{2}/.test(l.text));
+  const last = dated[dated.length - 1];
+  if (last) {
+    const amts = [...asciiDigits(last.text).matchAll(/\b\d{1,3}(?:,\d{2})*(?:,\d{3})\.\d{2}\b|\b\d{3,9}\.\d{2}\b/g)].map((m) => Number(m[0].replace(/,/g, "")));
+    if (amts.length >= 2) {
+      facts.deceasedBankBalance = amts[amts.length - 1];
+      provenance.deceasedBankBalance = prov(ev(docId, label, last), 0.8);
+    }
+  }
+  const nominee = lines.find((l) => /Nominee\s*[:\-]?\s*[A-Za-z\u0900-\u097F]/i.test(l.text) && !/Nominee\s*[:\-]?\s*(NIL|NONE|NOT)/i.test(l.text));
+  if (nominee) {
+    facts.passbookHasNominee = true;
+    provenance.passbookHasNominee = prov(ev(docId, label, nominee), 0.85);
+  }
+
   // If the passbook covers the right period and shows no PMSBY debit, say so — but don't conclude "false"
   // (the debit may be on another account). Leave it unknown and ask.
   if (facts.pmsbyPremiumDebited === undefined) notes.push("No ₹20 PMSBY debit found on these pages.");

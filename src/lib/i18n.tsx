@@ -14,6 +14,7 @@ const UI = {
   steps_questions: { en: "A few questions", hi: "कुछ सवाल" },
   steps_results: { en: "What you're owed", hi: "आपका हक़" },
   steps_plan: { en: "Plan & letters", hi: "योजना और पत्र" },
+  steps_track: { en: "Track & escalate", hi: "ट्रैक और शिकायत" },
   next: { en: "Continue", hi: "आगे बढ़ें" },
   back: { en: "Back", hi: "पीछे" },
   confirmed: { en: "Confirmed from your papers", hi: "आपके काग़ज़ों से पक्का" },

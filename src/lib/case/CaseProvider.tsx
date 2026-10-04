@@ -12,6 +12,7 @@ import { shield } from "../privacy/pii";
 import { detectInjectionHeuristic, quarantine } from "../agents/guard";
 import { SAMPLE_CASES } from "../samples/cases";
 import type { Extraction } from "../ai/schemas";
+import { extractIncome, type IncomeEvidence } from "../docs/income";
 
 interface Ctx {
   state: CaseState;
@@ -20,6 +21,7 @@ interface Ctx {
   provenance: ProvenanceMap;
   summary: EvaluationSummary;
   plan: Plan;
+  income: IncomeEvidence | null;
   today: string;
   loadSample: (id: string) => Promise<void>;
   addFiles: (files: FileList | File[]) => void;
@@ -60,6 +62,14 @@ export function CaseProvider({ children }: { children: ReactNode }) {
     const s = evaluate(m.facts, m.provenance, today);
     return { facts: m.facts, provenance: m.provenance, summary: s, plan: buildPlan(s) };
   }, [state.aiFacts, state.aiConfirmed, state.docs, state.answers, today]);
+
+  // ---------- income evidence from the passbook(s) ----------
+  const income = useMemo(() => {
+    const lines = state.docs.filter((d) => d.parsed?.kind === "passbook").flatMap((d) => d.lines.map((l) => ({ ...l, docId: d.id })));
+    if (!lines.length) return null;
+    const ev = extractIncome(lines, facts.accidentDate);
+    return ev.credits.length ? ev : null;
+  }, [state.docs, facts.accidentDate]);
 
   // ---------- documents ----------
   const addFiles = useCallback((files: FileList | File[]) => {
@@ -112,6 +122,11 @@ export function CaseProvider({ children }: { children: ReactNode }) {
           usedTextLayer = true;
         }
         docs[i] = { ...d, lines, ocrConfidence: r.confidence, usedTextLayer, width: r.width, height: r.height, status: "parsed", progress: 1 };
+        try {
+          const { sha256Hex } = await import("../vault");
+          const hash = await sha256Hex(await (await fetch(d.src)).arrayBuffer());
+          dispatch({ type: "patch", patch: { docHashes: { ...stateRef.current.docHashes, [d.id]: hash } } });
+        } catch {}
         dispatch({ type: "updateDoc", id: d.id, patch: docs[i] });
         traceUpdate(tid, {
           status: usedTextLayer ? "warn" : "done",
@@ -212,6 +227,7 @@ export function CaseProvider({ children }: { children: ReactNode }) {
           story: "",
           step: "docs",
           docs: c.docs.map((d) => ({ id: d.id, label: d.label, src: `/samples/${d.id}.png`, sample: true, status: "queued", progress: 0, lines: [] })),
+          family: { ...INITIAL.family, ...(c.family ?? {}) },
         },
       });
       const id0 = uid("t");
@@ -248,8 +264,8 @@ export function CaseProvider({ children }: { children: ReactNode }) {
   }, [readDocuments, confirmFacts, trace]);
 
   const value = useMemo<Ctx>(
-    () => ({ state, dispatch, facts, provenance, summary, plan, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, trace, traceUpdate }),
-    [state, facts, provenance, summary, plan, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, trace, traceUpdate],
+    () => ({ state, dispatch, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, trace, traceUpdate }),
+    [state, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, trace, traceUpdate],
   );
   return <C.Provider value={value}>{children}</C.Provider>;
 }

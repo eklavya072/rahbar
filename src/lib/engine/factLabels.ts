@@ -23,6 +23,8 @@ export const FACT_LABELS: Record<FactKey, Bilingual> = {
   esicInsured: { en: "ESIC insured", hi: "ESIC बीमित" },
   gigWorkerOnTrip: { en: "Working on a delivery/ride app", hi: "डिलीवरी/राइड ऐप पर काम" },
   hospitalisedWithin24h: { en: "In hospital within 24 hours", hi: "24 घंटे में अस्पताल" },
+  deceasedBankBalance: { en: "Balance in their account", hi: "उनके खाते में बैलेंस" },
+  passbookHasNominee: { en: "Nominee registered on the account", hi: "खाते में नॉमिनी दर्ज" },
 };
 
 const ENUMS: Record<string, Bilingual> = {
@@ -41,6 +43,7 @@ export function formatFact(key: FactKey, v: Facts[FactKey], lang: Lang): string 
   if (v === null || v === undefined) return lang === "hi" ? "पता नहीं" : "Unknown";
   if (typeof v === "boolean") return v ? (lang === "hi" ? "हाँ" : "Yes") : lang === "hi" ? "नहीं" : "No";
   if (key === "accidentDate" || key === "lastCardTxnDate") return formatDate(v as string, lang);
+  if (key === "deceasedBankBalance") return formatINR(v as number);
   if (key === "ownVehicleCpaSumInsured") return (v as number) > 0 ? formatINR(v as number) : lang === "hi" ? "नहीं है" : "Not included";
   if (typeof v === "string" && ENUMS[v]) return ENUMS[v][lang];
   return String(v);

@@ -56,6 +56,8 @@ export const factsArb: fc.Arbitrary<Facts> = fc.record({
   esicInsured: tri,
   gigWorkerOnTrip: tri,
   hospitalisedWithin24h: tri,
+  deceasedBankBalance: fc.option(fc.integer({ min: 0, max: 2000000 }), { nil: null }),
+  passbookHasNominee: tri,
 }) as fc.Arbitrary<Facts>;
 
 const TODAY = "2026-10-04";

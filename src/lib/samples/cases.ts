@@ -27,6 +27,8 @@ export interface SampleCase {
   expected: Partial<Record<EntitlementId, Status | "hidden">>;
   expectedConfirmedTotal: number;
   redTeam?: boolean;
+  /** Family composition for the MACT estimate (sample only). */
+  family?: { married: boolean; spouse: boolean; children: number; parents: number; employment: "permanent" | "self_employed" | "fixed_wage" | "not_earning" };
 }
 
 export const SAMPLE_CASES: SampleCase[] = [
@@ -80,8 +82,8 @@ export const SAMPLE_CASES: SampleCase[] = [
           "28/05/2026 | PMSBY PREMIUM RENEWAL | 20.00 | | 4,512.00",
           "01/07/2026 | SALARY CR SHREE LOGISTICS | | 14,500.00 | 19,012.00",
           "15/07/2026 | UPI/DR/MEDICAL STORE | 250.00 | | 18,762.00",
-          "10/08/2026 | ATM WDL RUPAY CARD GOMTI VIHAR | 3,000.00 | | 15,762.00",
-          "01/08/2026 | SALARY CR SHREE LOGISTICS | | 14,500.00 | 30,262.00",
+          "01/08/2026 | SALARY CR SHREE LOGISTICS | | 14,500.00 | 33,262.00",
+          "10/08/2026 | ATM WDL RUPAY CARD GOMTI VIHAR | 3,000.00 | | 30,262.00",
           "31/08/2026 | POS RUPAY KIRANA STORE LKO | 340.00 | | 29,922.00",
           "01/09/2026 | SALARY CR SHREE LOGISTICS | | 14,500.00 | 44,422.00",
         ],
@@ -105,8 +107,9 @@ export const SAMPLE_CASES: SampleCase[] = [
     ],
     answers: { victimHeldValidDL: true, pmjjbyPremiumDebited: false, esicInsured: true, gigWorkerOnTrip: false, state: "Uttar Pradesh" },
     aiFacts: { incidentType: "death", victimAge: 34, victimRole: "rider_own_vehicle", wasCommutingOrOnDuty: true, hospitalisedWithin24h: true, offendingVehicleIdentified: false },
-    expected: { HIT_RUN: "eligible", CPA: "eligible", PMSBY: "eligible", RUPAY: "eligible", PMJJBY: "not_eligible", MACT: "not_eligible", RAHAT: "eligible", EMPLOYER: "eligible", GIG: "hidden" },
+    expected: { HIT_RUN: "eligible", CPA: "eligible", PMSBY: "eligible", RUPAY: "eligible", PMJJBY: "not_eligible", MACT: "not_eligible", RAHAT: "eligible", EMPLOYER: "eligible", GIG: "hidden", BANK_BALANCE: "eligible" },
     expectedConfirmedTotal: 2100000,
+    family: { married: true, spouse: true, children: 2, parents: 0, employment: "fixed_wage" },
   },
   {
     id: "kavita",
@@ -210,7 +213,8 @@ export const SAMPLE_CASES: SampleCase[] = [
     ],
     answers: { wasCommutingOrOnDuty: false, hasRupayPmjdyCard: false, state: "Maharashtra" },
     aiFacts: { incidentType: "death", victimAge: 27, victimRole: "rider_own_vehicle", gigWorkerOnTrip: true, hospitalisedWithin24h: false, offendingVehicleIdentified: true, offendingVehicleInsured: true },
-    expected: { MACT: "eligible", PMSBY: "eligible", GIG: "eligible", CPA: "possible", PMJJBY: "possible", RUPAY: "not_eligible", HIT_RUN: "hidden", EMPLOYER: "hidden" },
+    expected: { MACT: "eligible", PMSBY: "eligible", GIG: "eligible", CPA: "possible", PMJJBY: "possible", RUPAY: "not_eligible", HIT_RUN: "hidden", EMPLOYER: "hidden", BANK_BALANCE: "eligible" },
     expectedConfirmedTotal: 700000,
+    family: { married: false, spouse: false, children: 0, parents: 2, employment: "self_employed" },
   },
 ];

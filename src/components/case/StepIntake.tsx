@@ -5,6 +5,7 @@ import { Camera, FileImage, Loader2, Lock, Mic, MicOff, Trash2, Upload } from "l
 import { useCase } from "@/lib/case/CaseProvider";
 import { useLang } from "@/lib/i18n";
 import { SAMPLE_CASES } from "@/lib/samples/cases";
+import { FirstHours } from "./Support";
 
 type SpeechRec = { lang: string; interimResults: boolean; continuous: boolean; start: () => void; stop: () => void; onresult: (e: { results: ArrayLike<{ 0: { transcript: string }; isFinal: boolean }> }) => void; onend: () => void };
 
@@ -49,6 +50,13 @@ export function StepTell() {
         <h2 className="font-display text-2xl font-semibold">{hi ? "हमें बताइए क्या हुआ" : "Tell us what happened"}</h2>
         <p className="mt-1 text-muted">{hi ? "अपने शब्दों में, जितना याद हो। नाम सिर्फ़ इस डिवाइस पर रहते हैं।" : "In your own words, as much as you remember. Names stay on this device."}</p>
       </div>
+
+      <details className="group">
+        <summary className="cursor-pointer list-none text-sm font-semibold text-amber underline decoration-dotted">
+          {hi ? "क्या यह पिछले कुछ दिनों में हुआ? पहले ये ज़रूरी काम देखें →" : "Did this happen in the last few days? See what to do first →"}
+        </summary>
+        <div className="mt-3"><FirstHours /></div>
+      </details>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block">

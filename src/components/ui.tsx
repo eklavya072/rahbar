@@ -35,9 +35,12 @@ export function Header({ right }: { right?: React.ReactNode }) {
         </Link>
         <div className="flex items-center gap-2">
           {right}
-          <Link href="/evals" className="hidden text-sm font-medium text-muted hover:text-ink sm:inline">
-            Evals
-          </Link>
+          <nav className="hidden items-center gap-4 text-sm font-medium text-muted md:flex" aria-label="Main">
+            <Link href="/offer" className="hover:text-ink">Offer check</Link>
+            <Link href="/rules" className="hover:text-ink">Rules</Link>
+            <Link href="/developers" className="hover:text-ink">API</Link>
+            <Link href="/evals" className="hover:text-ink">Evals</Link>
+          </nav>
           <LangToggle />
         </div>
       </div>

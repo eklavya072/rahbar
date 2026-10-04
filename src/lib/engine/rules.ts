@@ -358,6 +358,33 @@ export const RULES: RuleDef[] = [
     ],
     lastVerified: VERIFIED,
   },
+  {
+    id: "BANK_BALANCE",
+    name: { en: "The deceased's own bank balance (RBI 2025 deceased-claim rules)", hi: "मृतक का अपना बैंक बैलेंस (RBI 2025 नियम)" },
+    short: { en: "Bank balance of the deceased", hi: "मृतक का बैंक बैलेंस" },
+    payer: { en: "The deceased's bank — this is the family's own money, not compensation", hi: "मृतक का बैंक — यह परिवार का अपना पैसा है, मुआवज़ा नहीं" },
+    relevant: (f) => f.incidentType === "death" && f.deceasedBankBalance !== null,
+    informational: true,
+    conditions: [
+      { id: "death", label: { en: "Account holder has died", hi: "खाताधारक की मृत्यु हो गई" }, facts: ["incidentType"], test: isDeath },
+      { id: "balance", label: { en: "Balance found in the passbook", hi: "पासबुक में बैलेंस मिला" }, facts: ["deceasedBankBalance"], test: (f) => (f.deceasedBankBalance === null ? null : f.deceasedBankBalance > 0) },
+    ],
+    amount: (f) => ({
+      value: f.deceasedBankBalance,
+      label: { en: `₹${(f.deceasedBankBalance ?? 0).toLocaleString("en-IN")} in the account (last passbook entry)`, hi: `खाते में ₹${(f.deceasedBankBalance ?? 0).toLocaleString("en-IN")} (पासबुक की आख़िरी एंट्री)` },
+    }),
+    deadline: () => ({ date: null, kind: "process", label: { en: "Bank must settle within 15 days of complete documents; if late, it pays compensation at Bank Rate + 4%", hi: "पूरे दस्तावेज़ मिलने के 15 दिन में बैंक को भुगतान करना होगा; देरी पर बैंक रेट + 4% मुआवज़ा" } }),
+    documents: ["DEATH_CERT", "CLAIMANT_ID", "PASSBOOK", "LEGAL_HEIR"],
+    office: { en: "The deceased's bank branch (standard RBI claim form)", hi: "मृतक की बैंक शाखा (RBI का मानक क्लेम फ़ॉर्म)" },
+    steps: [
+      { en: "Nominee fills the bank's standard deceased-claim form with the death certificate and ID.", hi: "नॉमिनी मृत्यु प्रमाण पत्र और पहचान पत्र के साथ बैंक का मानक क्लेम फ़ॉर्म भरें।" },
+      { en: "No nominee? Up to ₹15 lakh, banks must use the simplified procedure (claim form, indemnity, no-objection from other heirs) — no succession certificate.", hi: "नॉमिनी नहीं? ₹15 लाख तक बैंक को सरल प्रक्रिया अपनानी होगी (क्लेम फ़ॉर्म, क्षतिपूर्ति बांड, बाकी वारिसों की NOC) — उत्तराधिकार प्रमाण पत्र नहीं।" },
+    ],
+    citations: [
+      { title: "RBI (Settlement of Claims in respect of Deceased Customers) Directions, 2025", url: "https://taxguru.in/rbi/rbi-standardizes-deceased-customer-claim-settlement-banks.html" },
+    ],
+    lastVerified: VERIFIED,
+  },
 ];
 
 export const RULES_BY_ID = Object.fromEntries(RULES.map((r) => [r.id, r])) as Record<RuleDef["id"], RuleDef>;
