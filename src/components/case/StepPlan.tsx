@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import QRCode from "qrcode";
 import { ArrowRight, CalendarPlus, CheckCircle2, FileCheck2, Fingerprint, Loader2, MessageCircle, PenLine, Printer, QrCode, ShieldX } from "lucide-react";
 import { sha256Hex } from "@/lib/vault";
+import { rehydrate } from "@/lib/privacy/pii";
 import { useCase } from "@/lib/case/CaseProvider";
 import { useLang } from "@/lib/i18n";
 import { formatDate } from "@/lib/engine/dates";
-import { assembleLetter, firNumber, templateParagraphs, type Letter, type LetterContext } from "@/lib/case/letters";
+import { assembleLetter, caseFactsSentence, firNumber, templateParagraphs, type Letter, type LetterContext } from "@/lib/case/letters";
 import { buildIcs, encodeCase, googleCalendarLink, whatsappText } from "@/lib/case/outputs";
 import { DaysLeft } from "../ui";
 
@@ -143,12 +144,24 @@ export function StepPlan() {
         const res = await fetch("/api/agent/draft", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ lang, scheme: r.name.en, office: r.office.en, relation: state.relation || "family member", summary: state.extraction?.summaryEn ?? `Road accident on {{ACCIDENT_DATE}}; ${facts.incidentType ?? "injury"}.` }),
+          body: JSON.stringify({ lang, scheme: r.name[lang], office: r.office[lang], relation: state.relation || "family member", summary: caseFactsSentence(facts) }),
         });
         const j = await res.json();
         if (!res.ok) throw new Error(j.error);
-        letter = assembleLetter(r, ctx, j.data, "ai", j.trace?.model);
-        traceUpdate(tid, { status: "done", model: j.trace?.model, tokens: (j.trace?.inputTokens ?? 0) + (j.trace?.outputTokens ?? 0) || null, cached: j.trace?.cached, ms: j.trace?.ms, detail: "placeholders only — real names filled in on this device" });
+        const paras = { factsParagraph: rehydrate(j.data.factsParagraph, state.piiTokens), requestParagraph: rehydrate(j.data.requestParagraph, state.piiTokens) };
+        letter = assembleLetter(r, ctx, paras, "ai", j.trace?.model);
+        traceUpdate(tid, {
+          status: "done",
+          model: j.trace?.model,
+          tokens: (j.trace?.inputTokens ?? 0) + (j.trace?.outputTokens ?? 0) || null,
+          cached: j.trace?.cached,
+          ms: j.trace?.ms,
+          detail: j.critic?.model
+            ? j.critic.revised
+              ? `critic (${j.critic.model}) found ${j.critic.unsupported.length} unsupported claim(s) → redrafted · placeholders only`
+              : `critic (${j.critic.model}) found no unsupported claims · placeholders only`
+            : "placeholders only — real names filled in on this device",
+        });
       } catch (e) {
         letter = assembleLetter(r, ctx, templateParagraphs(r, ctx), "template");
         traceUpdate(tid, { status: "skipped", detail: `AI unavailable (${(e as Error).message}) → deterministic template` });

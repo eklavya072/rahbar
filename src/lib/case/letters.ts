@@ -35,7 +35,6 @@ export function placeholderValues(r: EntitlementResult, c: LetterContext): Recor
     "{{DECEASED}}": c.victimName || (c.lang === "hi" ? "[नाम]" : "[Name]"),
     "{{CLAIMANT}}": c.claimantName || (c.lang === "hi" ? "[आपका नाम]" : "[Your name]"),
     "{{ACCIDENT_DATE}}": c.facts.accidentDate ? formatDate(c.facts.accidentDate, c.lang) : c.lang === "hi" ? "[तारीख]" : "[date]",
-    "{{PLACE}}": c.facts.state ?? (c.lang === "hi" ? "[स्थान]" : "[place]"),
     "{{AMOUNT}}": r.amount.value ? formatINR(r.amount.value) : r.amount.label[c.lang],
     "{{FIR_NO}}": c.firNo ?? (c.lang === "hi" ? "[एफ़आईआर संख्या]" : "[FIR number]"),
   };
@@ -93,4 +92,23 @@ export function firNumber(lines: string[]): string | null {
     if (m) return m[1].replace(/\s/g, "");
   }
   return null;
+}
+
+/** Deterministic, PII-free case facts for the drafter and its critic (placeholders stand in for names and dates). */
+export function caseFactsSentence(f: Facts): string {
+  const parts: string[] = [];
+  const what = f.incidentType === "death" ? "died" : f.incidentType === "grievous_injury" ? "was seriously injured" : "was injured";
+  const role =
+    f.victimRole === "rider_own_vehicle" ? "while riding their own vehicle" :
+    f.victimRole === "rider_not_owner" ? "while riding a vehicle" :
+    f.victimRole === "pillion" ? "while riding pillion" :
+    f.victimRole === "pedestrian" ? "while walking" :
+    f.victimRole === "passenger" ? "while travelling as a passenger" : "";
+  const vehicle = f.offendingVehicleIdentified === false ? "a vehicle that could not be identified (hit-and-run)" : f.offendingVehicleIdentified === true ? "an identified vehicle" : "a vehicle";
+  parts.push(`{{DECEASED}} ${what} in a road accident on {{ACCIDENT_DATE}} after being hit by ${vehicle}${role ? ` ${role}` : ""}.`);
+  if (f.wasCommutingOrOnDuty) parts.push("They were travelling to or from work.");
+  if (f.gigWorkerOnTrip) parts.push("They were working on a delivery/ride app at the time.");
+  if (f.hospitalisedWithin24h === true && f.incidentType === "death") parts.push("They were taken to hospital, where they were declared dead.");
+  parts.push("An FIR has been registered (FIR No. {{FIR_NO}}).");
+  return parts.join(" ");
 }

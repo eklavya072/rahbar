@@ -3,6 +3,7 @@ import { z } from "zod";
 import { clientIp, primarySlots, rateLimited } from "@/lib/ai/router";
 import { AGENT_SYSTEM } from "@/lib/ai/prompts";
 import { evaluate } from "@/lib/engine/evaluate";
+import { buildPlan } from "@/lib/engine/planner";
 import { formatINR } from "@/lib/engine/dates";
 import { EMPTY_FACTS, type Facts } from "@/lib/engine/types";
 
@@ -29,7 +30,8 @@ function digest(f: Facts, today: string) {
     confirmedTotal: formatINR(s.confirmedTotal),
     entitlements: s.results.map((r) => ({
       id: r.id,
-      name: r.short.en,
+      name: r.name.en,
+      legalBasis: r.citations.map((c) => c.title),
       status: r.status,
       amount: r.amount.label.en,
       deadline: r.deadline.date ?? r.deadline.label.en,
@@ -41,7 +43,7 @@ function digest(f: Facts, today: string) {
 
 export async function POST(req: Request) {
   if (rateLimited(clientIp(req))) return Response.json({ error: "rate_limited" }, { status: 429 });
-  const b = (await req.json().catch(() => null)) as { question?: string; facts?: Partial<Facts>; today?: string; history?: { role: "user" | "assistant"; content: string }[] } | null;
+  const b = (await req.json().catch(() => null)) as { question?: string; facts?: Partial<Facts>; today?: string; lang?: "en" | "hi"; history?: { role: "user" | "assistant"; content: string }[] } | null;
   if (!b?.question) return Response.json({ error: "bad_request" }, { status: 400 });
 
   const facts: Facts = { ...EMPTY_FACTS, ...(b.facts ?? {}) };
@@ -58,15 +60,30 @@ export async function POST(req: Request) {
         return out;
       },
     }),
+    getPlan: tool({
+      description: "The family's action plan: claims ordered earliest-deadline-first with days left, office, and documents to collect. Use for 'what first / next' questions.",
+      inputSchema: z.object({}),
+      execute: async () => {
+        const plan = buildPlan(evaluate(facts, {}, today));
+        const out = {
+          today,
+          claims: plan.claims.map((c, i) => ({ order: i + 1, claim: c.title.en, status: c.status, amount: c.amountLabel.en, deadline: c.deadlineDate, daysLeft: c.daysLeft, deadlineRule: c.deadlineLabel.en, office: c.office.en })),
+          documents: plan.documents.map((d) => ({ doc: d.doc.name.en, copies: d.copies, whereToGet: d.doc.whereToGet.en })),
+        };
+        toolCalls.push({ name: "getPlan", input: {}, output: { claims: out.claims.length } });
+        return out;
+      },
+    }),
     simulateWhatIf: tool({
       description: "Re-run the rules engine with some facts changed (e.g. the truck is found, the passbook shows PMJJBY) and report what changes.",
       inputSchema: z.object({ changes: ChangeSchema }),
       execute: async ({ changes }) => {
         const before = digest(facts, today);
         const after = digest({ ...facts, ...changes }, today);
-        const diff = after.entitlements
-          .map((a) => ({ id: a.id, name: a.name, before: before.entitlements.find((x) => x.id === a.id)?.status ?? "hidden", after: a.status, amount: a.amount }))
-          .filter((d) => d.before !== d.after);
+        const diff = [
+          ...after.entitlements.map((a) => ({ id: a.id, name: a.name, before: before.entitlements.find((x) => x.id === a.id)?.status ?? "not applicable", after: a.status, amount: a.amount })),
+          ...before.entitlements.filter((x) => !after.entitlements.some((a) => a.id === x.id)).map((x) => ({ id: x.id, name: x.name, before: x.status, after: "no longer applies", amount: x.amount })),
+        ].filter((d) => d.before !== d.after);
         const out = { changes, totalBefore: before.confirmedTotal, totalAfter: after.confirmedTotal, changed: diff };
         toolCalls.push({ name: "simulateWhatIf", input: changes, output: out });
         return out;
@@ -79,7 +96,7 @@ export async function POST(req: Request) {
     try {
       const res = await generateText({
         model: slot.model,
-        system: AGENT_SYSTEM,
+        system: `${AGENT_SYSTEM}\n- Reply in ${b.lang === "hi" || /[\u0900-\u097F]/.test(b.question) ? "simple Hindi (Devanagari)" : "English"}.`,
         messages: [...(b.history ?? []).slice(-6), { role: "user", content: b.question.slice(0, 800) }],
         tools,
         stopWhen: stepCountIs(4),
@@ -87,7 +104,7 @@ export async function POST(req: Request) {
         timeout: 30_000,
         temperature: 0.2,
       });
-      return Response.json({ answer: res.text, toolCalls, model: slot.id, steps: res.steps.length });
+      return Response.json({ answer: res.text, toolCalls, model: slot.id, steps: res.steps.length, fallbacks: errors });
     } catch (e) {
       errors.push(`${slot.id}: ${(e as Error).message?.slice(0, 120)}`);
     }

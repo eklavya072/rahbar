@@ -147,7 +147,8 @@ export function CaseProvider({ children }: { children: ReactNode }) {
     traceUpdate(tp, { status: "done", detail: `${found.length} facts with line-level evidence: ${[...new Set(found)].join(", ") || "none"}` });
 
     // 3. Shield: anonymise everything that might go to an AI
-    const narrative = parsedDocs.filter((d) => d.parsed?.kind === "fir").map((d) => d.parsed!.narrative).join("\n\n");
+    // The whole FIR (header + story), not just the story block: the header names the accused vehicle.
+    const narrative = parsedDocs.filter((d) => d.parsed?.kind === "fir").map((d) => d.lines.map((l) => l.text).join("\n")).join("\n\n");
     const names = [s0.victimName, s0.claimantName].filter(Boolean);
     const ts = trace("Shield", "Masking names, phone, Aadhaar, account and vehicle numbers on device");
     const sh = shield(`${narrative}\n<<STORY>>\n${s0.story}`, names);

@@ -130,7 +130,7 @@ export function AskAgent() {
     setBusy(true);
     const tid = trace("Case Agent", `Question: "${text.slice(0, 60)}"`);
     try {
-      const r = await fetch("/api/agent/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: text, facts: nonIdentifying, today, history }) }).then((x) => x.json());
+      const r = await fetch("/api/agent/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: text, facts: nonIdentifying, today, history, lang }) }).then((x) => x.json());
       setMsgs((m) => [...m, { role: "assistant", content: r.answer ?? r.error, tools: r.toolCalls, model: r.model }]);
       traceUpdate(tid, { status: r.model ? "done" : "warn", model: r.model, detail: r.toolCalls?.length ? `tools: ${r.toolCalls.map((t: { name: string }) => t.name).join(", ")}` : r.model ? "answered" : "AI offline → rules-engine answer" });
     } catch (e) {

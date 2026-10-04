@@ -29,6 +29,12 @@ describe("PII shield", () => {
     expect(r.counts.VEHICLE).toBe(1);
   });
 
+  it("masks OCR-mangled vehicle numbers but not ordinary words", () => {
+    const r = shield("bike UPOO AB 4471 and car MH12AB1234; BOOK 2026 page");
+    expect(r.counts.VEHICLE).toBe(2);
+    expect(r.text).toContain("BOOK 2026");
+  });
+
   it("round-trips: rehydrate(shield(x)) restores names but never a full Aadhaar", () => {
     const aadhaar = withCheckDigit("34567890123");
     const r = shield(`Name: Meena Mehta Aadhaar ${aadhaar}`, ["Meena Mehta"]);

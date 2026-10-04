@@ -61,7 +61,9 @@ const PATTERNS: Pattern[] = [
   { kind: "PAN", re: /\b[A-Z]{5}\d{4}[A-Z]\b/g },
   { kind: "IFSC", re: /\b[A-Z]{4}0[A-Z0-9]{6}\b/g },
   { kind: "PHONE", re: /(?:\+91[\s-]?|\b0)?\b[6-9]\d{9}\b/g },
-  { kind: "VEHICLE", re: /\b[A-Z]{2}[\s-]?\d{1,2}[\s-]?[A-Z]{1,3}[\s-]?\d{4}\b/g },
+  // Vehicle numbers. OCR often reads the district digits "00"/"0x" as letter O, so accept O there — but only
+  // when a separator follows, so ordinary words ("BOOK 2026") don't match.
+  { kind: "VEHICLE", re: /\b[A-Z]{2}[\s-]?(?:\d{1,2}[\s-]?|(?:O\d|\dO|OO)[\s-]+)[A-Z]{1,3}[\s-]?\d{4}\b/g },
   // Labelled account numbers: "A/c No. 1234567890", "Account No: ...", "खाता संख्या ..."
   { kind: "ACCOUNT", re: /(?<=(?:A\/c|Account|Acct|खाता)\s*(?:No\.?|Number|संख्या|सं\.?)?\s*[:\-]?\s*)\d{9,18}\b/gi },
   { kind: "ACCOUNT", re: /\b\d{11,18}\b/g },

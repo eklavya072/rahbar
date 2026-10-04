@@ -21,17 +21,23 @@ export function detectInjectionHeuristic(text: string): GuardResult {
   const lines: string[] = [];
   const reasons = new Set<string>();
   const all = text.split(/\n/);
+  const flagged = new Set<number>();
   for (let i = 0; i < all.length; i++) {
-    // Look at each line and each pair of lines (instructions are often split across OCR lines).
-    const window = all[i] + " " + (all[i + 1] ?? "");
     for (const r of RULES) {
-      if (r.re.test(all[i]) || r.re.test(window)) {
-        lines.push(all[i]);
+      if (r.re.test(all[i])) {
+        flagged.add(i);
         reasons.add(r.reason);
-        break;
+        continue;
+      }
+      // Instructions are sometimes split across two OCR lines: flag both only when neither matches alone.
+      const next = all[i + 1];
+      if (next !== undefined && !r.re.test(next) && r.re.test(`${all[i]} ${next}`)) {
+        flagged.add(i).add(i + 1);
+        reasons.add(r.reason);
       }
     }
   }
+  for (const i of [...flagged].sort((a, b) => a - b)) lines.push(all[i]);
   return { flagged: lines.length > 0, lines, reasons: [...reasons] };
 }
 

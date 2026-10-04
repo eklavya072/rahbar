@@ -83,6 +83,8 @@ export async function structuredCall<T>(opts: {
   prompt: string;
   schema: z.ZodType<T>;
   timeoutMs?: number;
+  /** Try these model ids first (e.g. a different model for an independent critic). */
+  prefer?: string[];
 }): Promise<{ data: T; trace: CallTrace }> {
   const key = createHash("sha256").update(`${opts.task}\n${opts.system}\n${opts.prompt}`).digest("hex");
   const started = Date.now();
@@ -91,7 +93,10 @@ export async function structuredCall<T>(opts: {
   const hit = cacheGet(key) as { data: T; provider: string; model: string } | undefined;
   if (hit) return { data: hit.data, trace: { ...trace, provider: hit.provider, model: hit.model, cached: true, ms: Date.now() - started } };
 
-  for (const slot of slots()) {
+  const ordered = opts.prefer?.length
+    ? [...slots()].sort((a, b) => (opts.prefer!.includes(b.id) ? 1 : 0) - (opts.prefer!.includes(a.id) ? 1 : 0))
+    : slots();
+  for (const slot of ordered) {
     try {
       const res = await generateText({
         model: slot.model,
@@ -123,6 +128,7 @@ export async function structuredCall<T>(opts: {
 // ---- per-IP rate limit (best effort, per instance) ----
 const HITS = new Map<string, number[]>();
 export function rateLimited(ip: string, limit = 20, windowMs = 60_000): boolean {
+  if (process.env.NODE_ENV !== "production") return false; // only protect the deployed app
   const now = Date.now();
   const arr = (HITS.get(ip) ?? []).filter((t) => now - t < windowMs);
   arr.push(now);

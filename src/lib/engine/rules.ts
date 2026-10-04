@@ -54,7 +54,7 @@ const noDate: Deadline = { date: null, kind: "none", label: { en: "Add the accid
 export const RULES: RuleDef[] = [
   {
     id: "HIT_RUN",
-    name: { en: "Hit-and-Run Compensation Scheme, 2022", hi: "हिट-एंड-रन मुआवज़ा योजना, 2022" },
+    name: { en: "Hit-and-Run Compensation Scheme, 2022 (MV Act s.161)", hi: "हिट-एंड-रन मुआवज़ा योजना, 2022 (मोटर वाहन अधिनियम धारा 161)" },
     short: { en: "Hit-and-run compensation", hi: "हिट-एंड-रन मुआवज़ा" },
     payer: { en: "Motor Vehicle Accident Fund (Govt. of India), via the District Magistrate", hi: "मोटर वाहन दुर्घटना कोष (भारत सरकार), ज़िलाधिकारी के माध्यम से" },
     relevant: (f) => f.incidentType !== "minor_injury" && f.offendingVehicleIdentified !== true,
@@ -239,7 +239,7 @@ export const RULES: RuleDef[] = [
   },
   {
     id: "MACT",
-    name: { en: "Motor Accident Claims Tribunal (MACT) compensation", hi: "मोटर दुर्घटना दावा न्यायाधिकरण (MACT) मुआवज़ा" },
+    name: { en: "Motor Accident Claims Tribunal (MACT) compensation (MV Act s.164 no-fault / s.166)", hi: "मोटर दुर्घटना दावा न्यायाधिकरण (MACT) मुआवज़ा (धारा 164 / 166)" },
     short: { en: "MACT compensation", hi: "MACT मुआवज़ा" },
     payer: { en: "Insurer of the vehicle at fault (or its owner)", hi: "दोषी वाहन की बीमा कंपनी (या उसका मालिक)" },
     relevant: () => true,

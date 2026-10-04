@@ -25,3 +25,7 @@ export const DraftSchema = z.object({
   requestParagraph: z.string().describe("One or two sentences requesting the claim be processed, mentioning the amount string exactly as given"),
 });
 export type Draft = z.infer<typeof DraftSchema>;
+
+export const CriticSchema = z.object({
+  unsupported: z.array(z.string()).describe("statements in the draft not supported by the case facts; empty if none"),
+});
