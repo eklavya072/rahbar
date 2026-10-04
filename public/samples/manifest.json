@@ -1,0 +1,51 @@
+[
+  {
+    "caseId": "sunita",
+    "docId": "sunita-fir",
+    "label": "FIR 0412/2026",
+    "kind": "fir",
+    "file": "/samples/sunita-fir.png"
+  },
+  {
+    "caseId": "sunita",
+    "docId": "sunita-passbook",
+    "label": "Passbook (Ramesh)",
+    "kind": "passbook",
+    "file": "/samples/sunita-passbook.png"
+  },
+  {
+    "caseId": "sunita",
+    "docId": "sunita-policy",
+    "label": "Bike policy",
+    "kind": "policy",
+    "file": "/samples/sunita-policy.png"
+  },
+  {
+    "caseId": "kavita",
+    "docId": "kavita-fir",
+    "label": "FIR 0233/2026",
+    "kind": "fir",
+    "file": "/samples/kavita-fir.png"
+  },
+  {
+    "caseId": "kavita",
+    "docId": "kavita-passbook",
+    "label": "Passbook (Kavita)",
+    "kind": "passbook",
+    "file": "/samples/kavita-passbook.png"
+  },
+  {
+    "caseId": "arjun",
+    "docId": "arjun-fir",
+    "label": "FIR 0981/2026",
+    "kind": "fir",
+    "file": "/samples/arjun-fir.png"
+  },
+  {
+    "caseId": "arjun",
+    "docId": "arjun-passbook",
+    "label": "Bank statement (Arjun)",
+    "kind": "passbook",
+    "file": "/samples/arjun-passbook.png"
+  }
+]

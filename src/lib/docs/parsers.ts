@@ -39,6 +39,40 @@ export function datesIn(line: string): string[] {
   return out.sort((a, b) => a.i - b.i).map((d) => d.iso).filter(isValidISO);
 }
 
+/**
+ * OCR engines often read table cells column by column, splitting one passbook row into several "lines".
+ * Rebuild visual rows: group lines whose vertical centres align, order each row left→right, join with " | ".
+ */
+export function mergeRows(lines: OcrLine[]): OcrLine[] {
+  const withBox = lines.filter((l) => l.bbox);
+  if (withBox.length !== lines.length || lines.length < 2) return lines;
+  const items = [...withBox].sort((a, b) => a.bbox!.y0 - b.bbox!.y0);
+  const rows: OcrLine[][] = [];
+  for (const l of items) {
+    const cy = (l.bbox!.y0 + l.bbox!.y1) / 2;
+    const h = l.bbox!.y1 - l.bbox!.y0;
+    const row = rows.find((r) => {
+      const rb = r[0].bbox!;
+      const rcy = (rb.y0 + rb.y1) / 2;
+      return Math.abs(rcy - cy) < 0.5 * Math.min(h, rb.y1 - rb.y0);
+    });
+    if (row) row.push(l);
+    else rows.push([l]);
+  }
+  return rows
+    .map((r) => r.sort((a, b) => a.bbox!.x0 - b.bbox!.x0))
+    .map((r) => ({
+      text: r.map((l) => l.text).join(" | "),
+      bbox: {
+        x0: Math.min(...r.map((l) => l.bbox!.x0)),
+        y0: Math.min(...r.map((l) => l.bbox!.y0)),
+        x1: Math.max(...r.map((l) => l.bbox!.x1)),
+        y1: Math.max(...r.map((l) => l.bbox!.y1)),
+      },
+    }))
+    .sort((a, b) => a.bbox.y0 - b.bbox.y0);
+}
+
 export function classifyDoc(lines: OcrLine[]): DocKind {
   const all = lines.map((l) => l.text).join("\n");
   if (/FIRST INFORMATION REPORT|प्रथम सूचना रिपोर्ट|\bF\.?I\.?R\.?\s*No/i.test(all)) return "fir";

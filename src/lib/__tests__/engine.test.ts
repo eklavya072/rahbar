@@ -175,3 +175,23 @@ describe("invariants (property-based, 500 random cases each)", () => {
     }
   });
 });
+
+describe("OCR row reconstruction", () => {
+  it("re-joins table cells that OCR read column by column", async () => {
+    const { mergeRows, parsePassbook } = await import("../docs/parsers");
+    const box = (x0: number, y0: number) => ({ x0, y0, x1: x0 + 100, y1: y0 + 20 });
+    const lines = [
+      { text: "28/05/2026", bbox: box(10, 100) },
+      { text: "31/08/2026", bbox: box(10, 140) },
+      { text: "PMSBY PREMIUM RENEWAL", bbox: box(150, 101) },
+      { text: "POS RUPAY KIRANA STORE", bbox: box(150, 141) },
+      { text: "20.00", bbox: box(400, 99) },
+      { text: "340.00", bbox: box(400, 139) },
+    ];
+    const rows = mergeRows(lines);
+    expect(rows.map((r) => r.text)).toEqual(["28/05/2026 | PMSBY PREMIUM RENEWAL | 20.00", "31/08/2026 | POS RUPAY KIRANA STORE | 340.00"]);
+    const p = parsePassbook("d", "Passbook", rows, "2026-09-12");
+    expect(p.facts.pmsbyPremiumDebited).toBe(true);
+    expect(p.facts.lastCardTxnDate).toBe("2026-08-31");
+  });
+});

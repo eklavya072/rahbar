@@ -13,6 +13,8 @@ import type {
   Tri,
 } from "./types";
 
+const SOURCE_RANK: Record<FactSource, number> = { document: 3, answer: 2, ai: 1, default: 0 };
+
 /** Tri-state AND across condition results. */
 export function combine(results: Tri[]): Status {
   if (results.some((r) => r === false)) return "not_eligible";
@@ -32,7 +34,10 @@ export function evaluateRule(rule: RuleDef, facts: Facts, prov: ProvenanceMap = 
     label: c.label,
     result: c.test(facts),
     facts: c.facts,
-    sources: c.facts.map((k) => (prov[k]?.source ?? "default") as FactSource),
+    // Strongest evidence first: document > human answer > AI reading > unknown.
+    sources: c.facts
+      .map((k) => (prov[k]?.source ?? "default") as FactSource)
+      .sort((a, b) => SOURCE_RANK[b] - SOURCE_RANK[a]),
   }));
 
   const status = combine(conditions.map((c) => c.result));
