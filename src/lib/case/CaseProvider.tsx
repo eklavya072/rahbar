@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useReducer, useRef, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useReducer, useRef, type ReactNode } from "react";
 import { INITIAL, reducer, type Action, type AgentName, type CaseDoc, type CaseState, type TraceEvent } from "./state";
 import { mergeFacts, type FactLayer } from "../engine/merge";
 import { evaluate } from "../engine/evaluate";
@@ -37,7 +37,9 @@ const uid = (p: string) => `${p}-${Date.now().toString(36)}-${(seq++).toString(3
 export function CaseProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, INITIAL);
   const stateRef = useRef(state);
-  stateRef.current = state;
+  useLayoutEffect(() => {
+    stateRef.current = state;
+  });
 
   const sample = state.sampleId ? SAMPLE_CASES.find((c) => c.id === state.sampleId) ?? null : null;
   const today = sample?.today ?? todayISO();

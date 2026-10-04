@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import { Camera, FileImage, Loader2, Lock, Mic, MicOff, Trash2, Upload } from "lucide-react";
 import { useCase } from "@/lib/case/CaseProvider";
 import { useLang } from "@/lib/i18n";
@@ -11,9 +11,12 @@ type SpeechRec = { lang: string; interimResults: boolean; continuous: boolean; s
 function useDictation(onText: (t: string) => void) {
   const [on, setOn] = useState(false);
   const rec = useRef<SpeechRec | null>(null);
-  // Detect after mount so server and client render the same HTML.
-  const [supported, setSupported] = useState(false);
-  useEffect(() => setSupported("webkitSpeechRecognition" in window || "SpeechRecognition" in window), []);
+  // Server renders "unsupported"; the client reads the real capability without a hydration mismatch.
+  const supported = useSyncExternalStore(
+    () => () => {},
+    () => "webkitSpeechRecognition" in window || "SpeechRecognition" in window,
+    () => false,
+  );
   const toggle = (lang: string) => {
     if (on) return rec.current?.stop();
     const W = window as unknown as { SpeechRecognition?: new () => SpeechRec; webkitSpeechRecognition?: new () => SpeechRec };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import QRCode from "qrcode";
 import { CalendarPlus, CheckCircle2, FileCheck2, Loader2, MessageCircle, PenLine, Printer, QrCode, ShieldX } from "lucide-react";
 import { useCase } from "@/lib/case/CaseProvider";
@@ -63,7 +63,6 @@ export function StepPlan() {
   const [letters, setLetters] = useState<Record<string, Letter>>({});
   const [drafting, setDrafting] = useState(false);
   const [qr, setQr] = useState<string | null>(null);
-  const [shareUrl, setShareUrl] = useState<string>("");
 
   const actionable = summary.results.filter((r) => r.status === "eligible" && !r.informational);
   const firLines = state.docs.filter((d) => d.parsed?.kind === "fir").flatMap((d) => d.lines.map((l) => l.text));
@@ -102,10 +101,6 @@ export function StepPlan() {
     setDrafting(false);
   };
 
-  useEffect(() => {
-    setShareUrl(`${window.location.origin}/case#c=${encodeCase(facts)}`);
-  }, [facts]);
-
   const approve = (id: string, v: boolean) => {
     dispatch({ type: "patch", patch: { approvedLetters: v ? [...state.approvedLetters, id] : state.approvedLetters.filter((x) => x !== id) } });
     if (v) trace("Human", `Approved the ${id} letter for the print packet`, { status: "done" });
@@ -121,6 +116,7 @@ export function StepPlan() {
   };
 
   const showQr = async () => {
+    const shareUrl = `${window.location.origin}/case#c=${encodeCase(facts)}`;
     setQr(await QRCode.toDataURL(shareUrl, { margin: 1, width: 220 }));
     trace("Human", "Created a caseworker handoff QR — facts only, no names or documents, nothing stored on a server", { status: "done" });
   };

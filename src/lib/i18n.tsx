@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useSyncExternalStore, type ReactNode } from "react";
 import type { Bilingual, Lang } from "./engine/types";
 
 const UI = {
@@ -52,26 +52,42 @@ interface LangCtx {
 
 const Ctx = createContext<LangCtx | null>(null);
 
-export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en");
+// Tiny external store so the saved language is read without setState-in-effect or hydration mismatches.
+const KEY = "aftercrash-lang";
+let memLang: Lang | null = null;
+const listeners = new Set<() => void>();
+function readLang(): Lang {
+  if (memLang) return memLang;
+  try {
+    memLang = localStorage.getItem(KEY) === "hi" ? "hi" : "en";
+  } catch {
+    memLang = "en";
+  }
+  return memLang;
+}
+function writeLang(l: Lang) {
+  memLang = l;
+  try {
+    localStorage.setItem(KEY, l);
+  } catch {}
+  listeners.forEach((f) => f());
+}
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("aftercrash-lang");
-      if (saved === "hi" || saved === "en") setLangState(saved);
-    } catch {}
-  }, []);
+export function LangProvider({ children }: { children: ReactNode }) {
+  const lang = useSyncExternalStore(
+    (cb) => {
+      listeners.add(cb);
+      return () => listeners.delete(cb);
+    },
+    readLang,
+    () => "en" as Lang,
+  );
 
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const setLang = useCallback((l: Lang) => {
-    setLangState(l);
-    try {
-      localStorage.setItem("aftercrash-lang", l);
-    } catch {}
-  }, []);
+  const setLang = useCallback((l: Lang) => writeLang(l), []);
 
   const t = useCallback((k: UIKey) => UI[k][lang], [lang]);
   const b = useCallback((x: Bilingual) => x[lang], [lang]);
