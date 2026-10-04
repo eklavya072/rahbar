@@ -76,7 +76,7 @@ for (const c of SAMPLE_CASES) {
     const body = doc.kind === "fir" ? firHtml(doc) : doc.kind === "passbook" ? passbookHtml(doc) : policyHtml(doc);
     const html = `<!doctype html><html><head><meta charset="utf-8"><style>${base}</style></head><body>
       <div class="page"><div class="wm"><span>SAMPLE · SYNTHETIC · NOT VALID</span></div>
-      <div class="banner">SAMPLE — SYNTHETIC DOCUMENT — AfterCrash demo — all names fictional</div>${body}</div></body></html>`;
+      <div class="banner">SAMPLE — SYNTHETIC DOCUMENT — Rahbar demo — all names fictional</div>${body}</div></body></html>`;
     await page.setContent(html, { waitUntil: "load" });
     const el = await page.$(".page");
     const file = `${doc.id}.png`;

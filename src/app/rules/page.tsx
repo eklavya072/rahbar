@@ -19,8 +19,8 @@ export default function RulesPage() {
           <h1 className="font-display text-3xl font-semibold">{hi ? "हर नियम, उसका स्रोत और उसकी समय-सीमा" : "Every rule, its source, and its clock"}</h1>
           <p className="mt-2 max-w-3xl text-ink-2">
             {hi
-              ? "AfterCrash में पात्रता और राशि यहीं के नियमों से तय होती है — AI से नहीं। हर नियम पर स्रोत और अंतिम जाँच की तारीख है। मशीन-पठनीय रूप:"
-              : "Eligibility and amounts in AfterCrash come only from these rules — never from the AI. Each carries its legal source and the date it was last verified. Machine-readable:"}{" "}
+              ? "Rahbar में पात्रता और राशि यहीं के नियमों से तय होती है — AI से नहीं। हर नियम पर स्रोत और अंतिम जाँच की तारीख है। मशीन-पठनीय रूप:"
+              : "Eligibility and amounts in Rahbar come only from these rules — never from the AI. Each carries its legal source and the date it was last verified. Machine-readable:"}{" "}
             <a className="underline" href="/api/v1/rules">/api/v1/rules</a> · v{RULES_VERSION}
           </p>
         </div>

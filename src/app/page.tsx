@@ -7,8 +7,8 @@ import { useLang } from "@/lib/i18n";
 import { SAMPLE_CASES } from "@/lib/samples/cases";
 
 const EVIDENCE = [
-  { v: "205", en: "hit-and-run compensation claims were filed in FY 2022-23 — against about 25,000 eligible crashes a year.", hi: "हिट-एंड-रन मुआवज़े के दावे वित्त वर्ष 2022-23 में हुए — जबकि हर साल लगभग 25,000 पात्र हादसे होते हैं।", src: "Supreme Court, S. Rajaseekaran v. UoI (2024); GI Council", url: "https://www.verdictum.in/court-updates/supreme-court/s-rajaseekaran-v-union-of-india-ors-2024-insc-37-compensation-in-hit-run-accidents-1515043" },
-  { v: "70%", en: "of low-income crash households didn't know any compensation scheme existed.", hi: "कम आय वाले दुर्घटना-प्रभावित परिवारों को किसी मुआवज़ा योजना की जानकारी नहीं थी।", src: "World Bank & SaveLIFE Foundation (2021)", url: "https://www.worldbank.org/en/country/india/publication/traffic-crash-injuries-and-disabilities-the-burden-on-indian-society" },
+  { v: "205", en: "hit-and-run compensation claims were filed in FY 2022-23 — against about 25,000 eligible hit-and-run accidents a year.", hi: "हिट-एंड-रन मुआवज़े के दावे वित्त वर्ष 2022-23 में हुए — जबकि हर साल लगभग 25,000 पात्र हादसे होते हैं।", src: "Supreme Court, S. Rajaseekaran v. UoI (2024); GI Council", url: "https://www.verdictum.in/court-updates/supreme-court/s-rajaseekaran-v-union-of-india-ors-2024-insc-37-compensation-in-hit-run-accidents-1515043" },
+  { v: "70%", en: "of low-income families hit by a road accident didn't know any compensation scheme existed.", hi: "कम आय वाले दुर्घटना-प्रभावित परिवारों को किसी मुआवज़ा योजना की जानकारी नहीं थी।", src: "World Bank & SaveLIFE Foundation (2021)", url: "https://www.worldbank.org/en/country/india/publication/traffic-crash-injuries-and-disabilities-the-burden-on-indian-society" },
   { v: "90%", en: "of stuck hit-and-run claims were stuck on missing documents, not on eligibility.", hi: "अटके हिट-एंड-रन दावे पात्रता से नहीं, काग़ज़ों की कमी से अटके थे।", src: "Crashfree India, Justice Unserved (2026)", url: "https://crashfreeindia.org/documents/justice-unserved-crashfree-india.pdf" },
   { v: "69%", en: "of road-injury households borrow or sell assets to pay for care while they wait.", hi: "सड़क-दुर्घटना पीड़ित परिवार इलाज के लिए उधार लेते हैं या संपत्ति बेचते हैं।", src: "BMC Health Services Research (2012)", url: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3475104/" },
 ];
@@ -34,7 +34,7 @@ function HeroProof() {
   const hi = lang === "hi";
   const found = [
     { tone: "accent", line: hi ? "₹20 'PMSBY' कटौती, 28 मई" : "₹20 'PMSBY' debit, 28 May", gets: hi ? "PMSBY दुर्घटना बीमा" : "PMSBY accident cover", amt: "₹2,00,000" },
-    { tone: "amber", line: hi ? "रुपे कार्ड इस्तेमाल, हादसे से 12 दिन पहले" : "RuPay card used 12 days before the crash", gets: hi ? "रुपे कार्ड दुर्घटना कवर" : "RuPay card accident cover", amt: "₹2,00,000" },
+    { tone: "amber", line: hi ? "रुपे कार्ड इस्तेमाल, हादसे से 12 दिन पहले" : "RuPay card used 12 days before the accident", gets: hi ? "रुपे कार्ड दुर्घटना कवर" : "RuPay card accident cover", amt: "₹2,00,000" },
   ];
   return (
     <figure className="relative mx-auto w-full min-w-0 max-w-xl">
@@ -71,12 +71,12 @@ export default function Home() {
         <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-14 pt-10 sm:pt-16 lg:grid-cols-[1.05fr_1fr] [&>*]:min-w-0">
           <div>
             <h1 className="text-balance font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
-              {hi ? "सड़क हादसे के बाद, आपके परिवार का जो हक़ है — वह सब।" : "After a road crash, everything your family is owed."}
+              {hi ? "हादसे के बाद, आगे का रास्ता।" : "After an accident, the way forward."}
             </h1>
             <p className="mt-5 max-w-xl text-pretty text-lg text-ink-2">
               {hi
-                ? "एक हादसे से 10 तक अलग-अलग दावे बनते हैं — बीमा, सरकारी योजनाएँ, मुआवज़ा। ज़्यादातर परिवार एक भी नहीं माँगते। AfterCrash आपके अपने काग़ज़ों से छिपा कवर ढूँढता है और सारा काग़ज़ी काम तैयार करता है।"
-                : "One accident can trigger up to 10 separate claims — insurance, government schemes, compensation. Most families claim none. AfterCrash finds the cover hidden in your own papers and prepares every form and letter."}
+                ? "एक हादसे से परिवार के 10 तक अलग-अलग हक़ बनते हैं — बीमा, सरकारी योजनाएँ, मुआवज़ा। ज़्यादातर परिवार एक भी नहीं माँग पाते। रहबर आपके अपने काग़ज़ों से वह सब ढूँढता है, और हर फ़ॉर्म और पत्र तैयार करता है — आप बस मंज़ूरी दें।"
+                : "One accident can give a family up to 10 separate rights to money — insurance, government schemes, compensation. Most families never claim them. Rahbar finds them in your own papers and prepares every form and letter. You just approve."}
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link href="/case" className="btn btn-primary !px-5 !py-3 text-base">{t("start")} <ArrowRight size={18} /></Link>
@@ -136,7 +136,7 @@ export default function Home() {
             <div>
               <h2 className="text-balance font-display text-3xl font-semibold">{hi ? "दावे महीनों चलते हैं। साथ भी उतना ही रहे।" : "Claims take months. So does the help."}</h2>
               <p className="mt-3 max-w-md text-ink-2">
-                {hi ? "पहला पत्र भेजने के बाद असली मुश्किल शुरू होती है: कम प्रस्ताव, चुप्पी, देरी। AfterCrash उसके लिए भी बना है।" : "The hard part starts after the first letter: low offers, silence, delay. AfterCrash is built for that part too."}
+                {hi ? "पहला पत्र भेजने के बाद असली मुश्किल शुरू होती है: कम प्रस्ताव, चुप्पी, देरी। Rahbar उसके लिए भी बना है।" : "The hard part starts after the first letter: low offers, silence, delay. Rahbar is built for that part too."}
               </p>
               <Link href="/offer" className="btn btn-primary mt-6">{hi ? "प्रस्ताव जाँचें" : "Check a settlement offer"} <ArrowRight size={16} /></Link>
             </div>

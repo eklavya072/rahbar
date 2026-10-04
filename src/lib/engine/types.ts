@@ -1,4 +1,4 @@
-// Core domain types for the AfterCrash entitlement engine.
+// Core domain types for the Rahbar entitlement engine.
 // Facts are tri-state: true / false / null (unknown). The engine never guesses.
 
 export type Tri = boolean | null;

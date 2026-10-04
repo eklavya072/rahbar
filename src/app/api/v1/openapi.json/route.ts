@@ -3,7 +3,7 @@ import { CORS, RULES_VERSION } from "@/lib/api/v1";
 const spec = {
   openapi: "3.1.0",
   info: {
-    title: "AfterCrash Entitlements API",
+    title: "Rahbar Entitlements API",
     version: RULES_VERSION,
     description:
       "Rules-as-code for road-accident entitlements in India. Deterministic, cited, no AI and no storage. Send non-identifying facts only (no names, phone, Aadhaar or account numbers). Information, not legal advice.",

@@ -50,7 +50,7 @@ export default function EvalsPage() {
         <div>
           <h1 className="font-display text-3xl font-semibold">Does it work consistently? Check it yourself.</h1>
           <p className="mt-2 max-w-3xl text-ink-2">
-            Every rupee in AfterCrash comes from {RULES.length} rules-as-code entitlements with citations — never from the language model. These checks run live in your browser; the same suite runs in CI with Vitest.
+            Every rupee in Rahbar comes from {RULES.length} rules-as-code entitlements with citations — never from the language model. These checks run live in your browser; the same suite runs in CI with Vitest.
           </p>
           <div className="mt-4 flex flex-wrap gap-2 text-sm">
             <span className="chip bg-slate-soft text-ink-2">Golden cases: {goldenPass}/{golden.length}</span>

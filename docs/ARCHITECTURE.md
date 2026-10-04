@@ -1,11 +1,11 @@
-# AfterCrash — Technical Architecture (judge-lens edition)
+# Rahbar (रहबर) — Technical Architecture (judge-lens edition)
 
 > "हादसे के बाद, आपका हक़" — *After the crash, what your family is owed.*
 > Budget: **₹0, no credit card.** Deadline: Mon 5 Oct 14:00 IST.
 
 ## 0. Design principle the judges will notice
 **LLMs handle language. Code handles law and money. Humans approve actions.**
-Anthropic's *Building Effective Agents* and the Beeck Center rules-as-code study both say the same thing: use a **predictable workflow** wherever the path is known, and keep the open-ended agent loop **bounded** to where judgement is actually needed. Every rupee and every date in AfterCrash comes from deterministic, cited, tested code. The LLM never computes money.
+Anthropic's *Building Effective Agents* and the Beeck Center rules-as-code study both say the same thing: use a **predictable workflow** wherever the path is known, and keep the open-ended agent loop **bounded** to where judgement is actually needed. Every rupee and every date in Rahbar comes from deterministic, cited, tested code. The LLM never computes money.
 
 ## 1. Rubric → technical choice map
 | Rubric (pts) | What we ship |

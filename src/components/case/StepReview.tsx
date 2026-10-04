@@ -120,18 +120,16 @@ export function StepFacts() {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-3">
-        <button className="btn btn-ghost" onClick={() => dispatch({ type: "step", step: "docs" })}>{hi ? "पीछे" : "Back"}</button>
-        <button
-          className="btn btn-primary"
-          onClick={() => {
-            confirmFacts();
-            dispatch({ type: "step", step: "questions" });
-          }}
-        >
-          {hi ? "हाँ, यह सही है" : "Yes, this is right"}
-        </button>
-      </div>
+      {known.length > 0 && (
+        <div className="flex flex-wrap items-center gap-3">
+          {state.aiConfirmed ? (
+            <span className="chip bg-accent-soft py-1.5 text-accent">{hi ? "आपने पुष्टि की" : "You confirmed these"}</span>
+          ) : (
+            <button className="btn btn-primary" onClick={confirmFacts}>{hi ? "हाँ, यह सही है" : "Yes, this is right"}</button>
+          )}
+          <span className="text-sm text-muted">{hi ? "कुछ ग़लत है? ऊपर 'बदलें' दबाएँ।" : "Something wrong? Use 'Edit' above."}</span>
+        </div>
+      )}
 
       {viewing && docForEvidence && <DocViewer doc={docForEvidence} evidence={viewing} onClose={() => setViewing(null)} />}
     </div>
@@ -218,16 +216,30 @@ export function StepQuestions() {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-3">
-        <button className="btn btn-ghost" onClick={() => dispatch({ type: "step", step: state.docs.length ? "facts" : "docs" })}>{hi ? "पीछे" : "Back"}</button>
+    </div>
+  );
+}
+
+/** One page: confirm what was read, then answer only the questions that matter. */
+export function StepCheck() {
+  const { state, summary, trace, confirmFacts, go } = useCase();
+  const { lang } = useLang();
+  const hi = lang === "hi";
+  return (
+    <div className="space-y-10">
+      {state.docs.length > 0 && <StepFacts />}
+      <StepQuestions />
+      <div className="flex flex-wrap gap-3 border-t border-line pt-5">
+        <button className="btn btn-ghost" onClick={() => go("papers")}>{hi ? "पीछे" : "Back"}</button>
         <button
           className="btn btn-primary"
           onClick={() => {
+            if (state.docs.length && !state.aiConfirmed) confirmFacts();
             trace("Rules", `Evaluated ${summary.results.length} entitlements (rules-as-code)`, {
               status: "done",
               detail: `${summary.counts.eligible} confirmed · ${summary.counts.possible} possible · ${summary.counts.not_eligible} not eligible`,
             });
-            dispatch({ type: "step", step: "results" });
+            go("owed");
           }}
         >
           {hi ? "मेरा हक़ दिखाएँ" : "Show what we're owed"}

@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "AfterCrash — what your family is owed after a road accident",
-    short_name: "AfterCrash",
-    description: "Finds every compensation and insurance claim after a road crash in India and prepares the paperwork. Works offline.",
+    name: "Rahbar (रहबर) — the way forward after a road accident",
+    short_name: "Rahbar",
+    description: "Finds every compensation and insurance claim after a road accident in India and prepares the paperwork. Works offline.",
     start_url: "/",
     display: "standalone",
     background_color: "#f7f4ee",

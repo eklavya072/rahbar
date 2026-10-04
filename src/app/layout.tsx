@@ -9,9 +9,9 @@ const deva = Noto_Sans_Devanagari({ variable: "--font-deva", subsets: ["devanaga
 const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], weight: ["500", "600", "700"] });
 
 export const metadata: Metadata = {
-  title: "AfterCrash — what your family is owed after a road accident",
+  title: "Rahbar (रहबर) — the way forward after a road accident",
   description:
-    "An AI agent that reads a family's own papers, finds every compensation and insurance claim they are owed after a road crash in India, and prepares the paperwork — with a human approving every step.",
+    "An AI agent that reads a family's own papers, finds every compensation and insurance claim they are owed after a road accident in India, and prepares the paperwork — with a human approving every step.",
 };
 
 export const viewport: Viewport = { themeColor: "#f7f4ee", width: "device-width", initialScale: 1 };

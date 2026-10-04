@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useReducer, useRef, type ReactNode } from "react";
-import { INITIAL, reducer, type Action, type AgentName, type CaseDoc, type CaseState, type TraceEvent } from "./state";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { INITIAL, reducer, stepPath, type Action, type AgentName, type CaseDoc, type CaseState, type Step, type TraceEvent } from "./state";
 import { mergeFacts, type FactLayer } from "../engine/merge";
 import { evaluate } from "../engine/evaluate";
 import { buildPlan, type Plan } from "../engine/planner";
@@ -28,6 +29,9 @@ interface Ctx {
   readDocuments: () => Promise<void>;
   confirmFacts: () => void;
   autoPlay: () => Promise<void>;
+  /** Navigate to a step page (and unlock it). */
+  go: (s: Step) => void;
+  hydrated: boolean;
   trace: (agent: AgentName, title: string, patch?: Partial<TraceEvent>) => string;
   traceUpdate: (id: string, patch: Partial<TraceEvent>) => void;
 }
@@ -36,12 +40,49 @@ const C = createContext<Ctx | null>(null);
 let seq = 0;
 const uid = (p: string) => `${p}-${Date.now().toString(36)}-${(seq++).toString(36)}`;
 
+const SESSION_KEY = "rahbar-case";
+
+/** Session persistence: the case survives refresh and back/forward, but only in this browser tab. */
+function loadSession(): CaseState | null {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const s = JSON.parse(raw) as CaseState;
+    // Object URLs of uploaded photos die with the page; keep their facts, drop the image.
+    return { ...INITIAL, ...s, docs: s.docs.map((d) => (d.src.startsWith("blob:") ? { ...d, src: "" } : d)) };
+  } catch {
+    return null;
+  }
+}
+
 export function CaseProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, INITIAL);
   const stateRef = useRef(state);
+  const router = useRouter();
   useLayoutEffect(() => {
     stateRef.current = state;
   });
+
+  // Restore once on mount, then save on every change.
+  useEffect(() => {
+    const saved = loadSession();
+    dispatch({ type: "reset", state: { ...(saved ?? {}), hydrated: true } });
+  }, []);
+  useEffect(() => {
+    if (!state.hydrated) return;
+    try {
+      const { hydrated: _h, ...rest } = state; // eslint-disable-line @typescript-eslint/no-unused-vars
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(rest));
+    } catch {}
+  }, [state]);
+
+  const go = useCallback(
+    (s: Step) => {
+      dispatch({ type: "step", step: s });
+      router.push(stepPath(s));
+    },
+    [router],
+  );
 
   const sample = state.sampleId ? SAMPLE_CASES.find((c) => c.id === state.sampleId) ?? null : null;
   const today = sample?.today ?? todayISO();
@@ -211,8 +252,9 @@ export function CaseProvider({ children }: { children: ReactNode }) {
     } else if (sampleCase) {
       Object.assign(aiFacts, sampleCase.aiFacts);
     }
-    dispatch({ type: "patch", patch: { aiFacts, extraction, step: "facts" } });
-  }, [reparseAll, trace, traceUpdate]);
+    dispatch({ type: "patch", patch: { aiFacts, extraction } });
+    go("check");
+  }, [reparseAll, trace, traceUpdate, go]);
 
   const loadSample = useCallback(
     async (id: string) => {
@@ -221,20 +263,22 @@ export function CaseProvider({ children }: { children: ReactNode }) {
       dispatch({
         type: "reset",
         state: {
+          hydrated: true,
           sampleId: id,
           victimName: c.victimName,
           claimantName: c.claimantName,
           relation: c.id === "sunita" ? "wife" : c.id === "arjun" ? "mother" : "self",
           story: "",
-          step: "docs",
+          step: "papers",
           docs: c.docs.map((d) => ({ id: d.id, label: d.label, src: `/samples/${d.id}.png`, sample: true, status: "queued", progress: 0, lines: [] })),
           family: { ...INITIAL.family, ...(c.family ?? {}) },
         },
       });
       const id0 = uid("t");
       dispatch({ type: "trace", event: { id: id0, agent: "Human", title: `Loaded sample case "${c.title.en}" (synthetic documents)`, status: "done", at: Date.now() } });
+      router.push(stepPath("papers"));
     },
-    [],
+    [router],
   );
 
   const confirmFacts = useCallback(() => {
@@ -249,7 +293,6 @@ export function CaseProvider({ children }: { children: ReactNode }) {
     await readDocuments();
     await new Promise((r) => setTimeout(r, 600));
     confirmFacts();
-    dispatch({ type: "step", step: "questions" });
     for (const [k, v] of Object.entries(c.answers)) {
       if (k === "state") {
         dispatch({ type: "answer", key: "state", value: v as string });
@@ -261,12 +304,12 @@ export function CaseProvider({ children }: { children: ReactNode }) {
     }
     await new Promise((r) => setTimeout(r, 300));
     trace("Rules", "Evaluated all entitlements (rules-as-code)", { status: "done" });
-    dispatch({ type: "step", step: "results" });
-  }, [readDocuments, confirmFacts, trace]);
+    go("owed");
+  }, [readDocuments, confirmFacts, trace, go]);
 
   const value = useMemo<Ctx>(
-    () => ({ state, dispatch, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, trace, traceUpdate }),
-    [state, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, trace, traceUpdate],
+    () => ({ state, dispatch, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, go, hydrated: !!state.hydrated, trace, traceUpdate }),
+    [state, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, go, trace, traceUpdate],
   );
   return <C.Provider value={value}>{children}</C.Provider>;
 }

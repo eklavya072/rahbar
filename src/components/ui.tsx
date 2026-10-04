@@ -8,18 +8,28 @@ import { Bot, FileText, Menu, MessageCircle, ShieldCheck } from "lucide-react";
 export function LangToggle() {
   const { lang, setLang } = useLang();
   return (
-    <div className="inline-flex rounded-full border border-line bg-surface p-0.5 text-sm" role="group" aria-label="Language">
-      {(["en", "hi"] as const).map((l) => (
-        <button
-          key={l}
-          onClick={() => setLang(l)}
-          aria-pressed={lang === l}
-          className={`min-h-9 min-w-11 rounded-full px-3 font-semibold transition-colors ${lang === l ? "bg-ink text-white" : "text-muted hover:text-ink"}`}
-        >
-          {l === "en" ? "EN" : "हिं"}
-        </button>
-      ))}
-    </div>
+    <>
+      {/* Phones: one compact button that switches to the other language */}
+      <button
+        onClick={() => setLang(lang === "en" ? "hi" : "en")}
+        className="grid h-9 min-w-10 place-items-center rounded-full border border-line bg-surface px-2.5 text-sm font-semibold sm:hidden"
+        aria-label={lang === "en" ? "हिंदी में देखें" : "View in English"}
+      >
+        {lang === "en" ? "हिं" : "EN"}
+      </button>
+      <div className="hidden rounded-full border border-line bg-surface p-0.5 text-sm sm:inline-flex" role="group" aria-label="Language">
+        {(["en", "hi"] as const).map((l) => (
+          <button
+            key={l}
+            onClick={() => setLang(l)}
+            aria-pressed={lang === l}
+            className={`min-h-9 min-w-11 rounded-full px-3 font-semibold transition-colors ${lang === l ? "bg-ink text-white" : "text-muted hover:text-ink"}`}
+          >
+            {l === "en" ? "EN" : "हिं"}
+          </button>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -36,7 +46,7 @@ export function Footer() {
   return (
     <footer className="no-print border-t border-line">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6 text-sm text-muted">
-        <span>AfterCrash · {hi ? "जानकारी, कानूनी सलाह नहीं" : "information, not legal advice"}</span>
+        <span>Rahbar · {hi ? "जानकारी, कानूनी सलाह नहीं" : "information, not legal advice"}</span>
         <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
           {NAV.map((n) => <Link key={n.href} href={n.href} className="hover:text-ink">{n.label}</Link>)}
           <a href="tel:15100" className="hover:text-ink">NALSA 15100</a>
@@ -50,14 +60,15 @@ export function Footer() {
 export function Header({ right }: { right?: React.ReactNode }) {
   return (
     <header className="no-print sticky top-0 z-30 border-b border-line bg-bg/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-3">
         <Link href="/" className="flex items-center gap-2">
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-accent text-white">
             <ShieldCheck size={18} />
           </span>
-          <span className="font-display text-xl font-semibold tracking-tight">AfterCrash</span>
+          <span className="font-display text-xl font-semibold tracking-tight">Rahbar</span>
+          <span className="hidden text-sm text-muted sm:inline" lang="hi">रहबर</span>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {right}
           <nav className="hidden items-center gap-5 text-sm font-medium text-muted md:flex" aria-label="Main">
             {NAV.map((n) => <Link key={n.href} href={n.href} className="hover:text-ink">{n.label}</Link>)}

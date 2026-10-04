@@ -49,10 +49,12 @@ export interface CaseDoc {
   height?: number;
 }
 
-export type Step = "tell" | "docs" | "facts" | "questions" | "results" | "plan" | "track";
-export const STEPS: Step[] = ["tell", "docs", "facts", "questions", "results", "plan", "track"];
+export type Step = "story" | "papers" | "check" | "owed" | "plan" | "track";
+export const STEPS: Step[] = ["story", "papers", "check", "owed", "plan", "track"];
+export const stepPath = (s: Step) => `/case/${s}`;
 
 export interface CaseState {
+  /** Furthest step reached (pages before it are unlocked in the progress bar). */
   step: Step;
   sampleId: string | null;
   victimName: string;
@@ -77,6 +79,8 @@ export interface CaseState {
   family: Family;
   offer: OfferInput | null;
   docHashes: Record<string, string>;
+  /** True once the tab's saved case (if any) has been restored. Not persisted. */
+  hydrated?: boolean;
 }
 
 export interface Family {
@@ -90,7 +94,7 @@ export interface Family {
 }
 
 export const INITIAL: CaseState = {
-  step: "tell",
+  step: "story",
   sampleId: null,
   victimName: "",
   claimantName: "",
@@ -129,11 +133,12 @@ export type Action =
 export function reducer(s: CaseState, a: Action): CaseState {
   switch (a.type) {
     case "reset":
-      return { ...INITIAL, ...(a.state ?? {}) };
+      return { ...INITIAL, hydrated: s.hydrated, ...(a.state ?? {}) };
     case "patch":
       return { ...s, ...a.patch };
     case "step":
-      return { ...s, step: a.step };
+      // Only ever move the "furthest reached" marker forward.
+      return STEPS.indexOf(a.step) > STEPS.indexOf(s.step) ? { ...s, step: a.step } : s;
     case "addDoc":
       return { ...s, docs: [...s.docs.filter((d) => d.id !== a.doc.id), a.doc] };
     case "updateDoc":

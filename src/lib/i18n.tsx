@@ -4,8 +4,8 @@ import { createContext, useCallback, useContext, useEffect, useSyncExternalStore
 import type { Bilingual, Lang } from "./engine/types";
 
 const UI = {
-  appName: { en: "AfterCrash", hi: "AfterCrash" },
-  tagline: { en: "After a road crash, what your family is owed.", hi: "सड़क हादसे के बाद, आपके परिवार का हक़।" },
+  appName: { en: "Rahbar", hi: "Rahbar" },
+  tagline: { en: "After an accident, the way forward.", hi: "हादसे के बाद, आगे का रास्ता।" },
   start: { en: "Start a case", hi: "केस शुरू करें" },
   trySample: { en: "Try a sample case", hi: "सैंपल केस देखें" },
   steps_tell: { en: "What happened", hi: "क्या हुआ" },
@@ -31,8 +31,8 @@ const UI = {
   sources: { en: "Sources", hi: "स्रोत" },
   lastVerified: { en: "Rule last verified", hi: "नियम अंतिम बार जाँचा गया" },
   notAdvice: {
-    en: "AfterCrash gives information, not legal advice. Free legal aid: NALSA helpline 15100 / your District Legal Services Authority.",
-    hi: "AfterCrash जानकारी देता है, कानूनी सलाह नहीं। मुफ़्त कानूनी सहायता: NALSA हेल्पलाइन 15100 / ज़िला विधिक सेवा प्राधिकरण।",
+    en: "Rahbar gives information, not legal advice. Free legal aid: NALSA helpline 15100 / your District Legal Services Authority.",
+    hi: "Rahbar जानकारी देता है, कानूनी सलाह नहीं। मुफ़्त कानूनी सहायता: NALSA हेल्पलाइन 15100 / ज़िला विधिक सेवा प्राधिकरण।",
   },
   privacyPromise: {
     en: "Your papers are read on this device. Names, phone, Aadhaar and account numbers are masked before anything is sent to AI. Nothing is stored on our server.",
@@ -54,7 +54,7 @@ interface LangCtx {
 const Ctx = createContext<LangCtx | null>(null);
 
 // Tiny external store so the saved language is read without setState-in-effect or hydration mismatches.
-const KEY = "aftercrash-lang";
+const KEY = "rahbar-lang";
 let memLang: Lang | null = null;
 const listeners = new Set<() => void>();
 function readLang(): Lang {

@@ -1,13 +1,13 @@
-# AfterCrash
+# Rahbar (रहबर)
 
-**After a road crash in India, find everything the family is owed — and do the paperwork.**
-*हादसे के बाद, आपका हक़।*
+**रहबर — "the one who shows the way." After a road accident in India, Rahbar finds everything the family is owed and does the paperwork, with the family approving every step.**
+*हादसे के बाद, आगे का रास्ता।*
 
 WCC Launchpad 30 · Track: **Agentic AI** · Built in 30 hours · Runs at **₹0**
 
 > One road accident can legally trigger up to **9 separate claims**: hit-and-run compensation, the ₹15 lakh owner-driver cover hidden in every vehicle policy, PMSBY, PMJJBY, the free RuPay/Jan Dhan accident cover, MACT compensation, PM RAHAT cashless treatment, ESIC/employee compensation and gig-platform insurance. Each lives in a different institution, with different forms and deadlines. **Most families claim none of them.**
 
-AfterCrash is an agent that reads the family's own papers (FIR, passbook, vehicle policy) **on their phone**, finds cover they didn't know they had, works out eligibility with **cited rules-as-code**, plans the claims deadline-first, drafts the letters, and **makes a human approve every step**.
+Rahbar is an agent that reads the family's own papers (FIR, passbook, vehicle policy) **on their phone**, finds cover they didn't know they had, works out eligibility with **cited rules-as-code**, plans the claims deadline-first, drafts the letters, and **makes a human approve every step**.
 
 ---
 
@@ -22,7 +22,7 @@ AfterCrash is an agent that reads the family's own papers (FIR, passbook, vehicl
 | **10.46 lakh** motor accident claims (₹80,455 cr) pending; ₹459 cr of awarded money unclaimed in Bombay alone | Crashfree India (2026) |
 | **41 crore** RuPay Jan Dhan cards carry ₹2 lakh accident cover — almost nobody claims it | PIB (2026); PMJDY |
 
-Why nobody fixed it: the entitlements are split across MoRTH, NHA, insurers, NPCI, banks, ESIC, Labour Commissioners, MACT courts and SDMs, with mutual exclusions, set-offs and deadlines. This is **administrative burden** (Moynihan, Herd & Harvey 2015): learning costs, compliance costs and psychological costs. AfterCrash attacks all three.
+Why nobody fixed it: the entitlements are split across MoRTH, NHA, insurers, NPCI, banks, ESIC, Labour Commissioners, MACT courts and SDMs, with mutual exclusions, set-offs and deadlines. This is **administrative burden** (Moynihan, Herd & Harvey 2015): learning costs, compliance costs and psychological costs. Rahbar attacks all three.
 
 Full research: [`docs/RESEARCH.md`](docs/RESEARCH.md) · Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
@@ -91,10 +91,10 @@ flowchart LR
 Full mapping: [`docs/FEATURES.md`](docs/FEATURES.md)
 
 ### Compared with what exists
-| Option | What it does | Gap AfterCrash fills |
+| Option | What it does | Gap Rahbar fills |
 |---|---|---|
 | Lawyers / claim middlemen | File MACT cases | Paid, often take a cut; ignore insurance and scheme entitlements |
-| Crashfree India **AASHA** + calculator | Bilingual Q&A chatbot on rights; MACT calculator | Doesn't read the family's documents, find insurance/scheme cover, draft letters or track deadlines. Complementary: AfterCrash could power their hospital helpdesks |
+| Crashfree India **AASHA** + calculator | Bilingual Q&A chatbot on rights; MACT calculator | Doesn't read the family's documents, find insurance/scheme cover, draft letters or track deadlines. Complementary: Rahbar could power their hospital helpdesks |
 | Haqdarshak, myScheme | General welfare-scheme discovery | Not event-triggered; no legal claims; no document reading or claim execution |
 | iRAD / eDAR, NHA TMS | Police and hospital back-office | Not built for the family |
 
@@ -130,7 +130,7 @@ Full mapping: [`docs/FEATURES.md`](docs/FEATURES.md)
 ## Run locally
 
 ```bash
-cd aftercrash
+cd aftercrash  # repo folder
 cp .env.example .env.local   # add a free Groq key (optional — the app works in no-AI mode without it)
 npm install
 npm run dev                  # http://localhost:3000
@@ -157,4 +157,4 @@ src/lib/evals/       golden + property harness used by /evals
 DigiLocker requester API (FIR/RC/DL/insurance) · Account Aggregator consented bank statements · eDAR victim access · WhatsApp bot · state schemes · DLSA/paralegal multi-case dashboard · a policy watcher that flags rules for human review when PIB announces changes.
 
 ## Disclosure
-Built during the event with open-source libraries listed in `package.json`. All sample documents are synthetic. AfterCrash provides information, not legal advice.
+Built during the event with open-source libraries listed in `package.json`. All sample documents are synthetic. Rahbar provides information, not legal advice.

@@ -39,7 +39,7 @@ function useDictation(onText: (t: string) => void) {
 }
 
 export function StepTell() {
-  const { state, dispatch, loadSample } = useCase();
+  const { state, dispatch, loadSample, go } = useCase();
   const { lang, b } = useLang();
   const hi = lang === "hi";
   const dict = useDictation((t) => dispatch({ type: "patch", patch: { story: (state.story ? state.story + " " : "") + t } }));
@@ -103,7 +103,7 @@ export function StepTell() {
       </p>
 
       <div className="flex flex-wrap gap-3">
-        <button className="btn btn-primary" onClick={() => dispatch({ type: "step", step: "docs" })}>
+        <button className="btn btn-primary" onClick={() => go("papers")}>
           {hi ? "आगे: काग़ज़ात" : "Next: add papers"}
         </button>
       </div>
@@ -125,7 +125,7 @@ export function StepTell() {
 }
 
 export function StepDocs() {
-  const { state, dispatch, addFiles, readDocuments, autoPlay } = useCase();
+  const { state, dispatch, addFiles, readDocuments, autoPlay, go } = useCase();
   const { lang } = useLang();
   const hi = lang === "hi";
   const [busy, setBusy] = useState(false);
@@ -184,7 +184,7 @@ export function StepDocs() {
 
 
       <div className="flex flex-col-reverse gap-2 sm:flex-row sm:flex-wrap sm:gap-3 [&>*]:w-full sm:[&>*]:w-auto">
-        <button className="btn btn-ghost" onClick={() => dispatch({ type: "step", step: "tell" })} disabled={busy}>
+        <button className="btn btn-ghost" onClick={() => go("story")} disabled={busy}>
           {hi ? "पीछे" : "Back"}
         </button>
         {state.sampleId && !busy && (
@@ -198,7 +198,7 @@ export function StepDocs() {
             {busy ? (hi ? "एजेंट काम कर रहे हैं…" : "Agents at work…") : hi ? "मेरे काग़ज़ पढ़ें" : "Read my papers"}
           </button>
         ) : (
-          <button className="btn btn-primary" onClick={() => dispatch({ type: "step", step: "questions" })}>
+          <button className="btn btn-primary" onClick={() => go("check")}>
             {hi ? "काग़ज़ नहीं हैं — सवालों से आगे बढ़ें" : "No papers — continue with questions"}
           </button>
         )}
@@ -208,8 +208,12 @@ export function StepDocs() {
         <ul className="grid grid-cols-3 gap-2 sm:gap-3">
           {state.docs.map((d) => (
             <li key={d.id} className="card overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={d.src} alt={d.label} className="h-24 w-full border-b border-line object-cover object-top sm:h-36" />
+              {d.src ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={d.src} alt={d.label} className="h-24 w-full border-b border-line object-cover object-top sm:h-36" />
+              ) : (
+                <div className="grid h-24 place-items-center border-b border-line bg-surface-2 px-2 text-center text-[11px] text-muted sm:h-36">{hi ? "फ़ोटो सेव नहीं होती; पढ़े गए तथ्य सुरक्षित हैं" : "Photo not kept; the facts read from it are"}</div>
+              )}
               <div className="flex items-center gap-1 p-2 sm:gap-2 sm:p-2.5">
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-xs font-medium sm:text-sm">{d.label}</div>

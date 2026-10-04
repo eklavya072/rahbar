@@ -38,7 +38,7 @@ export default function Developers() {
       <Header />
       <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8">
         <div>
-          <h1 className="font-display text-3xl font-semibold">Build on AfterCrash</h1>
+          <h1 className="font-display text-3xl font-semibold">Build on Rahbar</h1>
           <p className="mt-2 text-ink-2">
             Hospital helpdesks, DLSA case-management tools, NGOs and gig platforms can call the same rules engine the app uses. Deterministic, cited, CORS-enabled, rate-limited, and it stores nothing. Send non-identifying facts only.
           </p>

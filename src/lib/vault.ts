@@ -1,9 +1,9 @@
 "use client";
 // Encrypted case vault: AES-256-GCM with a key derived from the user's passphrase (PBKDF2-SHA-256, 310,000 rounds).
-// Ciphertext lives in this browser (localStorage) or in an exported .aftercrash file. No server ever sees it.
+// Ciphertext lives in this browser (localStorage) or in an exported .rahbar file. No server ever sees it.
 
 const ITER = 310_000;
-const PREFIX = "aftercrash-vault:";
+const PREFIX = "rahbar-vault:";
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
@@ -76,7 +76,7 @@ export function downloadSealed(s: SealedCase) {
   const blob = new Blob([JSON.stringify(s)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `${s.label.replace(/[^\w-]+/g, "_")}.aftercrash`;
+  a.download = `${s.label.replace(/[^\w-]+/g, "_")}.rahbar`;
   a.click();
 }
 

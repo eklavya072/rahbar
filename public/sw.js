@@ -1,6 +1,6 @@
-// AfterCrash service worker: offline app shell, sample documents and the OCR engine.
+// Rahbar service worker: offline app shell, sample documents and the OCR engine.
 // API calls are never cached (they may carry case facts).
-const VERSION = "aftercrash-v1";
+const VERSION = "rahbar-v1";
 const SHELL = ["/", "/case", "/offer", "/rules", "/evals", "/icon.svg", "/samples/manifest.json"];
 
 self.addEventListener("install", (e) => {

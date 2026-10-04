@@ -38,7 +38,7 @@ function CashFlow({ items }: { items: EntitlementResult[] }) {
       <p className="mt-1 text-sm text-muted">
         {hi
           ? `लगभग ${formatINRShort(within90, lang)} 90 दिनों में आ सकता है। 69% परिवार इलाज के लिए ऊँचे ब्याज पर उधार लेते हैं — इन दावों को पहले जमा करें।`
-          : `About ${formatINRShort(within90, lang)} could arrive within 90 days. 69% of crash households borrow at high interest — file these first.`}
+          : `About ${formatINRShort(within90, lang)} could arrive within 90 days. 69% of families hit by a road accident borrow at high interest — file these first.`}
       </p>
       <div className="mt-4 space-y-2.5">
         {rows.map(({ r, w }) => {
@@ -185,7 +185,7 @@ function Vault() {
     else if (!storeSealed(s)) return setMsg(hi ? "इस ब्राउज़र में सेव नहीं हो सका — फ़ाइल डाउनलोड करें" : "Couldn't save in this browser — download the file instead");
     setSaved(listSaved());
     setMsg(hi ? "AES-256 से एन्क्रिप्ट कर सेव किया गया" : "Encrypted with AES-256 and saved");
-    trace("Human", download ? "Exported the case as an encrypted .aftercrash file" : "Saved the case to this device's encrypted vault", { status: "done", detail: "AES-256-GCM · PBKDF2-SHA-256 310k · key never leaves the device" });
+    trace("Human", download ? "Exported the case as an encrypted .rahbar file" : "Saved the case to this device's encrypted vault", { status: "done", detail: "AES-256-GCM · PBKDF2-SHA-256 310k · key never leaves the device" });
   };
 
   const open = async (s: SealedCase) => {
@@ -216,7 +216,7 @@ function Vault() {
         <input
           ref={fileRef}
           type="file"
-          accept=".aftercrash,application/json"
+          accept=".rahbar,application/json"
           hidden
           onChange={async (e) => {
             const f = e.target.files?.[0];

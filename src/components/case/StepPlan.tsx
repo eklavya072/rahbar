@@ -78,7 +78,7 @@ function Manifest({ letters }: { letters: Record<string, Letter> }) {
         out.push({ name: `${hi ? "पत्र" : "Letter"}: ${l.subject.slice(0, 70)}`, hash: await sha256Hex([l.to, l.subject, ...l.body, ...l.enclosures, ...l.signature].join("\n")) });
       }
       const fp = out.length ? await sha256Hex(out.map((r) => r.hash).join("")) : "";
-      const q = fp ? await QRCode.toDataURL(`aftercrash:packet:sha256:${fp}`, { margin: 1, width: 140 }) : null;
+      const q = fp ? await QRCode.toDataURL(`rahbar:packet:sha256:${fp}`, { margin: 1, width: 140 }) : null;
       if (!cancelled) {
         setRows(out);
         setFingerprint(fp);
@@ -123,7 +123,7 @@ function Manifest({ letters }: { letters: Record<string, Letter> }) {
 }
 
 export function StepPlan() {
-  const { plan, summary, state, dispatch, facts, today, trace, traceUpdate } = useCase();
+  const { plan, summary, state, dispatch, facts, today, trace, traceUpdate, go } = useCase();
   const { lang, b } = useLang();
   const hi = lang === "hi";
   const [letters, setLetters] = useState<Record<string, Letter>>({});
@@ -188,7 +188,7 @@ export function StepPlan() {
     const blob = new Blob([buildIcs(plan, lang)], { type: "text/calendar" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "aftercrash-deadlines.ics";
+    a.download = "rahbar-deadlines.ics";
     a.click();
     trace("Human", "Added claim deadlines to the calendar (.ics with 7-day and 1-day reminders)", { status: "done" });
   };
@@ -223,7 +223,7 @@ export function StepPlan() {
               </div>
               <div className="mt-1 text-sm text-ink-2">{b(c.office)}</div>
               {c.deadlineDate && (
-                <a className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-accent underline" target="_blank" rel="noreferrer" href={googleCalendarLink(`AfterCrash: ${c.title[lang]}`, c.deadlineDate, c.office[lang])}>
+                <a className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-accent underline" target="_blank" rel="noreferrer" href={googleCalendarLink(`Rahbar: ${c.title[lang]}`, c.deadlineDate, c.office[lang])}>
                   <CalendarPlus size={12} /> Google Calendar
                 </a>
               )}
@@ -288,8 +288,8 @@ export function StepPlan() {
       <Manifest letters={letters} />
 
       <div className="no-print flex flex-wrap gap-3">
-        <button className="btn btn-ghost" onClick={() => dispatch({ type: "step", step: "results" })}>{hi ? "पीछे" : "Back"}</button>
-        <button className="btn btn-primary" onClick={() => dispatch({ type: "step", step: "track" })}>
+        <button className="btn btn-ghost" onClick={() => go("owed")}>{hi ? "पीछे" : "Back"}</button>
+        <button className="btn btn-primary" onClick={() => go("track")}>
           {hi ? "दावों पर नज़र रखें" : "Track the claims"} <ArrowRight size={16} />
         </button>
       </div>

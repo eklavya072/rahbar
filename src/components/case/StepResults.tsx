@@ -175,7 +175,7 @@ export function AskAgent() {
 }
 
 export function StepResults() {
-  const { summary, state, dispatch, trace, plan, facts } = useCase();
+  const { summary, state, trace, plan, facts, go } = useCase();
   const { lang, t, b } = useLang();
   const hi = lang === "hi";
   const by = (s: Status) => summary.results.filter((r) => r.status === s);
@@ -221,7 +221,7 @@ export function StepResults() {
       <SupportCard />
 
       <div className="flex flex-wrap gap-3">
-        <button className="btn btn-ghost" onClick={() => dispatch({ type: "step", step: "questions" })}>{hi ? "पीछे" : "Back"}</button>
+        <button className="btn btn-ghost" onClick={() => go("check")}>{hi ? "पीछे" : "Back"}</button>
         <button
           className="btn btn-primary"
           onClick={() => {
@@ -229,7 +229,7 @@ export function StepResults() {
               status: "done",
               detail: `${plan.claims.length} claims ordered by deadline · ${plan.documents.length} distinct documents`,
             });
-            dispatch({ type: "step", step: "plan" });
+            go("plan");
           }}
         >
           {hi ? "योजना और पत्र बनाएँ" : "Make the plan & letters"}

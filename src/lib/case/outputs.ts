@@ -9,17 +9,17 @@ const ymd = (iso: string) => iso.replace(/-/g, "");
 const escIcs = (s: string) => s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
 
 export function buildIcs(plan: Plan, lang: Lang): string {
-  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//AfterCrash//Claim deadlines//EN", "CALSCALE:GREGORIAN"];
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Rahbar//Claim deadlines//EN", "CALSCALE:GREGORIAN"];
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
   for (const c of plan.claims) {
     if (!c.deadlineDate) continue;
     lines.push(
       "BEGIN:VEVENT",
-      `UID:${c.id}-${c.deadlineDate}@aftercrash`,
+      `UID:${c.id}-${c.deadlineDate}@rahbar`,
       `DTSTAMP:${stamp}`,
       `DTSTART;VALUE=DATE:${ymd(c.deadlineDate)}`,
       `DTEND;VALUE=DATE:${ymd(addDays(c.deadlineDate, 1))}`,
-      `SUMMARY:${escIcs(`AfterCrash: ${c.title[lang]} — deadline`)}`,
+      `SUMMARY:${escIcs(`Rahbar: ${c.title[lang]} — deadline`)}`,
       `DESCRIPTION:${escIcs(`${c.deadlineLabel[lang]}\n${c.office[lang]}`)}`,
       "BEGIN:VALARM", "TRIGGER:-P7D", "ACTION:DISPLAY", `DESCRIPTION:${escIcs(c.title[lang])} — 7 days left`, "END:VALARM",
       "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", `DESCRIPTION:${escIcs(c.title[lang])} — tomorrow`, "END:VALARM",
@@ -36,7 +36,7 @@ export function googleCalendarLink(title: string, date: string, details: string)
 }
 
 export function whatsappText(plan: Plan, lang: Lang): string {
-  const head = lang === "hi" ? "AfterCrash योजना — दुर्घटना के बाद के दावे:" : "AfterCrash plan — claims after the accident:";
+  const head = lang === "hi" ? "Rahbar योजना — दुर्घटना के बाद के दावे:" : "Rahbar plan — claims after the accident:";
   const items = plan.claims.map((c, i) => `${i + 1}. ${c.title[lang]} — ${c.amountLabel[lang]}${c.deadlineDate ? ` — ${lang === "hi" ? "अंतिम तिथि" : "by"} ${formatDate(c.deadlineDate, lang)}` : ""}\n   ${c.office[lang]}`);
   const tail = lang === "hi" ? "मुफ़्त कानूनी सहायता: NALSA 15100" : "Free legal aid: NALSA 15100";
   return `${head}\n${items.join("\n")}\n${tail}`;
