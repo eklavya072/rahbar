@@ -4,6 +4,7 @@ import { Noto_Sans_Devanagari, Tiro_Devanagari_Hindi } from "next/font/google";
 import "./globals.css";
 import { LangProvider } from "@/lib/i18n";
 import { RegisterSW } from "@/components/RegisterSW";
+import { SaathiOutsideCase } from "@/components/guide/Saathi";
 
 /* The faces, self-hosted (the same family as Meridian):
    Newsreader, the serif voice of headings, warm and humane, ink on paper.
@@ -49,7 +50,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${serif.variable} ${sans.variable} ${grotesk.variable} ${mono.variable} ${brand.variable} ${devaSans.variable} ${devaSerif.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <LangProvider>{children}</LangProvider>
+        <LangProvider>
+          {children}
+          <SaathiOutsideCase />
+        </LangProvider>
         <RegisterSW />
       </body>
     </html>

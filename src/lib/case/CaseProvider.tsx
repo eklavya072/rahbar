@@ -319,3 +319,8 @@ export function useCase(): Ctx {
   if (!c) throw new Error("useCase outside CaseProvider");
   return c;
 }
+
+/** The case when there is one (case pages), null elsewhere (landing, tool pages). */
+export function useMaybeCase(): Ctx | null {
+  return useContext(C);
+}

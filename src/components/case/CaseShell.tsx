@@ -10,6 +10,7 @@ import { useLang } from "@/lib/i18n";
 import type { Bilingual } from "@/lib/engine/types";
 import { Header } from "../ui";
 import { TracePanel } from "./TracePanel";
+import { Saathi } from "../guide/Saathi";
 
 export const STEP_META: Record<Step, { title: Bilingual; hint: Bilingual }> = {
   story: { title: { en: "Your story", hi: "आपकी बात" }, hint: { en: "What happened", hi: "क्या हुआ" } },
@@ -135,7 +136,7 @@ function Shell({ children }: { children: ReactNode }) {
 
       {/* The pill: how many agent steps ran, pulsing while they work. */}
       <button
-        className={`no-print fixed bottom-6 right-6 z-30 hidden items-center gap-2 rounded-full border border-line bg-surface/95 px-3.5 py-2 text-sm font-medium shadow-[0_12px_28px_-16px_rgba(21,23,28,.55)] backdrop-blur md:flex ${showTrace ? "lg:hidden" : ""}`}
+        className={`no-print fixed bottom-6 left-6 z-30 hidden items-center gap-2 rounded-full border border-line bg-surface/95 px-3.5 py-2 text-sm font-medium shadow-[0_12px_28px_-16px_rgba(21,23,28,.55)] backdrop-blur md:flex ${showTrace ? "lg:hidden" : ""}`}
         onClick={() => (window.innerWidth >= 1024 ? writeTracePref(true) : setDrawer(true))}
       >
         <span className={`h-2 w-2 rounded-full ${working ? "pulse bg-key-bright" : "bg-accent"}`} aria-hidden />
@@ -143,6 +144,7 @@ function Shell({ children }: { children: ReactNode }) {
         <span>{hi ? "पर्दे के पीछे" : "Behind the scenes"}</span>
         <span className="mono text-xs text-muted">{state.trace.length}</span>
       </button>
+      <Saathi />
       {drawer && (
         <div className="no-print fixed inset-0 z-50 flex flex-col bg-black/40 lg:hidden" onClick={() => setDrawer(false)}>
           <div className="rise mt-auto max-h-[85vh] rounded-t-2xl bg-bg p-3" onClick={(e) => e.stopPropagation()}>

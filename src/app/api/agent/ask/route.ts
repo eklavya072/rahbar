@@ -6,6 +6,7 @@ import { evaluate } from "@/lib/engine/evaluate";
 import { buildPlan } from "@/lib/engine/planner";
 import { formatINR } from "@/lib/engine/dates";
 import { EMPTY_FACTS, type Facts } from "@/lib/engine/types";
+import { GLOSSARY } from "@/lib/guide/knowledge";
 
 export const maxDuration = 60;
 
@@ -43,7 +44,16 @@ function digest(f: Facts, today: string) {
 
 export async function POST(req: Request) {
   if (rateLimited(clientIp(req))) return Response.json({ error: "rate_limited" }, { status: 429 });
-  const b = (await req.json().catch(() => null)) as { question?: string; facts?: Partial<Facts>; today?: string; lang?: "en" | "hi"; history?: { role: "user" | "assistant"; content: string }[] } | null;
+  const b = (await req.json().catch(() => null)) as {
+    question?: string;
+    facts?: Partial<Facts>;
+    today?: string;
+    lang?: "en" | "hi";
+    history?: { role: "user" | "assistant"; content: string }[];
+    /** Saathi, the guide: reply style and where the person is in the app. */
+    style?: "en" | "hi" | "hinglish";
+    context?: string;
+  } | null;
   if (!b?.question) return Response.json({ error: "bad_request" }, { status: 400 });
 
   const facts: Facts = { ...EMPTY_FACTS, ...(b.facts ?? {}) };
@@ -74,6 +84,16 @@ export async function POST(req: Request) {
         return out;
       },
     }),
+    explainTerm: tool({
+      description: "Plain-language meaning of a legal or scheme term (FIR, MACT, DAR, hit-and-run, PMSBY, PMJJBY, RuPay, owner-driver PA cover, PM RAHAT, nominee, legal aid, Lok Adalat, post-mortem).",
+      inputSchema: z.object({ term: z.string() }),
+      execute: async ({ term }) => {
+        const t = GLOSSARY.find((g) => g.match.test(term) || g.id === term.toLowerCase());
+        const out = t ? { term: t.en.name, meaning: t.en.body, meaningHi: t.hi.body } : { term, meaning: "Not in Rahbar's glossary. Do not guess; suggest free legal aid (NALSA 15100)." };
+        toolCalls.push({ name: "explainTerm", input: { term }, output: { found: !!t } });
+        return out;
+      },
+    }),
     simulateWhatIf: tool({
       description: "Re-run the rules engine with some facts changed (e.g. the truck is found, the passbook shows PMJJBY) and report what changes.",
       inputSchema: z.object({ changes: ChangeSchema }),
@@ -96,7 +116,13 @@ export async function POST(req: Request) {
     try {
       const res = await generateText({
         model: slot.model,
-        system: `${AGENT_SYSTEM}\n- Reply in ${b.lang === "hi" || /[\u0900-\u097F]/.test(b.question) ? "simple Hindi (Devanagari)" : "English"}.`,
+        system:
+          `${AGENT_SYSTEM}\n- Reply in ${
+            b.style === "hinglish" ? "simple Hinglish (Hindi written in Roman letters, like the person wrote)" : b.style === "hi" || b.lang === "hi" || /[\u0900-\u097F]/.test(b.question) ? "simple Hindi (Devanagari)" : "English"
+          }.` +
+          (b.context
+            ? `\n- You are Saathi, Rahbar's guide for grieving, often low-literacy families. Be warm and very brief: at most 4 short sentences, plain text only (no markdown, no asterisks, no tables, no headings). Use the tools for every amount, deadline or eligibility; never state a rupee figure that a tool did not return. Use explainTerm for legal words. If unsure, say so and suggest free legal aid on 15100.\n- Where the person is in the app: ${b.context.slice(0, 300)}`
+            : ""),
         messages: [...(b.history ?? []).slice(-6), { role: "user", content: b.question.slice(0, 800) }],
         tools,
         stopWhen: stepCountIs(4),

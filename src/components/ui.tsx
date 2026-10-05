@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useLang } from "@/lib/i18n";
 import type { FactSource, Status } from "@/lib/engine/types";
-import { Bot, FileText, Menu, MessageCircle } from "lucide-react";
+import { ArrowRight, Bot, FileText, Menu, MessageCircle } from "lucide-react";
 
 /** The Rahbar mark: a road converging on a brass sunrise — the way forward. */
 export function RahbarMark({ size = 32, tone = "paper" }: { size?: number; tone?: "paper" | "void" }) {
@@ -26,18 +27,18 @@ export function LangToggle({ dark = false }: { dark?: boolean }) {
       {/* Phones: one compact button that switches to the other language */}
       <button
         onClick={() => setLang(lang === "en" ? "hi" : "en")}
-        className={`grid h-10 min-w-10 place-items-center rounded-full border px-2.5 text-sm font-semibold sm:hidden ${ring}`}
+        className={`grid h-10 min-w-10 place-items-center rounded-lg border px-2.5 text-sm font-semibold sm:hidden ${ring}`}
         aria-label={lang === "en" ? "हिंदी में देखें" : "View in English"}
       >
         {lang === "en" ? "हिं" : "EN"}
       </button>
-      <div className={`hidden rounded-full border p-0.5 text-sm sm:inline-flex ${ring}`} role="group" aria-label="Language">
+      <div className={`hidden rounded-[10px] border p-0.5 text-sm sm:inline-flex ${ring}`} role="group" aria-label="Language">
         {(["en", "hi"] as const).map((l) => (
           <button
             key={l}
             onClick={() => setLang(l)}
             aria-pressed={lang === l}
-            className={`min-h-9 min-w-11 rounded-full px-3 font-semibold transition-colors ${
+            className={`min-h-9 min-w-11 rounded-lg px-3 font-semibold transition-colors ${
               lang === l ? (dark ? "bg-[#f2f1ec] text-[#0a0c10]" : "bg-ink text-white") : dark ? "text-white/60 hover:text-white" : "text-muted hover:text-ink"
             }`}
           >
@@ -108,6 +109,38 @@ function useSurfaceUnderHeader(enabled: boolean) {
   return tone;
 }
 
+/** True when this tab already holds a case with something in it (read from the session the case pages write). */
+function readCaseInProgress(): boolean {
+  try {
+    const raw = sessionStorage.getItem("rahbar-case");
+    if (!raw) return false;
+    const c = JSON.parse(raw) as { sampleId?: string | null; story?: string; answers?: Record<string, unknown>; docs?: unknown[]; victimName?: string };
+    return !!(c.sampleId || c.story || c.victimName || Object.keys(c.answers ?? {}).length || (c.docs ?? []).length);
+  } catch {
+    return false;
+  }
+}
+const noop = () => () => {};
+
+/** The one action that matters, always in reach: start a case, or pick up the one you began. */
+function CaseCta({ dark }: { dark: boolean }) {
+  const { lang } = useLang();
+  const hi = lang === "hi";
+  const inProgress = useSyncExternalStore(noop, readCaseInProgress, () => false);
+  const long = inProgress ? (hi ? "अपना केस जारी रखें" : "Continue your case") : hi ? "अपना केस शुरू करें" : "Start your case";
+  const short = inProgress ? (hi ? "जारी रखें" : "Continue") : hi ? "शुरू करें" : "Start";
+  return (
+    <Link
+      href="/case"
+      className={`group inline-flex h-10 items-center gap-1.5 rounded-lg px-3.5 text-sm font-semibold transition-colors ${dark ? "bg-[#f2f1ec] text-[#0a0c10] hover:bg-white" : "bg-[#15171c] text-[#f8f6f0] hover:bg-[#2a2d33]"}`}
+    >
+      <span className="sm:hidden">{short}</span>
+      <span className="hidden sm:inline">{long}</span>
+      <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+    </Link>
+  );
+}
+
 // The landing redefines --ink and friends for its dark film; anything paper-coloured
 // inside the floating header resets them so its text stays dark on light.
 const PAPER_VARS = { "--ink": "#15171c", "--ink-2": "#393b41", "--key": "#8c6a1e" } as React.CSSProperties;
@@ -117,6 +150,8 @@ export function Header({ right, variant = "paper" }: { right?: React.ReactNode; 
   const hi = lang === "hi";
   const film = variant === "film";
   const tone = useSurfaceUnderHeader(film);
+  const path = usePathname();
+  const showCta = !path?.startsWith("/case");
   const dark = film && tone !== "light";
   const shell = !film
     ? "sticky top-0 border-b border-line bg-bg/85 backdrop-blur-md"
@@ -135,12 +170,13 @@ export function Header({ right, variant = "paper" }: { right?: React.ReactNode; 
         </Link>
         <div className="flex items-center gap-1.5 sm:gap-2">
           {right}
-          <nav className={`hidden items-center gap-6 text-sm font-medium md:flex ${dark ? "text-white/70" : "text-muted"}`} aria-label="Main">
+          <nav className={`mr-2 hidden items-center gap-6 text-sm font-medium lg:flex ${dark ? "text-white/70" : "text-muted"}`} aria-label="Main">
             {NAV.map((n) => <Link key={n.href} href={n.href} className={`link-swipe ${dark ? "hover:text-white" : "hover:text-ink"}`}>{hi ? n.hi : n.en}</Link>)}
           </nav>
+          {showCta && <CaseCta dark={dark} />}
           <LangToggle dark={dark} />
-          <details className="relative md:hidden">
-            <summary className={`grid h-10 w-10 cursor-pointer list-none place-items-center rounded-full border ${dark ? "border-white/25 bg-white/5" : "border-line bg-surface"}`} aria-label="Menu">
+          <details className="relative lg:hidden">
+            <summary className={`grid h-10 w-10 cursor-pointer list-none place-items-center rounded-lg border ${dark ? "border-white/25 bg-white/5" : "border-line bg-surface"}`} aria-label="Menu">
               <Menu size={16} />
             </summary>
             <nav className="absolute right-0 top-12 z-50 w-52 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-[0_16px_34px_-14px_rgba(21,23,28,.35)]" style={PAPER_VARS} aria-label="Main">
