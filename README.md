@@ -135,8 +135,17 @@ cd aftercrash  # repo folder
 cp .env.example .env.local   # add a free Groq key (optional — the app works in no-AI mode without it)
 npm install
 npm run dev                  # http://localhost:3000
-npm test                     # 39 tests incl. property-based invariants
+npm test                     # 40 tests incl. property-based invariants (10 more run live against Groq with AI_LIVE=1)
 ```
+
+## Deploy on Vercel (free, Hobby plan)
+
+1. Push this folder to a GitHub repository.
+2. On [vercel.com/new](https://vercel.com/new), import the repository. Vercel detects Next.js; keep the defaults (build `next build`, Node 20+).
+3. Under **Settings → Environment Variables**, add `GROQ_API_KEY` (free key from [console.groq.com/keys](https://console.groq.com/keys)). Optional: `GOOGLE_GENERATIVE_AI_API_KEY` as a backup model.
+4. Deploy. Every push to the main branch redeploys automatically.
+
+Without any key the app still works in no-AI mode: OCR, rules, plans, letters from templates and the glossary all run without a model. Agent routes allow up to 60 s, within the Hobby limit. Nothing about a case is stored on the server.
 
 Re-render the synthetic sample documents: `PLAYWRIGHT_PATH=<path to playwright> node scripts/render-samples.mjs`
 
