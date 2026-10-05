@@ -38,16 +38,12 @@ export function useCurrentStep(): Step {
   return STEPS.find((s) => path?.startsWith(stepPath(s))) ?? "story";
 }
 
-/** "Step 2 of 6", the page's one question as a big serif title, and one plain sentence. */
+/** The page's one question as a big serif title, and one plain sentence. Position lives in the road above. */
 export function StepIntro({ title, lead, aside }: { title: string; lead?: ReactNode; aside?: ReactNode }) {
-  const step = useCurrentStep();
-  const { lang } = useLang();
-  const n = STEPS.indexOf(step) + 1;
   return (
-    <header className="mb-7 flex flex-wrap items-end justify-between gap-4">
+    <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0 max-w-2xl">
-        <div className="step-label">{lang === "hi" ? `चरण ${n} / ${STEPS.length}` : `Step ${n} of ${STEPS.length}`}</div>
-        <h1 className="h-step mt-2">
+        <h1 className="h-step">
           <Words text={title} delay={80} />
         </h1>
         {lead && <p className="lead step-enter mt-3" style={{ animationDelay: "260ms" }}>{lead}</p>}
@@ -97,8 +93,8 @@ export function More({ icon, title, hint, children, open = false, id }: { icon: 
 /** A labelled group of optional drawers. */
 export function Extras({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="mt-10 space-y-3">
-      <h2 className="step-label !text-muted">{title}</h2>
+    <section className="mt-12 space-y-3">
+      <h2 className="t-label">{title}</h2>
       {children}
     </section>
   );
@@ -125,7 +121,7 @@ export function WorkingSteps({ since }: { since: number }) {
   const firstWaiting = phaseState.indexOf("wait");
   return (
     <div className="card step-enter p-5" role="status" aria-live="polite">
-      <div className="step-label">{lang === "hi" ? "रहबर काम कर रहा है" : "Rahbar is working"}</div>
+      <div className="h-sec">{lang === "hi" ? "रहबर काम कर रहा है…" : "Rahbar is working…"}</div>
       <ul className="mt-3">
         {PHASES.map((p, i) => {
           const st = phaseState[i] === "wait" && i === firstWaiting && !phaseState.includes("on") ? "on" : phaseState[i];
@@ -142,11 +138,10 @@ export function WorkingSteps({ since }: { since: number }) {
 }
 
 /** The same intro on the standalone tool pages: what this page is for, in one line. */
-export function PageIntro({ kicker, title, children }: { kicker: string; title: string; children?: ReactNode }) {
+export function PageIntro({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <header className="max-w-3xl">
-      <div className="step-label">{kicker}</div>
-      <h1 className="h-step mt-2">
+      <h1 className="h-step">
         <Words text={title} delay={60} />
       </h1>
       {children && <div className="lead step-enter mt-3" style={{ animationDelay: "240ms" }}>{children}</div>}

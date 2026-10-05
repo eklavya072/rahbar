@@ -44,7 +44,7 @@ export const cardTxnWithin90Days = (f: Facts): Tri => {
 
 const deathOrInjury = (f: Facts, death: number, grievous: number, minor: number | null, labels: { death: string; grievous: string; minor?: string; deathHi: string; grievousHi: string; minorHi?: string }): Amount => {
   if (f.incidentType === "grievous_injury") return { value: grievous, label: { en: labels.grievous, hi: labels.grievousHi } };
-  if (f.incidentType === "minor_injury") return { value: minor, label: { en: labels.minor ?? "—", hi: labels.minorHi ?? "—" } };
+  if (f.incidentType === "minor_injury") return { value: minor, label: { en: labels.minor ?? "-", hi: labels.minorHi ?? "-" } };
   return { value: death, label: { en: labels.death, hi: labels.deathHi } };
 };
 
@@ -91,7 +91,7 @@ export const RULES: RuleDef[] = [
     ],
     notes: () => [
       { en: "If the vehicle is traced later and a Claims Tribunal awards compensation, this amount is adjusted (refunded) from that award.", hi: "अगर बाद में वाहन मिल जाए और ट्रिब्यूनल मुआवज़ा दे, तो यह राशि उस मुआवज़े में से समायोजित (वापस) होगी।" },
-      { en: "Supreme Court (2024): if no claim is filed within a month, the officer must alert the District Legal Services Authority to help you — for free.", hi: "सुप्रीम कोर्ट (2024): एक महीने में दावा न हो तो अधिकारी को ज़िला विधिक सेवा प्राधिकरण को सूचित करना होगा — मुफ़्त मदद।" },
+      { en: "Supreme Court (2024): if no claim is filed within a month, the officer must alert the District Legal Services Authority to help you, for free.", hi: "सुप्रीम कोर्ट (2024): एक महीने में दावा न हो तो अधिकारी को ज़िला विधिक सेवा प्राधिकरण को सूचित करना होगा, मुफ़्त मदद।" },
     ],
     citations: [
       { title: "MoRTH notification: Hit-and-Run Scheme 2022 (PIB)", url: "https://www.pib.gov.in/PressReleasePage.aspx?PRID=1801656" },
@@ -121,17 +121,17 @@ export const RULES: RuleDef[] = [
     },
     deadline: (f) =>
       isValidISO(f.accidentDate)
-        ? { date: addDays(f.accidentDate, 30), kind: "soft", label: { en: "Inform the insurer immediately — most policies ask within 30 days", hi: "बीमा कंपनी को तुरंत सूचित करें — अधिकतर पॉलिसी 30 दिन के भीतर कहती हैं" } }
+        ? { date: addDays(f.accidentDate, 30), kind: "soft", label: { en: "Inform the insurer immediately. Most policies ask within 30 days", hi: "बीमा कंपनी को तुरंत सूचित करें। अधिकतर पॉलिसी 30 दिन के भीतर कहती हैं" } }
         : noDate,
     documents: ["POLICY", "FIR", "POST_MORTEM", "DEATH_CERT", "DL", "RC", "CLAIMANT_ID", "BANK_DETAILS", "LEGAL_HEIR"],
     office: { en: "Claims desk of the vehicle's insurer (toll-free number on the policy, or nearest branch)", hi: "वाहन की बीमा कंपनी का क्लेम डेस्क (पॉलिसी पर टोल-फ़्री नंबर, या नज़दीकी शाखा)" },
     steps: [
-      { en: "Call the insurer's claim number and register a PA (personal accident) claim — note the claim number.", hi: "बीमा कंपनी के क्लेम नंबर पर कॉल करके PA (व्यक्तिगत दुर्घटना) क्लेम दर्ज करें — क्लेम नंबर नोट करें।" },
+      { en: "Call the insurer's claim number, register a PA (personal accident) claim and note the claim number.", hi: "बीमा कंपनी के क्लेम नंबर पर कॉल करके PA (व्यक्तिगत दुर्घटना) क्लेम दर्ज करें और क्लेम नंबर नोट करें।" },
       { en: "Submit the claim form with the documents (the nominee on the policy, or legal heir, claims).", hi: "दस्तावेज़ों के साथ क्लेम फ़ॉर्म जमा करें (पॉलिसी का नॉमिनी या कानूनी वारिस दावा करता है)।" },
       { en: "If unpaid after 30 days, escalate to the insurer's Grievance Officer, then Bima Bharosa / Insurance Ombudsman.", hi: "30 दिन में भुगतान न हो तो शिकायत अधिकारी, फिर बीमा भरोसा / बीमा लोकपाल के पास जाएँ।" },
     ],
     notes: () => [
-      { en: "This cover is mandatory on every vehicle policy unless the owner had another ₹15 lakh PA policy — families very often don't know it exists.", hi: "यह कवर हर वाहन पॉलिसी पर अनिवार्य है (जब तक मालिक के पास अलग ₹15 लाख PA पॉलिसी न हो) — परिवार अक्सर इसके बारे में नहीं जानते।" },
+      { en: "This cover is mandatory on every vehicle policy unless the owner had another ₹15 lakh PA policy. Families very often don't know it exists.", hi: "यह कवर हर वाहन पॉलिसी पर अनिवार्य है (जब तक मालिक के पास अलग ₹15 लाख PA पॉलिसी न हो)। परिवार अक्सर इसके बारे में नहीं जानते।" },
     ],
     citations: [
       { title: "IRDAI raises owner-driver PA cover to ₹15 lakh", url: "https://www.coverfox.com/news/irdai-raises-motor-insurance-personal-accident-cover-to-rs-15-lakh/" },
@@ -147,7 +147,7 @@ export const RULES: RuleDef[] = [
     relevant: (f) => f.incidentType !== "minor_injury",
     conditions: [
       { id: "enrolled", label: { en: "₹20 PMSBY premium was debited from the account this cover year", hi: "इस वर्ष खाते से ₹20 PMSBY प्रीमियम कटा था" }, facts: ["pmsbyPremiumDebited"], test: (f) => f.pmsbyPremiumDebited },
-      { id: "age", label: { en: "Victim was aged 18–70", hi: "मृतक की आयु 18–70 वर्ष थी" }, facts: ["victimAge"], test: (f) => ageBetween(f, 18, 70) },
+      { id: "age", label: { en: "Victim was aged 18-70", hi: "मृतक की आयु 18-70 वर्ष थी" }, facts: ["victimAge"], test: (f) => ageBetween(f, 18, 70) },
       { id: "severity", label: { en: "Accidental death or permanent disability", hi: "दुर्घटना में मृत्यु या स्थायी विकलांगता" }, facts: ["incidentType"], test: isDeathOrPermanentDisability },
     ],
     amount: (f) =>
@@ -180,7 +180,7 @@ export const RULES: RuleDef[] = [
     relevant: (f) => f.incidentType === "death" || f.incidentType === null,
     conditions: [
       { id: "enrolled", label: { en: "₹436 PMJJBY premium was debited this cover year", hi: "इस वर्ष ₹436 PMJJBY प्रीमियम कटा था" }, facts: ["pmjjbyPremiumDebited"], test: (f) => f.pmjjbyPremiumDebited },
-      { id: "age", label: { en: "Victim was aged 18–55", hi: "मृतक की आयु 18–55 वर्ष थी" }, facts: ["victimAge"], test: (f) => ageBetween(f, 18, 55) },
+      { id: "age", label: { en: "Victim was aged 18-55", hi: "मृतक की आयु 18-55 वर्ष थी" }, facts: ["victimAge"], test: (f) => ageBetween(f, 18, 55) },
       { id: "death", label: { en: "Death (any cause)", hi: "मृत्यु (किसी भी कारण से)" }, facts: ["incidentType"], test: isDeath },
     ],
     amount: () => ({ value: 200000, label: { en: "₹2,00,000 on death", hi: "मृत्यु पर ₹2,00,000" } }),
@@ -219,7 +219,7 @@ export const RULES: RuleDef[] = [
         ? { value: 200000, label: { en: "₹2,00,000 (account opened after 28 Aug 2018)", hi: "₹2,00,000 (28 अगस्त 2018 के बाद खुला खाता)" } }
         : f.pmjdyAccountOpenedAfter2018 === false
           ? { value: 100000, label: { en: "₹1,00,000 (account opened before 28 Aug 2018)", hi: "₹1,00,000 (28 अगस्त 2018 से पहले खुला खाता)" } }
-          : { value: 100000, label: { en: "₹1–2 lakh (₹2 lakh if the account was opened after 28 Aug 2018)", hi: "₹1–2 लाख (28 अगस्त 2018 के बाद खुले खाते पर ₹2 लाख)" } },
+          : { value: 100000, label: { en: "₹1-2 lakh (₹2 lakh if the account was opened after 28 Aug 2018)", hi: "₹1-2 लाख (28 अगस्त 2018 के बाद खुले खाते पर ₹2 लाख)" } },
     deadline: (f) =>
       isValidISO(f.accidentDate)
         ? { date: addDays(f.accidentDate, 90), kind: "hard", label: { en: "Intimate the bank within 90 days of the accident; documents within 60 days after that", hi: "दुर्घटना के 90 दिन के भीतर बैंक को सूचना दें; उसके बाद 60 दिन में दस्तावेज़" } }
@@ -227,7 +227,7 @@ export const RULES: RuleDef[] = [
     documents: ["FIR", "POST_MORTEM", "DEATH_CERT", "PASSBOOK", "CLAIMANT_ID", "BANK_DETAILS", "LEGAL_HEIR"],
     office: { en: "The bank branch that issued the RuPay card", hi: "वह बैंक शाखा जिसने रुपे कार्ड जारी किया" },
     steps: [
-      { en: "Tell the branch in writing that the cardholder died in an accident — ask for the RuPay PMJDY accident claim form.", hi: "शाखा को लिखित में बताएँ कि कार्डधारक की दुर्घटना में मृत्यु हुई — रुपे PMJDY दुर्घटना क्लेम फ़ॉर्म माँगें।" },
+      { en: "Tell the branch in writing that the cardholder died in an accident. Ask for the RuPay PMJDY accident claim form.", hi: "शाखा को लिखित में बताएँ कि कार्डधारक की दुर्घटना में मृत्यु हुई। रुपे PMJDY दुर्घटना क्लेम फ़ॉर्म माँगें।" },
       { en: "Ask the bank for the transaction log showing card use in the last 90 days.", hi: "बैंक से पिछले 90 दिनों के कार्ड इस्तेमाल का ट्रांज़ैक्शन लॉग माँगें।" },
       { en: "Submit the form with the documents; the bank forwards it to the insurer.", hi: "दस्तावेज़ों के साथ फ़ॉर्म जमा करें; बैंक बीमा कंपनी को भेजता है।" },
     ],
@@ -249,39 +249,39 @@ export const RULES: RuleDef[] = [
     ],
     amount: (f) =>
       deathOrInjury(f, 500000, 250000, null, {
-        death: "₹5,00,000 fixed (no-fault, s.164) — or more under s.166 based on income and dependants",
-        grievous: "₹2,50,000 fixed (no-fault, s.164) — or more under s.166",
+        death: "₹5,00,000 fixed (no-fault, s.164), or more under s.166 based on income and dependants",
+        grievous: "₹2,50,000 fixed (no-fault, s.164), or more under s.166",
         minor: "Based on actual losses (s.166)",
-        deathHi: "₹5,00,000 तय (नो-फ़ॉल्ट, धारा 164) — या आय और आश्रितों के आधार पर धारा 166 में अधिक",
-        grievousHi: "₹2,50,000 तय (नो-फ़ॉल्ट, धारा 164) — या धारा 166 में अधिक",
+        deathHi: "₹5,00,000 तय (नो-फ़ॉल्ट, धारा 164), या आय और आश्रितों के आधार पर धारा 166 में अधिक",
+        grievousHi: "₹2,50,000 तय (नो-फ़ॉल्ट, धारा 164), या धारा 166 में अधिक",
         minorHi: "वास्तविक नुकसान के आधार पर (धारा 166)",
       }),
     deadline: (f) =>
       isValidISO(f.accidentDate)
-        ? { date: addMonths(f.accidentDate, 6), kind: "hard", label: { en: "File within 6 months (MV Act s.166(3)). Supreme Court interim order (Nov 2025): late claims must not be dismissed while the limit is under challenge — but don't rely on it.", hi: "6 महीने में दाखिल करें (धारा 166(3))। सुप्रीम कोर्ट अंतरिम आदेश (नवंबर 2025): चुनौती के दौरान देर से आए दावे खारिज नहीं होंगे — फिर भी इस पर निर्भर न रहें।" } }
+        ? { date: addMonths(f.accidentDate, 6), kind: "hard", label: { en: "File within 6 months (MV Act s.166(3)). Supreme Court interim order (Nov 2025): late claims must not be dismissed while the limit is under challenge, but don't rely on it.", hi: "6 महीने में दाखिल करें (धारा 166(3))। सुप्रीम कोर्ट अंतरिम आदेश (नवंबर 2025): चुनौती के दौरान देर से आए दावे खारिज नहीं होंगे, फिर भी इस पर निर्भर न रहें।" } }
         : noDate,
     documents: ["FIR", "DAR", "POST_MORTEM", "DEATH_CERT", "CLAIMANT_ID", "LEGAL_HEIR", "EMPLOYER_PROOF", "HOSPITAL_RECORDS"],
     office: { en: "Motor Accident Claims Tribunal (district court). Free lawyer: District Legal Services Authority (NALSA 15100).", hi: "मोटर दुर्घटना दावा न्यायाधिकरण (ज़िला न्यायालय)। मुफ़्त वकील: ज़िला विधिक सेवा प्राधिकरण (NALSA 15100)।" },
     steps: [
-      { en: "Ask the police whether the Detailed Accident Report (DAR) has been sent to the Tribunal — it can be treated as your claim.", hi: "पुलिस से पूछें कि विस्तृत दुर्घटना रिपोर्ट (DAR) ट्रिब्यूनल को भेजी गई या नहीं — इसे आपका दावा माना जा सकता है।" },
+      { en: "Ask the police whether the Detailed Accident Report (DAR) has been sent to the Tribunal. It can be treated as your claim.", hi: "पुलिस से पूछें कि विस्तृत दुर्घटना रिपोर्ट (DAR) ट्रिब्यूनल को भेजी गई या नहीं। इसे आपका दावा माना जा सकता है।" },
       { en: "Get a free legal-aid lawyer from the DLSA; never sign over a percentage of the award to anyone.", hi: "DLSA से मुफ़्त वकील लें; मुआवज़े का कोई प्रतिशत किसी को न लिखें।" },
-      { en: "Many cases settle faster at a National Lok Adalat — but check the offer against the s.166 estimate first.", hi: "कई मामले राष्ट्रीय लोक अदालत में जल्दी निपटते हैं — पर पहले धारा 166 के अनुमान से प्रस्ताव मिलाएँ।" },
+      { en: "Many cases settle faster at a National Lok Adalat, but check the offer against the s.166 estimate first.", hi: "कई मामले राष्ट्रीय लोक अदालत में जल्दी निपटते हैं, पर पहले धारा 166 के अनुमान से प्रस्ताव मिलाएँ।" },
     ],
     notes: (f) =>
       f.offendingVehicleIdentified === false
-        ? [{ en: "Becomes available if police trace the vehicle later — the hit-and-run payment is then adjusted.", hi: "पुलिस बाद में वाहन ढूँढ ले तो यह रास्ता खुल जाता है — तब हिट-एंड-रन राशि समायोजित होती है।" }]
+        ? [{ en: "Becomes available if police trace the vehicle later. The hit-and-run payment is then adjusted.", hi: "पुलिस बाद में वाहन ढूँढ ले तो यह रास्ता खुल जाता है। तब हिट-एंड-रन राशि समायोजित होती है।" }]
         : f.offendingVehicleInsured === false
           ? [{ en: "The vehicle was uninsured: the owner is liable, and recovery can be slow. Ask the DLSA lawyer about the Motor Vehicle Accident Fund.", hi: "वाहन का बीमा नहीं था: मालिक ज़िम्मेदार है, वसूली धीमी हो सकती है। DLSA वकील से मोटर वाहन दुर्घटना कोष के बारे में पूछें।" }]
           : [],
     citations: [
       { title: "SC interim order on s.166(3) limitation (Nov 2025)", url: "https://www.livelaw.in/top-stories/no-motor-accident-claim-should-be-dismissed-as-time-barred-supreme-court-interim-order-s1663-mv-act-309095" },
-      { title: "Crashfree India — compensation routes (Jan 2026)", url: "https://crashfreeindia.org/documents/justice-unserved-crashfree-india.pdf" },
+      { title: "Crashfree India: compensation routes (Jan 2026)", url: "https://crashfreeindia.org/documents/justice-unserved-crashfree-india.pdf" },
     ],
     lastVerified: VERIFIED,
   },
   {
     id: "RAHAT",
-    name: { en: "PM RAHAT cashless treatment for road accident victims", hi: "पीएम राहत — सड़क दुर्घटना पीड़ितों का कैशलेस इलाज" },
+    name: { en: "PM RAHAT cashless treatment for road accident victims", hi: "पीएम राहत: सड़क दुर्घटना पीड़ितों का कैशलेस इलाज" },
     short: { en: "PM RAHAT cashless treatment", hi: "पीएम राहत कैशलेस इलाज" },
     payer: { en: "Motor Vehicle Accident Fund via NHA / State Health Agency (paid to the hospital)", hi: "NHA / राज्य स्वास्थ्य एजेंसी के ज़रिए मोटर वाहन दुर्घटना कोष (अस्पताल को भुगतान)" },
     relevant: () => true,
@@ -289,7 +289,7 @@ export const RULES: RuleDef[] = [
     conditions: [
       { id: "within24", label: { en: "Admitted to hospital within 24 hours of the accident", hi: "दुर्घटना के 24 घंटे के भीतर अस्पताल में भर्ती" }, facts: ["hospitalisedWithin24h"], test: (f) => f.hospitalisedWithin24h },
     ],
-    amount: () => ({ value: 150000, label: { en: "Treatment up to ₹1,50,000 for 7 days — paid to the hospital, not to you", hi: "7 दिन तक ₹1,50,000 तक का इलाज — अस्पताल को भुगतान, आपको नहीं" } }),
+    amount: () => ({ value: 150000, label: { en: "Treatment up to ₹1,50,000 for 7 days, paid to the hospital, not to you", hi: "7 दिन तक ₹1,50,000 तक का इलाज, अस्पताल को भुगतान, आपको नहीं" } }),
     deadline: (f) =>
       isValidISO(f.accidentDate)
         ? { date: addDays(f.accidentDate, 7), kind: "process", label: { en: "Covers the first 7 days of treatment", hi: "इलाज के पहले 7 दिन कवर" } }
@@ -309,7 +309,7 @@ export const RULES: RuleDef[] = [
     id: "EMPLOYER",
     name: { en: "Employer liability: ESIC dependants' benefit or Employees' Compensation (commuting/on duty)", hi: "नियोक्ता दायित्व: ESIC आश्रित लाभ या कर्मचारी मुआवज़ा (आते-जाते/ड्यूटी पर)" },
     short: { en: "ESIC / employee compensation", hi: "ESIC / कर्मचारी मुआवज़ा" },
-    payer: { en: "ESIC (if insured) — otherwise the employer under the Employees' Compensation Act", hi: "ESIC (अगर बीमित) — नहीं तो कर्मचारी मुआवज़ा अधिनियम के तहत नियोक्ता" },
+    payer: { en: "ESIC (if insured), otherwise the employer under the Employees' Compensation Act", hi: "ESIC (अगर बीमित), नहीं तो कर्मचारी मुआवज़ा अधिनियम के तहत नियोक्ता" },
     relevant: (f) => f.incidentType !== "minor_injury" && f.wasCommutingOrOnDuty !== false,
     conditions: [
       { id: "commute", label: { en: "Victim was on duty or commuting between home and work", hi: "मृतक ड्यूटी पर थे या घर और काम के बीच आ-जा रहे थे" }, facts: ["wasCommutingOrOnDuty"], test: (f) => f.wasCommutingOrOnDuty },
@@ -327,11 +327,11 @@ export const RULES: RuleDef[] = [
     office: { en: "Employer's HR → ESIC branch office, or the Commissioner for Employees' Compensation (Labour Dept.)", hi: "नियोक्ता का HR → ESIC शाखा कार्यालय, या कर्मचारी मुआवज़ा आयुक्त (श्रम विभाग)" },
     steps: [
       { en: "Ask the employer to file the accident report (ESIC) or to admit the claim (EC Act).", hi: "नियोक्ता से दुर्घटना रिपोर्ट (ESIC) दाखिल करने या दावा स्वीकार करने को कहें।" },
-      { en: "ESIC and the EC Act cannot both pay for the same injury — the ESIC route applies if he was ESIC-insured.", hi: "ESIC और EC अधिनियम दोनों एक ही चोट के लिए भुगतान नहीं करते — ESIC बीमित होने पर ESIC रास्ता लागू होगा।" },
+      { en: "ESIC and the EC Act cannot both pay for the same injury. The ESIC route applies if he was ESIC-insured.", hi: "ESIC और EC अधिनियम दोनों एक ही चोट के लिए भुगतान नहीं करते। ESIC बीमित होने पर ESIC रास्ता लागू होगा।" },
     ],
     citations: [
       { title: "Supreme Court, 2025 INSC 904 (commuting accidents, EC Act)", url: "https://api.sci.gov.in/supremecourt/2012/11949/11949_2012_5_1501_62795_Judgement_29-Jul-2025.pdf" },
-      { title: "ESIC benefits — dependants' benefit", url: "http://esic.gov.in/information-benefits" },
+      { title: "ESIC benefits: dependants' benefit", url: "http://esic.gov.in/information-benefits" },
     ],
     lastVerified: VERIFIED,
   },
@@ -362,7 +362,7 @@ export const RULES: RuleDef[] = [
     id: "BANK_BALANCE",
     name: { en: "The deceased's own bank balance (RBI 2025 deceased-claim rules)", hi: "मृतक का अपना बैंक बैलेंस (RBI 2025 नियम)" },
     short: { en: "Bank balance of the deceased", hi: "मृतक का बैंक बैलेंस" },
-    payer: { en: "The deceased's bank — this is the family's own money, not compensation", hi: "मृतक का बैंक — यह परिवार का अपना पैसा है, मुआवज़ा नहीं" },
+    payer: { en: "The deceased's bank (this is the family's own money, not compensation)", hi: "मृतक का बैंक (यह परिवार का अपना पैसा है, मुआवज़ा नहीं)" },
     relevant: (f) => f.incidentType === "death" && f.deceasedBankBalance !== null,
     informational: true,
     conditions: [
@@ -378,7 +378,7 @@ export const RULES: RuleDef[] = [
     office: { en: "The deceased's bank branch (standard RBI claim form)", hi: "मृतक की बैंक शाखा (RBI का मानक क्लेम फ़ॉर्म)" },
     steps: [
       { en: "Nominee fills the bank's standard deceased-claim form with the death certificate and ID.", hi: "नॉमिनी मृत्यु प्रमाण पत्र और पहचान पत्र के साथ बैंक का मानक क्लेम फ़ॉर्म भरें।" },
-      { en: "No nominee? Up to ₹15 lakh, banks must use the simplified procedure (claim form, indemnity, no-objection from other heirs) — no succession certificate.", hi: "नॉमिनी नहीं? ₹15 लाख तक बैंक को सरल प्रक्रिया अपनानी होगी (क्लेम फ़ॉर्म, क्षतिपूर्ति बांड, बाकी वारिसों की NOC) — उत्तराधिकार प्रमाण पत्र नहीं।" },
+      { en: "No nominee? Up to ₹15 lakh, banks must use the simplified procedure (claim form, indemnity, no-objection from other heirs), with no succession certificate.", hi: "नॉमिनी नहीं? ₹15 लाख तक बैंक को सरल प्रक्रिया अपनानी होगी (क्लेम फ़ॉर्म, क्षतिपूर्ति बांड, बाकी वारिसों की NOC)। उत्तराधिकार प्रमाण पत्र नहीं।" },
     ],
     citations: [
       { title: "RBI (Settlement of Claims in respect of Deceased Customers) Directions, 2025", url: "https://taxguru.in/rbi/rbi-standardizes-deceased-customer-claim-settlement-banks.html" },

@@ -11,6 +11,7 @@ import { formatINRShort } from "@/lib/engine/dates";
 import { rehydrate } from "@/lib/privacy/pii";
 import type { Evidence, FactKey, Facts } from "@/lib/engine/types";
 import { SourceBadge } from "../ui";
+import { Odometer } from "../Type";
 import { DocViewer } from "./DocViewer";
 import { ActionBar, Extras, More, StepIntro } from "./Flow";
 
@@ -50,7 +51,7 @@ function FactsRead() {
       {state.guardFlags.length > 0 && (
         <div className="rounded-2xl border border-rose/30 bg-rose-soft p-4 text-sm text-rose">
           <div className="flex items-center gap-2 font-semibold">
-            <ShieldAlert size={17} /> {hi ? "एक काग़ज़ में AI के लिए छिपा निर्देश मिला — उसे अनदेखा किया गया" : "One paper had a hidden instruction to the AI — it was ignored"}
+            <ShieldAlert size={17} /> {hi ? "एक काग़ज़ में AI के लिए छिपा निर्देश मिला। उसे अनदेखा किया गया" : "One paper had a hidden instruction to the AI. It was ignored"}
           </div>
           <ul className="mt-2 space-y-1">
             {state.guardFlags.map((l) => (
@@ -61,10 +62,15 @@ function FactsRead() {
         </div>
       )}
 
-      {summary && <p className="border-l-2 border-key-bright pl-4 font-display text-lg leading-relaxed text-ink-2">{summary}</p>}
+      {summary && (
+        <blockquote className="pull">
+          <span className="pull-mark" aria-hidden>“</span>
+          <p>{summary}</p>
+        </blockquote>
+      )}
 
       <div className="card overflow-hidden">
-        {known.length === 0 && <div className="p-4 text-sm text-muted">{hi ? "काग़ज़ों से कोई तथ्य नहीं मिला — नीचे कुछ सवाल हैं।" : "Nothing could be read from the papers — a few questions below instead."}</div>}
+        {known.length === 0 && <div className="p-4 text-sm text-muted">{hi ? "काग़ज़ों से कोई तथ्य नहीं मिला, इसलिए नीचे कुछ सवाल हैं।" : "Nothing could be read from the papers, so there are a few questions below instead."}</div>}
         <ul className="divide-y divide-line">
           {shown.map((k) => {
             const p = provenance[k];
@@ -76,7 +82,7 @@ function FactsRead() {
                   {isEditing ? (
                     <FactEditor k={k} value={facts[k]} onChange={(v) => dispatch({ type: "answer", key: k, value: v })} />
                   ) : (
-                    <div className="mt-0.5 text-[1.05rem] font-semibold">{formatFact(k, facts[k], lang)}</div>
+                    <div className="fact-v">{formatFact(k, facts[k], lang)}</div>
                   )}
                 </div>
                 <button className="inline-flex h-9 items-center gap-1.5 self-start rounded-full px-3 text-sm font-medium text-key hover:bg-key-soft" onClick={() => setEditing(isEditing ? null : k)}>
@@ -128,7 +134,7 @@ function SentToAI() {
   const hi = lang === "hi";
   if (!state.anonymisedPreview) return null;
   return (
-    <More icon={<EyeOff size={18} />} title={hi ? "AI को असल में क्या भेजा गया" : "What the AI actually saw"} hint={hi ? "नाम और नंबर छिपाकर — ख़ुद देखें" : "Names and numbers hidden — see for yourself"}>
+    <More icon={<EyeOff size={18} />} title={hi ? "AI को असल में क्या भेजा गया" : "What the AI actually saw"} hint={hi ? "नाम और नंबर छिपाकर। ख़ुद देखें" : "Names and numbers hidden. See for yourself"}>
       <div className="space-y-2">
         <div className="flex flex-wrap gap-1.5">
           {Object.entries(state.piiCounts).map(([k, v]) => (
@@ -158,17 +164,17 @@ function Questions() {
 
   const answer = (k: FactKey, v: Facts[FactKey], unlocks: string[]) => {
     dispatch({ type: "answer", key: k, value: v });
-    trace("Questioner", `Asked "${FACT_LABELS[k].en}" — highest value of information`, { status: "done", detail: `could unlock: ${unlocks.join(", ")}` });
+    trace("Questioner", `Asked "${FACT_LABELS[k].en}": highest value of information`, { status: "done", detail: `could unlock: ${unlocks.join(", ")}` });
     setVal("");
   };
 
   return (
     <section>
       {summary.confirmedTotal + summary.possibleTotal > 0 && (
-        <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl bg-accent-soft px-4 py-3 text-accent">
-          <span className="text-sm">{hi ? "अब तक मिला" : "Found so far"}</span>
-          <b className="num-serif text-2xl">{formatINRShort(summary.confirmedTotal, lang)}</b>
-          {summary.possibleTotal > 0 && <span className="text-sm">+ {formatINRShort(summary.possibleTotal, lang)} {hi ? "और संभव" : "more possible"}</span>}
+        <div className="mb-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className="t-label">{hi ? "अब तक मिला" : "Found so far"}</span>
+          <Odometer value={summary.confirmedTotal} className="money-md text-accent" />
+          {summary.possibleTotal > 0 && <span className="text-sm text-muted">+ {formatINRShort(summary.possibleTotal, lang)} {hi ? "और संभव" : "more possible"}</span>}
         </div>
       )}
 
@@ -182,12 +188,17 @@ function Questions() {
         </div>
       ) : (
         <div key={top.question.key} className="card step-enter p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-3">
-            <span className="step-label">{hi ? "सवाल" : "Question"}</span>
-            <span className="text-xs text-muted">{hi ? `लगभग ${ranked.length} बाकी` : `about ${ranked.length} left`}</span>
-          </div>
-          <h3 className="mt-2 font-display text-[1.5rem] leading-snug">{b(top.question.text)}</h3>
-          {top.question.help && <p className="mt-1.5 text-ink-2">{b(top.question.help)}</p>}
+          <h3 className="q-text">{b(top.question.text)}</h3>
+          {top.question.help && <p className="mt-2 text-ink-2">{b(top.question.help)}</p>}
+          {top.unlocks.length > 0 && (
+            <p className="mt-2 text-sm text-muted">
+              {hi ? "इससे तय होगा: " : "This decides "}
+              <span className="font-medium text-ink-2">
+                {top.unlocks.slice(0, 3).map((id) => b(RULES_BY_ID[id as keyof typeof RULES_BY_ID].short)).join(", ")}
+                {top.unlocks.length > 3 ? (hi ? ` और ${top.unlocks.length - 3}` : ` and ${top.unlocks.length - 3} more`) : ""}
+              </span>
+            </p>
+          )}
 
           <div className="mt-5 grid gap-2 sm:grid-cols-2">
             {top.question.kind === "yesno" && (
@@ -213,17 +224,11 @@ function Questions() {
               </form>
             )}
           </div>
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-4">
             <button className="text-sm font-medium text-muted underline underline-offset-4 hover:text-ink" onClick={() => dispatch({ type: "patch", patch: { skipped: [...state.skipped, top.question.key] } })}>
-              {hi ? "पता नहीं — छोड़ें" : "I don't know — skip"}
+              {hi ? "पता नहीं, छोड़ें" : "I don't know, skip"}
             </button>
-            {top.unlocks.length > 0 && (
-              <span className="text-xs text-muted">
-                {hi ? "इससे पता चलेगा: " : "Helps decide: "}
-                {top.unlocks.slice(0, 3).map((id) => b(RULES_BY_ID[id as keyof typeof RULES_BY_ID].short)).join(", ")}
-                {top.unlocks.length > 3 ? ` +${top.unlocks.length - 3}` : ""}
-              </span>
-            )}
+            <span className="t-meta">{hi ? `लगभग ${ranked.length} सवाल बाकी` : `About ${ranked.length} question${ranked.length > 1 ? "s" : ""} left`}</span>
           </div>
         </div>
       )}
@@ -243,7 +248,7 @@ export function StepCheck() {
         title={hasDocs ? (hi ? "क्या यह सही है?" : "Is this right?") : hi ? "बस कुछ सवाल" : "Just a few questions"}
         lead={
           hasDocs
-            ? hi ? "आपके काग़ज़ों से हमने यह पढ़ा। जो ग़लत हो, ठीक करें — फिर कुछ छोटे सवाल।" : "Here's what we read from your papers. Fix anything that's wrong — then a few quick questions."
+            ? hi ? "आपके काग़ज़ों से हमने यह पढ़ा। जो ग़लत हो, ठीक करें, फिर कुछ छोटे सवाल।" : "Here's what we read from your papers. Fix anything that's wrong, then a few quick questions."
             : hi ? "हम सिर्फ़ वही पूछते हैं जिससे पैसा या कोई डेडलाइन तय होती है। 'पता नहीं' भी ठीक है।" : "We only ask what decides money or a deadline. 'I don't know' is always fine."
         }
       />

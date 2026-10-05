@@ -24,8 +24,9 @@ The **header** on every page has: the Rahbar logo (→ home), **Offer check / Ru
 **Design language** (after the Meridian project): a dark "night road" surface for the story, warm ivory paper for the work, one brass accent for "the way forward". Fonts: Newsreader (serif headings and money), Schibsted Grotesk (hero), Public Sans (body), IBM Plex Mono (labels), Unbounded (wordmark), Noto Sans / Tiro Devanagari for Hindi. Motion is calm and purposeful: words rise from behind a mask, numbers count up, the progress bar is a road. Everything respects *reduce motion*.
 
 **How every case page reads, for someone who has never seen it:**
-- A **road** across the top (six segments on phones) shows where you are.
-- **"Step 2 of 6"** and one big question as the title, then one plain sentence saying what to do.
+- A **road** across the top (six segments and "2 of 6" on phones) shows where you are.
+- One big question as the title, then one plain sentence saying what to do.
+- **Importance is typographic:** money is set as figures (small raised ₹, lining numerals, the total rolls into place like a meter), deadlines are large numbers coloured by urgency (red within 14 days, amber within 60), and the single key phrase in a block gets a brass highlighter.
 - **One main button** at the bottom. On phones it stays pinned within thumb reach; **← Back** sits beside it.
 - Anything optional (asking the agent, income proof, court formula, fingerprints, the vault) sits in a **drawer with a plain name and a one-line reason**, closed until wanted.
 

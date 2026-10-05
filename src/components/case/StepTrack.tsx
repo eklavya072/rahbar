@@ -38,8 +38,8 @@ function CashFlow({ items }: { items: EntitlementResult[] }) {
       <h2 className="h-sec">{hi ? "पैसा कब आ सकता है" : "When the money may arrive"}</h2>
       <p className="mt-1 text-sm text-muted">
         {hi
-          ? `लगभग ${formatINRShort(within90, lang)} 90 दिनों में आ सकता है। 69% परिवार इलाज के लिए ऊँचे ब्याज पर उधार लेते हैं — इन दावों को पहले जमा करें।`
-          : `About ${formatINRShort(within90, lang)} could arrive within 90 days. 69% of families hit by a road accident borrow at high interest — file these first.`}
+          ? `लगभग ${formatINRShort(within90, lang)} 90 दिनों में आ सकता है। 69% परिवार इलाज के लिए ऊँचे ब्याज पर उधार लेते हैं। इन दावों को पहले जमा करें।`
+          : `About ${formatINRShort(within90, lang)} could arrive within 90 days. 69% of families hit by a road accident borrow at high interest. File these first.`}
       </p>
       <div className="mt-4 space-y-2.5">
         {rows.map(({ r, w }) => {
@@ -50,7 +50,7 @@ function CashFlow({ items }: { items: EntitlementResult[] }) {
             <div key={r.id} className="grid grid-cols-[minmax(0,9rem)_1fr] items-center gap-3 text-xs sm:grid-cols-[minmax(0,12rem)_1fr]">
               <div className="truncate font-medium text-ink-2" title={b(r.short)}>{b(r.short)}</div>
               <div className="relative h-5 rounded-full bg-surface-2">
-                <div className={`absolute top-0 h-5 rounded-full ${state.tracks[r.id]?.stage === "paid" ? "bg-accent" : fast ? "bg-key-bright" : "bg-line-strong"}`} style={{ left: `${left}%`, width: `${width}%` }} title={`${w[0]}–${w[1]} days`} />
+                <div className={`absolute top-0 h-5 rounded-full ${state.tracks[r.id]?.stage === "paid" ? "bg-accent" : fast ? "bg-key-bright" : "bg-line-strong"}`} style={{ left: `${left}%`, width: `${width}%` }} title={`${w[0]}-${w[1]} days`} />
               </div>
             </div>
           );
@@ -192,7 +192,7 @@ function Vault({ bare = false }: { bare?: boolean }) {
     if (pass.length < 6) return setMsg(hi ? "कम से कम 6 अक्षरों का पासफ़्रेज़" : "Use a passphrase of at least 6 characters");
     const s = await seal(payload(), pass, label || `Case ${new Date().toLocaleDateString("en-IN")}`);
     if (download) downloadSealed(s);
-    else if (!storeSealed(s)) return setMsg(hi ? "इस ब्राउज़र में सेव नहीं हो सका — फ़ाइल डाउनलोड करें" : "Couldn't save in this browser — download the file instead");
+    else if (!storeSealed(s)) return setMsg(hi ? "इस ब्राउज़र में सेव नहीं हो सका। फ़ाइल डाउनलोड करें" : "Couldn't save in this browser. Download the file instead");
     setSaved(listSaved());
     setMsg(hi ? "AES-256 से एन्क्रिप्ट कर सेव किया गया" : "Encrypted with AES-256 and saved");
     trace("Human", download ? "Exported the case as an encrypted .rahbar file" : "Saved the case to this device's encrypted vault", { status: "done", detail: "AES-256-GCM · PBKDF2-SHA-256 310k · key never leaves the device" });
@@ -276,8 +276,8 @@ export function StepTrack() {
         title={hi ? "हर दावे पर नज़र रखें" : "Follow up on every claim"}
         lead={
           hi
-            ? `जमा करने पर निशान लगाएँ। कोई दफ़्तर देर करे, तो रहबर अगला शिकायत पत्र लिख देता है — टूटे नियम के साथ। कुल पक्का: ${formatINR(total)}।`
-            : `Mark each claim when you file it. If an office is late, Rahbar writes the next complaint — with the rule it broke. Confirmed total: ${formatINR(total)}.`
+            ? `जमा करने पर निशान लगाएँ। कोई दफ़्तर देर करे, तो रहबर अगला शिकायत पत्र लिख देता है, टूटे नियम के साथ। कुल पक्का: ${formatINR(total)}।`
+            : `Mark each claim when you file it. If an office is late, Rahbar writes the next complaint, with the rule it broke. Confirmed total: ${formatINR(total)}.`
         }
       />
       <CashFlow items={items} />
@@ -293,7 +293,7 @@ export function StepTrack() {
       </ActionBar>
 
       <Extras title={hi ? "बाद के लिए" : "For later"}>
-        <More id="vault" icon={<Lock size={18} />} title={hi ? "केस को ताले में सेव करें" : "Save the case under lock"} hint={hi ? "पासफ़्रेज़ से एन्क्रिप्टेड — सिर्फ़ आप खोल सकते हैं" : "Encrypted with your passphrase — only you can open it"}>
+        <More id="vault" icon={<Lock size={18} />} title={hi ? "केस को ताले में सेव करें" : "Save the case under lock"} hint={hi ? "पासफ़्रेज़ से एन्क्रिप्टेड। सिर्फ़ आप खोल सकते हैं" : "Encrypted with your passphrase. Only you can open it"}>
           <Vault bare />
         </More>
         <SupportCard />

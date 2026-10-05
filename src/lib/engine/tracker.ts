@@ -35,9 +35,9 @@ export interface ClaimClock {
 }
 
 const IRDAI: Citation = { title: "IRDAI (Protection of Policyholders' Interests) Regulations & Master Circular 2024", url: "https://www.oquilia.com/news/irdai-protection-policyholders-interests-master-circular-2024-grievance" };
-const BIMA_BHAROSA = { en: "Bima Bharosa portal (bimabharosa.irdai.gov.in) / Insurance Ombudsman — free", hi: "बीमा भरोसा पोर्टल (bimabharosa.irdai.gov.in) / बीमा लोकपाल — मुफ़्त" };
-const RBI_OMB = { en: "RBI Integrated Ombudsman (cms.rbi.org.in) — free", hi: "RBI एकीकृत लोकपाल (cms.rbi.org.in) — मुफ़्त" };
-const DLSA = { en: "District Legal Services Authority — free lawyer (NALSA 15100)", hi: "ज़िला विधिक सेवा प्राधिकरण — मुफ़्त वकील (NALSA 15100)" };
+const BIMA_BHAROSA = { en: "Bima Bharosa portal (bimabharosa.irdai.gov.in) / Insurance Ombudsman (free)", hi: "बीमा भरोसा पोर्टल (bimabharosa.irdai.gov.in) / बीमा लोकपाल (मुफ़्त)" };
+const RBI_OMB = { en: "RBI Integrated Ombudsman (cms.rbi.org.in) (free)", hi: "RBI एकीकृत लोकपाल (cms.rbi.org.in) (मुफ़्त)" };
+const DLSA = { en: "District Legal Services Authority: free lawyer (NALSA 15100)", hi: "ज़िला विधिक सेवा प्राधिकरण: मुफ़्त वकील (NALSA 15100)" };
 
 export const CLOCKS: Record<EntitlementId, ClaimClock> = {
   CPA: {
@@ -100,13 +100,13 @@ export const CLOCKS: Record<EntitlementId, ClaimClock> = {
     payout: [150, 1300],
     basis: { title: "MV Act s.149; CMV Rules 2022; Gohar Mohammed v. UPSRTC (SC 2022)", url: "https://www.livelaw.in/top-stories/motor-accident-claims-supreme-court-issues-directions-for-timely-registration-of-first-accident-report-by-police-directs-forming-of-special-police-units-217732" },
     ladder: [
-      { level: 1, to: { en: "Investigating Officer / SHO — ask whether the DAR was filed (RTI if no answer)", hi: "जाँच अधिकारी / थानाध्यक्ष — DAR दाखिल हुई या नहीं (जवाब न मिले तो RTI)" }, how: { en: "Written request; RTI to the police PIO (₹10 fee, reply in 30 days)", hi: "लिखित अनुरोध; पुलिस PIO को RTI (₹10 शुल्क, 30 दिन में जवाब)" }, waitDays: 30 },
+      { level: 1, to: { en: "Investigating Officer / SHO: ask whether the DAR was filed (RTI if no answer)", hi: "जाँच अधिकारी / थानाध्यक्ष: DAR दाखिल हुई या नहीं (जवाब न मिले तो RTI)" }, how: { en: "Written request; RTI to the police PIO (₹10 fee, reply in 30 days)", hi: "लिखित अनुरोध; पुलिस PIO को RTI (₹10 शुल्क, 30 दिन में जवाब)" }, waitDays: 30 },
       { level: 2, to: DLSA, how: { en: "Free lawyer to move the Tribunal", hi: "ट्रिब्यूनल में आवेदन के लिए मुफ़्त वकील" }, waitDays: 30 },
     ],
   },
   EMPLOYER: {
     tatDays: 90,
-    tatLabel: { en: "ESIC dependants' benefit / EC Act compensation — target 90 days", hi: "ESIC आश्रित लाभ / EC अधिनियम मुआवज़ा — लक्ष्य 90 दिन" },
+    tatLabel: { en: "ESIC dependants' benefit / EC Act compensation, target 90 days", hi: "ESIC आश्रित लाभ / EC अधिनियम मुआवज़ा, लक्ष्य 90 दिन" },
     payout: [45, 120],
     basis: { title: "ESIC benefits; Employees' Compensation Act", url: "http://esic.gov.in/information-benefits" },
     ladder: [
@@ -116,7 +116,7 @@ export const CLOCKS: Record<EntitlementId, ClaimClock> = {
   },
   GIG: {
     tatDays: 15,
-    tatLabel: { en: "Platforms state 7–15 working days after documents", hi: "प्लेटफ़ॉर्म दस्तावेज़ों के बाद 7–15 कार्य दिवस बताते हैं" },
+    tatLabel: { en: "Platforms state 7-15 working days after documents", hi: "प्लेटफ़ॉर्म दस्तावेज़ों के बाद 7-15 कार्य दिवस बताते हैं" },
     payout: [10, 30],
     basis: { title: "Gig worker insurance (2026)", url: "https://www.oneassure.in/insurance/health-insurance-guides/insurance-for-gig-workers-zomato-swiggy-plans" },
     ladder: [
@@ -177,7 +177,7 @@ export function escalationLetter(
   if (ctx.lang === "hi") {
     return [
       `सेवा में,\n${step.to.hi}`,
-      `विषय: ${ctx.claimName.hi} दावे में देरी — ${ctx.victim}`,
+      `विषय: ${ctx.claimName.hi} दावे में देरी: ${ctx.victim}`,
       `महोदय/महोदया,`,
       `मैंने ${t.filedOn ? formatDate(t.filedOn, "hi") : "[तारीख]"} को ${ctx.claimName.hi} के तहत दावा जमा किया था। नियम के अनुसार (${c.tatLabel.hi}) इसका निपटारा ${due ? formatDate(due, "hi") : "[तारीख]"} तक हो जाना चाहिए था, पर ${late} दिन बाद भी भुगतान नहीं हुआ है।${c.interest ? ` ${c.interest.hi}।` : ""}`,
       `कृपया दावे का शीघ्र निपटारा करें और लिखित जवाब दें। आधार: ${c.basis.title}।`,
@@ -186,7 +186,7 @@ export function escalationLetter(
   }
   return [
     `To,\n${step.to.en}`,
-    `Subject: Delay in settling the ${ctx.claimName.en} claim — ${ctx.victim}`,
+    `Subject: Delay in settling the ${ctx.claimName.en} claim: ${ctx.victim}`,
     `Respected Sir/Madam,`,
     `I submitted a claim under the ${ctx.claimName.en} on ${t.filedOn ? formatDate(t.filedOn, "en") : "[date]"}. Under the applicable rule (${c.tatLabel.en}) it should have been settled by ${due ? formatDate(due, "en") : "[date]"}, but it remains unpaid ${late} day(s) later.${c.interest ? ` ${c.interest.en}.` : ""}`,
     `I request that the claim be settled without further delay and that I be informed in writing. Basis: ${c.basis.title}.`,

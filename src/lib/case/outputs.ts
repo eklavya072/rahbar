@@ -19,10 +19,10 @@ export function buildIcs(plan: Plan, lang: Lang): string {
       `DTSTAMP:${stamp}`,
       `DTSTART;VALUE=DATE:${ymd(c.deadlineDate)}`,
       `DTEND;VALUE=DATE:${ymd(addDays(c.deadlineDate, 1))}`,
-      `SUMMARY:${escIcs(`Rahbar: ${c.title[lang]} — deadline`)}`,
+      `SUMMARY:${escIcs(`Rahbar: ${c.title[lang]}: deadline`)}`,
       `DESCRIPTION:${escIcs(`${c.deadlineLabel[lang]}\n${c.office[lang]}`)}`,
-      "BEGIN:VALARM", "TRIGGER:-P7D", "ACTION:DISPLAY", `DESCRIPTION:${escIcs(c.title[lang])} — 7 days left`, "END:VALARM",
-      "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", `DESCRIPTION:${escIcs(c.title[lang])} — tomorrow`, "END:VALARM",
+      "BEGIN:VALARM", "TRIGGER:-P7D", "ACTION:DISPLAY", `DESCRIPTION:${escIcs(c.title[lang])}: 7 days left`, "END:VALARM",
+      "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", `DESCRIPTION:${escIcs(c.title[lang])}: tomorrow`, "END:VALARM",
       "END:VEVENT",
     );
   }
@@ -36,8 +36,8 @@ export function googleCalendarLink(title: string, date: string, details: string)
 }
 
 export function whatsappText(plan: Plan, lang: Lang): string {
-  const head = lang === "hi" ? "Rahbar योजना — दुर्घटना के बाद के दावे:" : "Rahbar plan — claims after the accident:";
-  const items = plan.claims.map((c, i) => `${i + 1}. ${c.title[lang]} — ${c.amountLabel[lang]}${c.deadlineDate ? ` — ${lang === "hi" ? "अंतिम तिथि" : "by"} ${formatDate(c.deadlineDate, lang)}` : ""}\n   ${c.office[lang]}`);
+  const head = lang === "hi" ? "Rahbar योजना: दुर्घटना के बाद के दावे" : "Rahbar plan: claims after the accident";
+  const items = plan.claims.map((c, i) => `${i + 1}. ${c.title[lang]}: ${c.amountLabel[lang]}${c.deadlineDate ? `, ${lang === "hi" ? "अंतिम तिथि" : "by"} ${formatDate(c.deadlineDate, lang)}` : ""}\n   ${c.office[lang]}`);
   const tail = lang === "hi" ? "मुफ़्त कानूनी सहायता: NALSA 15100" : "Free legal aid: NALSA 15100";
   return `${head}\n${items.join("\n")}\n${tail}`;
 }

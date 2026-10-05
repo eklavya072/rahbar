@@ -60,7 +60,7 @@ export const QUESTIONS: Partial<Record<FactKey, Question>> = {
   pmsbyPremiumDebited: {
     key: "pmsbyPremiumDebited",
     kind: "yesno",
-    text: { en: "Does their passbook show a ₹20 'PMSBY' debit (usually May–June)?", hi: "क्या उनकी पासबुक में ₹20 'PMSBY' कटौती दिखती है (आमतौर पर मई–जून)?" },
+    text: { en: "Does their passbook show a ₹20 'PMSBY' debit (usually May-June)?", hi: "क्या उनकी पासबुक में ₹20 'PMSBY' कटौती दिखती है (आमतौर पर मई-जून)?" },
     help: { en: "Upload a photo of the passbook and we'll look for it.", hi: "पासबुक की फ़ोटो अपलोड करें, हम ढूँढ लेंगे।" },
   },
   pmjjbyPremiumDebited: {

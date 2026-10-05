@@ -64,8 +64,8 @@ export function assembleLetter(r: EntitlementResult, c: LetterContext, paras: { 
   const hi = c.lang === "hi";
   const relation = hi ? REL_HI[c.relation] ?? c.relation : c.relation;
   const subject = hi
-    ? `विषय: ${r.name.hi} के अंतर्गत दावा — ${vals["{{DECEASED}}"]} — दुर्घटना दिनांक ${vals["{{ACCIDENT_DATE}}"]}`
-    : `Subject: Claim under the ${r.name.en} — ${vals["{{DECEASED}}"]} — accident on ${vals["{{ACCIDENT_DATE}}"]}`;
+    ? `विषय: ${r.name.hi} के अंतर्गत दावा: ${vals["{{DECEASED}}"]}, दुर्घटना दिनांक ${vals["{{ACCIDENT_DATE}}"]}`
+    : `Subject: Claim under the ${r.name.en}: ${vals["{{DECEASED}}"]}, accident on ${vals["{{ACCIDENT_DATE}}"]}`;
 
   // Allowed amounts: the computed value plus any figure in the rule's own amount label (e.g. "up to ₹10 lakh").
   const allowedAmounts = [r.amount.value, ...extractAmounts(r.amount.label.en).map((a) => a.value), ...extractAmounts(r.amount.label.hi).map((a) => a.value)].filter((x): x is number => typeof x === "number");

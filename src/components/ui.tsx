@@ -108,6 +108,10 @@ function useSurfaceUnderHeader(enabled: boolean) {
   return tone;
 }
 
+// The landing redefines --ink and friends for its dark film; anything paper-coloured
+// inside the floating header resets them so its text stays dark on light.
+const PAPER_VARS = { "--ink": "#15171c", "--ink-2": "#393b41", "--key": "#8c6a1e" } as React.CSSProperties;
+
 export function Header({ right, variant = "paper" }: { right?: React.ReactNode; variant?: "paper" | "film" }) {
   const { lang } = useLang();
   const hi = lang === "hi";
@@ -122,7 +126,7 @@ export function Header({ right, variant = "paper" }: { right?: React.ReactNode; 
         ? "fixed inset-x-0 top-0 border-b border-white/10 bg-[#0a0c10]/80 text-[#f2f1ec] backdrop-blur-md"
         : "fixed inset-x-0 top-0 border-b border-transparent bg-gradient-to-b from-[#06080b]/85 to-transparent text-[#f2f1ec]";
   return (
-    <header className={`no-print z-40 transition-[background-color,border-color,color] duration-300 ${shell}`}>
+    <header className={`no-print z-40 transition-[background-color,border-color,color] duration-300 ${shell}`} style={film && tone === "light" ? PAPER_VARS : undefined}>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-5">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Rahbar home">
           <RahbarMark size={30} tone={dark ? "void" : "paper"} />
@@ -139,7 +143,7 @@ export function Header({ right, variant = "paper" }: { right?: React.ReactNode; 
             <summary className={`grid h-10 w-10 cursor-pointer list-none place-items-center rounded-full border ${dark ? "border-white/25 bg-white/5" : "border-line bg-surface"}`} aria-label="Menu">
               <Menu size={16} />
             </summary>
-            <nav className="absolute right-0 top-12 z-50 w-52 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-[0_16px_34px_-14px_rgba(21,23,28,.35)]" aria-label="Main">
+            <nav className="absolute right-0 top-12 z-50 w-52 rounded-xl border border-line bg-surface p-1.5 text-ink shadow-[0_16px_34px_-14px_rgba(21,23,28,.35)]" style={PAPER_VARS} aria-label="Main">
               {NAV.map((n) => <Link key={n.href} href={n.href} className="block rounded-lg px-3 py-3 text-sm font-medium hover:bg-surface-2">{hi ? n.hi : n.en}</Link>)}
             </nav>
           </details>
@@ -173,11 +177,4 @@ export function SourceBadge({ source, confirmed }: { source: FactSource; confirm
       {lang === "hi" ? map.hi : map.en}
     </span>
   );
-}
-
-export function DaysLeft({ days }: { days: number | null }) {
-  const { t } = useLang();
-  if (days === null) return null;
-  const cls = days < 0 ? "bg-rose-soft text-rose" : days <= 14 ? "bg-rose-soft text-rose" : days <= 45 ? "bg-amber-soft text-amber" : "bg-slate-soft text-ink-2";
-  return <span className={`chip ${cls}`}>{days < 0 ? t("overdue") : `${days} ${t("daysLeft")}`}</span>;
 }

@@ -27,20 +27,21 @@ function Progress() {
   const reached = STEPS.indexOf(state.step);
   const curIdx = STEPS.indexOf(current);
   const furthest = Math.max(reached, curIdx);
-  const fill = `calc((100% - 100% / 6) * ${curIdx / (STEPS.length - 1)})`;
+  const fill = curIdx / (STEPS.length - 1);
 
   return (
     <nav className="no-print" aria-label={lang === "hi" ? "प्रगति" : "Progress"}>
       {/* Phones: six segments (the page title says where you are) */}
-      <div className="md:hidden">
-        <div className="segs" aria-hidden>
+      <div className="flex items-center gap-3 md:hidden">
+        <div className="segs flex-1" aria-hidden>
           {STEPS.map((s, i) => <span key={s} className={`seg ${i === curIdx ? "is-cur" : i <= furthest ? "is-done" : ""}`} />)}
         </div>
+        <span className="t-meta shrink-0">{lang === "hi" ? `${curIdx + 1} / ${STEPS.length}` : `${curIdx + 1} of ${STEPS.length}`}</span>
       </div>
       {/* Larger screens: the road */}
       <div className="road hidden md:grid" role="list">
         <span className="road-track" aria-hidden />
-        <span className="road-fill" style={{ width: fill }} aria-hidden />
+        <span className="road-fill" style={{ transform: `scaleX(${fill})` }} aria-hidden />
         {STEPS.map((s, i) => {
           const isCur = i === curIdx;
           const done = !isCur && i <= furthest;
@@ -123,7 +124,7 @@ function Shell({ children }: { children: ReactNode }) {
             <div className="no-print hidden lg:block">
               <div className="sticky top-20 space-y-2">
                 <button className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-ink" onClick={() => writeTracePref(false)}>
-                  <EyeOff size={13} /> {hi ? "पर्दे के पीछे — छिपाएँ" : "Hide behind the scenes"}
+                  <EyeOff size={13} /> {hi ? "पर्दे के पीछे: छिपाएँ" : "Hide behind the scenes"}
                 </button>
                 <TracePanel />
               </div>
@@ -146,7 +147,7 @@ function Shell({ children }: { children: ReactNode }) {
         <div className="no-print fixed inset-0 z-50 flex flex-col bg-black/40 lg:hidden" onClick={() => setDrawer(false)}>
           <div className="rise mt-auto max-h-[85vh] rounded-t-2xl bg-bg p-3" onClick={(e) => e.stopPropagation()}>
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-semibold">{hi ? "पर्दे के पीछे — हर एजेंट का काम" : "Behind the scenes — every agent step"}</span>
+              <span className="text-sm font-semibold">{hi ? "पर्दे के पीछे: हर एजेंट का काम" : "Behind the scenes: every agent step"}</span>
               <button className="btn btn-ghost !p-2" onClick={() => setDrawer(false)} aria-label="Close"><X size={16} /></button>
             </div>
             <TracePanel />

@@ -49,8 +49,8 @@ export default function EvalsPage() {
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-10 px-4 py-10 sm:px-5 md:py-14">
         <div>
-          <PageIntro kicker="Tests" title="Does it work consistently? Check it yourself.">
-            Every rupee in Rahbar comes from {RULES.length} rules-as-code entitlements with citations — never from the language model. These checks run live in your browser; the same suite runs in CI with Vitest.
+          <PageIntro title="Does it work consistently? Check it yourself.">
+            Every rupee in Rahbar comes from {RULES.length} rules-as-code entitlements with citations, never from the language model. These checks run live in your browser; the same suite runs in CI with Vitest.
           </PageIntro>
           <div className="mt-4 flex flex-wrap gap-2 text-sm">
             <span className="chip bg-slate-soft text-ink-2">Golden cases: {goldenPass}/{golden.length}</span>

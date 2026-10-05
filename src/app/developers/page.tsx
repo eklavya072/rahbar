@@ -39,7 +39,7 @@ export default function Developers() {
       <Header />
       <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-10 sm:px-5 md:py-14">
         <div>
-          <PageIntro kicker="API" title="Build on Rahbar">
+          <PageIntro title="Build on Rahbar">
             Hospital helpdesks, DLSA case-management tools, NGOs and gig platforms can call the same rules engine the app uses. Deterministic, cited, CORS-enabled, rate-limited, and it stores nothing. Send non-identifying facts only.
           </PageIntro>
           <div className="mt-3 flex flex-wrap gap-2 text-sm">

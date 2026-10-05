@@ -3,7 +3,7 @@
 /** The product's own screens, animating themselves (after Meridian's ProductFrames). */
 import { Check, CircleHelp, ShieldCheck } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import { CountUp } from "./TextEffects";
+import { Money, Odometer } from "../Type";
 
 export function ScanFrame({ active }: { active: boolean }) {
   const { lang } = useLang();
@@ -19,8 +19,8 @@ export function ScanFrame({ active }: { active: boolean }) {
         <span className="f-hit f-hit-b" aria-hidden style={{ left: "4.8%", top: "73.6%", width: "90.4%", height: "6%" }} />
       </div>
       <div className="f-found">
-        <div className="f-found-row f-d1"><span className="f-dot bg-accent" />{hi ? "₹20 'PMSBY' कटौती" : "₹20 'PMSBY' debit"}<b>→ ₹2,00,000</b></div>
-        <div className="f-found-row f-d2"><span className="f-dot bg-key" />{hi ? "हादसे से 12 दिन पहले कार्ड इस्तेमाल" : "Card used 12 days before"}<b>→ ₹2,00,000</b></div>
+        <div className="f-found-row f-d1"><span className="f-dot bg-accent" />{hi ? "₹20 'PMSBY' कटौती" : "₹20 'PMSBY' debit"}<b>→ <Money value={200000} /></b></div>
+        <div className="f-found-row f-d2"><span className="f-dot bg-key" />{hi ? "हादसे से 12 दिन पहले कार्ड इस्तेमाल" : "Card used 12 days before"}<b>→ <Money value={200000} /></b></div>
       </div>
     </div>
   );
@@ -37,7 +37,7 @@ export function OwedFrame({ active }: { active: boolean }) {
       <div className="f-bar"><span /><span /><span /><b>{hi ? "आपका हक़" : "What you're owed"}</b></div>
       <div className="f-total">
         <div className="f-total-label">{hi ? "काग़ज़ों से पक्का" : "Confirmed from your papers"}</div>
-        <div className="f-total-num"><CountUp to={2100000} active={active} prefix="₹" /></div>
+        <div className="f-total-num"><Odometer value={2100000} active={active} /></div>
       </div>
       <ul className="f-rows">
         {rows.map(([n, a, s], i) => (

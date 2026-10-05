@@ -118,7 +118,7 @@ export function estimateDeath(i: MactInput): MactEstimate {
       id: "consortium",
       label: { en: "Loss of consortium (each family member)", hi: "साहचर्य की हानि (हर सदस्य)" },
       amount: perConsortium * claimants,
-      working: `${inr(perConsortium)} × ${claimants} (spouse, children, parents — each)`,
+      working: `${inr(perConsortium)} × ${claimants} (each spouse, child and parent)`,
       basis: MAGMA,
     },
   ];
@@ -126,14 +126,14 @@ export function estimateDeath(i: MactInput): MactEstimate {
   const notes: Bilingual[] = [];
   if (i.incomeSource === "notional" || i.incomeSource === "declared") {
     notes.push({
-      en: "Income without documents is often assessed at minimum wage. Bank credits, salary slips or ITRs can raise the award — see 'Income evidence'.",
+      en: "Income without documents is often assessed at minimum wage. Bank credits, salary slips or ITRs can raise the award. See 'Income evidence'.",
       hi: "बिना दस्तावेज़ की आय अक्सर न्यूनतम मज़दूरी मानी जाती है। बैंक क्रेडिट, सैलरी स्लिप या ITR से मुआवज़ा बढ़ सकता है।",
     });
   }
   if (i.employment === "not_earning") {
     notes.push({
-      en: "For homemakers, students and children, courts use a notional income (Kirti v. Oriental, 2021; Deepak Singh, 2025) — enter the amount your lawyer proposes.",
-      hi: "गृहिणी, छात्र और बच्चों के लिए अदालतें काल्पनिक आय मानती हैं — वकील द्वारा सुझाई राशि डालें।",
+      en: "For homemakers, students and children, courts use a notional income (Kirti v. Oriental, 2021; Deepak Singh, 2025). Enter the amount your lawyer proposes.",
+      hi: "गृहिणी, छात्र और बच्चों के लिए अदालतें काल्पनिक आय मानती हैं। वकील द्वारा सुझाई राशि डालें।",
     });
   }
   notes.push({
@@ -201,8 +201,8 @@ export function auditOffer(est: MactEstimate, input: MactInput, offer: OfferInpu
       severity: "high",
       impact: r(base(input.monthlyIncome, est.futureProspects, est.deduction, est.multiplier) - base(input.monthlyIncome, 0, est.deduction, est.multiplier)),
       message: {
-        en: `Future prospects (${Math.round(est.futureProspects * 100)}%) are missing — the Constitution Bench in Pranay Sethi made them mandatory.`,
-        hi: `भविष्य की संभावनाएँ (${Math.round(est.futureProspects * 100)}%) छूटी हैं — प्रणय सेठी फ़ैसले में यह अनिवार्य हैं।`,
+        en: `Future prospects (${Math.round(est.futureProspects * 100)}%) are missing. The Constitution Bench in Pranay Sethi made them mandatory.`,
+        hi: `भविष्य की संभावनाएँ (${Math.round(est.futureProspects * 100)}%) छूटी हैं। प्रणय सेठी फ़ैसले में यह अनिवार्य हैं।`,
       },
     });
   }

@@ -23,7 +23,7 @@ function Entry() {
     const shared = m ? decodeCase(m[1]) : null;
     if (shared) {
       dispatch({ type: "reset", state: { answers: shared, step: "owed", aiConfirmed: true } });
-      trace("Human", "Opened a shared case link — facts only, no names or documents", { status: "done" });
+      trace("Human", "Opened a shared case link, facts only, no names or documents", { status: "done" });
       router.replace(stepPath("owed"));
       return;
     }

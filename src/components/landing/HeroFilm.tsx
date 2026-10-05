@@ -13,7 +13,7 @@
 
 import { Fragment, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, Play } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { drawScene, makeScene, smoothstep } from "./roadScene";
 
@@ -214,26 +214,33 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         <div className={`l-band l-band-a${introCls}`} ref={(el) => { bandRefs.current[0] = el; }}>
           <h1 className="l-h1">
             <ScrubWords text={hi ? "हादसे के बाद," : "After an accident,"} seed={11} spread={0.4} />{" "}
-            <span className="l-key">
+            <span className="l-key l-promise">
               <ScrubWords text={hi ? "आगे का रास्ता।" : "the way forward."} seed={17} spread={0.35} indexFrom={4} />
             </span>
           </h1>
           <p className="l-h1-sub">
             {hi
-              ? "रहबर आपके परिवार का हर हक़ ढूँढता है — बीमा, सरकारी योजनाएँ, मुआवज़ा — और काग़ज़ी काम आपके साथ पूरा करता है।"
-              : "Rahbar finds every rupee your family is owed — insurance, government schemes, compensation — and does the paperwork with you."}
+              ? "रहबर आपके परिवार का हर हक़ ढूँढता है (बीमा, सरकारी योजनाएँ, मुआवज़ा) और काग़ज़ी काम आपके साथ पूरा करता है।"
+              : "Rahbar finds every rupee your family is owed and does the paperwork with you, on your phone."}
           </p>
+          <div className="l-cta l-cta-a">
+            <Link href="/case" className="l-btn l-btn-primary">
+              {hi ? "अपना केस शुरू करें" : "Start your case"} <ArrowRight size={17} />
+            </Link>
+            <Link href="/case?sample=sunita" className="l-btn l-btn-quiet">
+              <Play size={15} /> {hi ? "सैंपल केस देखें" : "Watch a sample case"}
+            </Link>
+          </div>
         </div>
 
         {/* 2 — the finding */}
         <div className="l-band l-band-b" ref={(el) => { bandRefs.current[1] = el; }}>
-          <p className="l-attrib">Supreme Court of India · World Bank · Crashfree India</p>
           <p className="l-lede">
             <ScrubWords text={hi ? "पैसा मौजूद है। परिवार उस तक नहीं पहुँचते।" : "The money exists. Families never reach it."} seed={29} spread={0.5} />
           </p>
           <ul className="l-find">
             {[
-              ["205", hi ? "हिट-एंड-रन दावे एक साल में — लगभग 25,000 पात्र हादसों में से" : "hit-and-run claims filed in a year — out of about 25,000 eligible accidents"],
+              ["205", hi ? "हिट-एंड-रन दावे एक साल में, लगभग 25,000 पात्र हादसों में से" : "hit-and-run claims filed in a year, out of about 25,000 eligible accidents"],
               ["70%", hi ? "ग़रीब परिवारों ने इन योजनाओं के बारे में सुना ही नहीं" : "of low-income families had never heard of the schemes"],
               ["90%", hi ? "अटके दावे पात्रता से नहीं, काग़ज़ों से अटके" : "of stuck claims were stuck on paperwork, not eligibility"],
             ].map(([q, t], i) => (
@@ -243,6 +250,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
               </li>
             ))}
           </ul>
+          <p className="l-src">{hi ? "स्रोत: सुप्रीम कोर्ट, विश्व बैंक, Crashfree India" : "Sources: Supreme Court of India, World Bank, Crashfree India"}</p>
         </div>
 
         {/* 3 — the scale */}
@@ -253,8 +261,8 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
           </p>
           <p className="l-note">
             {hi
-              ? "बीमा, सरकारी योजनाएँ, मुआवज़ा, नियोक्ता का कवर, यहाँ तक कि खाते की बचत — हर एक का अलग दफ़्तर, अलग फ़ॉर्म, अलग समय-सीमा।"
-              : "Insurance, government schemes, compensation, employer cover, even the savings in their account — each with its own office, form and deadline."}
+              ? "बीमा, सरकारी योजनाएँ, मुआवज़ा, नियोक्ता का कवर, यहाँ तक कि खाते की बचत: हर एक का अलग दफ़्तर, अलग फ़ॉर्म, अलग समय-सीमा।"
+              : "Insurance, government schemes, compensation, employer cover, even the savings in their account. Each has its own office, form and deadline."}
           </p>
         </div>
 
@@ -287,7 +295,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
           <p className="l-note">{hi ? "कोई साइन-अप नहीं। मुफ़्त। आपके काग़ज़ आपके फ़ोन से बाहर नहीं जाते।" : "No sign-up. Free. Your papers never leave your phone."}</p>
           <div className="l-cta">
             <Link href="/case" className="l-btn l-btn-primary">
-              {hi ? "शुरू करें" : "Start — it's free"} <ArrowRight size={17} />
+              {hi ? "अपना केस शुरू करें" : "Start your case"} <ArrowRight size={17} />
             </Link>
             <Link href="/case?sample=sunita" className="l-btn l-btn-quiet">
               <Play size={15} /> {hi ? "सैंपल केस देखें" : "Watch a sample case"}
@@ -295,9 +303,6 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
           </div>
         </div>
 
-        <span className="l-scroll-cue" aria-hidden>
-          <ArrowDown size={14} /> {hi ? "स्क्रॉल करें" : "Scroll"}
-        </span>
       </div>
     </section>
   );

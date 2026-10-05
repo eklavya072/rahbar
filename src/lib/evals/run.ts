@@ -87,7 +87,7 @@ export const PROPERTIES: { name: string; run: (n: number) => void }[] = [
       ),
   },
   {
-    name: "A failed condition always means 'not eligible'; an unknown always means 'possible' — never a guess",
+    name: "A failed condition always means 'not eligible'; an unknown always means 'possible', never a guess",
     run: (n) =>
       fc.assert(
         fc.property(factsArb, (f) =>

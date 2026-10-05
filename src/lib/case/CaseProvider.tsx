@@ -215,7 +215,7 @@ export function CaseProvider({ children }: { children: ReactNode }) {
     }
     const safeNarr = quarantine(anonNarr, local.lines);
     traceUpdate(tg, { status: flagged ? "warn" : "done", detail: flagged ? `⚠ Injection attempt quarantined. ${guardDetail}` : guardDetail });
-    dispatch({ type: "patch", patch: { guardFlags: local.lines, anonymisedPreview: safeNarr + (anonStory ? `\n\n— family's words —\n${anonStory}` : ""), piiCounts: sh.counts as Record<string, number>, piiTokens: sh.tokens } });
+    dispatch({ type: "patch", patch: { guardFlags: local.lines, anonymisedPreview: safeNarr + (anonStory ? `\n\n[family's words]\n${anonStory}` : ""), piiCounts: sh.counts as Record<string, number>, piiTokens: sh.tokens } });
 
     // 5. Extractor: AI reads the anonymised narrative into typed facts
     const tx = trace("Extractor", "AI reads the anonymised narrative into typed facts (zod schema)");

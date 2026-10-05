@@ -216,7 +216,7 @@ h1, h2, h3 { text-wrap: balance; }
   .road { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .road-track, .road-fill { position: absolute; left: calc(100% / 12); top: 15px; height: 2px; }
   .road-track { right: calc(100% / 12); background: repeating-linear-gradient(90deg, var(--line-strong) 0 10px, transparent 10px 18px); }
-  .road-fill { background: var(--key-bright); box-shadow: 0 0 12px rgba(206, 168, 80, 0.55); transition: width 900ms var(--ease-out); }
+  .road-fill { right: calc(100% / 12); background: var(--key-bright); box-shadow: 0 0 12px rgba(206, 168, 80, 0.55); transform-origin: left center; transition: transform 900ms var(--ease-out); }
   .road-stop { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.55rem; text-align: center; padding: 0 0.25rem; border-radius: 12px; }
   .road-dot {
     position: relative; z-index: 1; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
@@ -275,7 +275,12 @@ h1, h2, h3 { text-wrap: balance; }
   .panel-ink .rule-brass { height: 1px; background: linear-gradient(90deg, rgba(206, 168, 80, 0), #cea850, rgba(206, 168, 80, 0)); transform-origin: left; animation: draw 1.4s var(--ease-out) 300ms both; }
   @keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-  /* Big tappable answers. */
+  .panel-lead { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-size: clamp(1.15rem, 2.2vw, 1.45rem); line-height: 1.4; color: rgba(242, 241, 236, 0.82); max-width: 40ch; }
+.panel-n { font-family: var(--font-serif), Georgia, serif; font-weight: 400; font-size: 1.6em; line-height: 1; color: #f2f1ec; font-variant-numeric: lining-nums tabular-nums; vertical-align: -0.08em; }
+.panel-n.is-key { color: #cea850; }
+.panel-n.is-dim { color: rgba(242, 241, 236, 0.5); }
+
+/* Big tappable answers. */
   .choice {
     display: flex; align-items: center; gap: 0.6rem; width: 100%; min-height: 52px; padding: 0.75rem 1rem; text-align: left;
     border: 1px solid var(--line-strong); border-radius: 12px; background: var(--surface); color: var(--ink); font-weight: 500;
@@ -308,6 +313,100 @@ h1, h2, h3 { text-wrap: balance; }
   }
 }
 
+/* ── Type roles that carry importance (outside the component layer on purpose:
+      these are typographic facts, not boxes) ── */
+
+/* A label names a group in plain words, sentence case. No tracking, no capitals, no mono. */
+.t-label { font-size: 0.9rem; font-weight: 600; line-height: 1.3; color: var(--ink-2); letter-spacing: 0; }
+.t-meta { font-family: var(--font-mono-face), ui-monospace, monospace; font-size: 0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Money: lining tabular figures in the serif, the rupee sign small and raised,
+   Indian-grouping commas a shade lighter so the digits read first. */
+.money {
+  font-family: var(--font-serif), Georgia, serif; font-weight: 400;
+  font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "lnum" 1, "tnum" 1;
+  letter-spacing: -0.025em; white-space: nowrap;
+}
+.money-sym { font-size: 0.56em; vertical-align: 0.6em; margin-right: 0.06em; font-weight: 500; opacity: 0.72; letter-spacing: 0; }
+.money-sep { opacity: 0.45; margin: 0 -0.02em; }
+.money-xl { font-size: clamp(3.1rem, 10.5vw, 6rem); line-height: 1; }
+.money-lg { font-size: clamp(1.8rem, 4vw, 2.35rem); line-height: 1.05; }
+.money-md { font-size: 1.45rem; line-height: 1.1; }
+.money-qual { display: block; margin-top: 0.3rem; font-size: 0.95rem; line-height: 1.45; color: var(--ink-2); max-width: 46ch; }
+.amount { display: block; }
+.amount.is-struck .money { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+.amount-words { display: block; font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-size: 1.15rem; line-height: 1.35; letter-spacing: -0.01em; color: var(--ink); max-width: 40ch; }
+.amount-words.is-lg { font-size: 1.3rem; }
+.amount-words.is-struck { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+
+/* Odometer: digit columns roll a full turn and settle, right to left. */
+.odo { display: inline-flex; align-items: flex-start; }
+.odo .money-sym { vertical-align: baseline; margin-top: 0.14em; }
+.odo-row { display: inline-flex; height: 1.08em; line-height: 1.08em; }
+.odo .money-sep { line-height: 1.08em; }
+.odo-col { position: relative; display: inline-block; height: 1.08em; overflow: hidden; }
+.odo-ghost { display: block; visibility: hidden; }
+.odo-strip { position: absolute; inset: 0 0 auto 0; display: flex; flex-direction: column; transition: transform 1.9s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
+.odo-strip > span { display: block; height: 1.08em; text-align: center; }
+
+/* Deadlines: the number is the message; colour says how urgent. */
+.deadline { display: inline-flex; align-items: center; gap: 0.5rem; line-height: 1; }
+.deadline-n { font-family: var(--font-serif), Georgia, serif; font-size: 2.1rem; font-variant-numeric: lining-nums tabular-nums; letter-spacing: -0.03em; }
+.deadline-rest { display: flex; flex-direction: column; gap: 0.2rem; }
+.deadline-word { font-size: 0.82rem; font-weight: 600; }
+.deadline-date { font-size: 0.78rem; color: var(--muted); }
+.deadline.is-compact .deadline-n { font-size: 1.55rem; }
+.deadline.is-urgent .deadline-n, .deadline.is-urgent .deadline-word, .deadline.is-late .deadline-word { color: var(--rose); }
+.deadline.is-soon .deadline-n, .deadline.is-soon .deadline-word { color: var(--amber); }
+.deadline.is-calm .deadline-n { color: var(--ink-2); }
+.deadline.is-calm .deadline-word { color: var(--muted); }
+.deadline.is-urgent .deadline-n { position: relative; }
+.deadline.is-urgent .deadline-n::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -0.12em; height: 2px; border-radius: 2px;
+  background: currentColor; transform-origin: left; animation: draw 900ms var(--ease-out) 400ms both;
+}
+.deadline.is-late .deadline-word { font-size: 0.95rem; }
+
+/* Highlighter: a brass stroke sweeps behind the one phrase that matters. */
+mark.hl {
+  color: inherit; padding: 0 0.08em; margin: 0 -0.08em; border-radius: 0.12em;
+  background: linear-gradient(transparent 52%, rgba(206, 168, 80, 0.42) 52%, rgba(206, 168, 80, 0.42) 92%, transparent 92%) no-repeat 0 0 / 0% 100%;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  animation: hl-sweep 1100ms var(--ease-out) 650ms both;
+}
+@keyframes hl-sweep { to { background-size: 100% 100%; } }
+
+/* Redaction: a bar wipes across each identifier, the token appears beneath it. */
+.rd { position: relative; display: inline-grid; vertical-align: baseline; }
+.rd > * { grid-area: 1 / 1; }
+.rd-real { overflow: hidden; white-space: nowrap; max-width: 30em; }
+.rd-tok { opacity: 0; color: var(--key-bright); font-family: var(--font-mono-face), monospace; font-size: 0.86em; letter-spacing: 0; }
+.rd::after { content: ""; position: absolute; inset: 0.08em -0.12em; border-radius: 2px; background: #0a0c10; transform: scaleX(0); transform-origin: left; }
+.rd-line.is-on .rd::after { animation: rd-bar 1.3s cubic-bezier(0.65, 0, 0.35, 1) calc(400ms + var(--i) * 420ms) both; }
+.rd-line.is-on .rd-real { animation: rd-out 1.3s linear calc(400ms + var(--i) * 420ms) both; }
+.rd-line.is-on .rd-tok { animation: rd-in 1.3s steps(1) calc(400ms + var(--i) * 420ms) both; }
+@keyframes rd-bar { 0% { transform: scaleX(0); transform-origin: left; } 45% { transform: scaleX(1); transform-origin: left; } 55% { transform: scaleX(1); transform-origin: right; } 100% { transform: scaleX(0); transform-origin: right; } }
+@keyframes rd-out { 0%, 49% { opacity: 1; max-width: 30em; } 50% { opacity: 0; max-width: 30em; } 100% { opacity: 0; max-width: 0; } }
+@keyframes rd-in { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .odo-strip { transition: none; }
+  mark.hl { animation: none; background-size: 100% 100%; }
+  .rd-line.is-on .rd::after { animation: none; }
+  .rd-line.is-on .rd-real { animation: none; opacity: 0; max-width: 0; }
+  .rd-line.is-on .rd-tok { animation: none; opacity: 1; }
+  .deadline.is-urgent .deadline-n::after { animation: none; }
+}
+
+/* A pull quote with a hanging brass mark (no coloured side border). */
+.pull { position: relative; margin: 0; padding: 0.2rem 0 0 2.1rem; }
+.pull-mark { position: absolute; left: -0.05rem; top: -0.55rem; font-family: var(--font-serif), Georgia, serif; font-size: 3.6rem; line-height: 1; color: var(--key-bright); }
+.pull p { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-size: clamp(1.12rem, 1.8vw, 1.3rem); line-height: 1.55; color: var(--ink); max-width: 60ch; text-wrap: pretty; }
+/* The question being asked is the loudest thing on its card. */
+.q-text { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 400; font-size: clamp(1.55rem, 3.2vw, 2rem); line-height: 1.2; letter-spacing: -0.018em; color: var(--ink); text-wrap: balance; }
+/* A fact's value reads before its label. */
+.fact-v { margin-top: 0.15rem; font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-size: 1.22rem; line-height: 1.3; letter-spacing: -0.01em; font-variant-numeric: lining-nums; color: var(--ink); }
+
 /* ── Print: only the claim packet ── */
 @media print {
   body { background: #fff; }
@@ -319,5 +418,4 @@ h1, h2, h3 { text-wrap: balance; }
 
 /* Tracking breaks Devanagari conjuncts apart: spaced mono labels set solid in Hindi. */
 html[lang="hi"] .step-label,
-html[lang="hi"] .l-attrib,
-html[lang="hi"] .l-scroll-cue { letter-spacing: 0; font-size: 0.8rem; }
+html[lang="hi"] .t-meta { letter-spacing: 0; font-size: 0.8rem; }

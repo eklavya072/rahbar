@@ -185,7 +185,7 @@ export function parsePolicy(docId: string, label: string, lines: OcrLine[], acci
         facts.ownVehiclePolicyActive = accidentDate >= ds[0] && accidentDate <= ds[1];
         provenance.ownVehiclePolicyActive = prov(ev(docId, label, line));
       } else if (ds.length >= 2) {
-        notes.push(`Policy period ${ds[0]} to ${ds[1]} — add the accident date to check it.`);
+        notes.push(`Policy period ${ds[0]} to ${ds[1]} . Add the accident date to check it.`);
       }
     }
     if (/(Compulsory\s*)?P\.?A\.?\s*(Cover)?.*Owner[\s-]*Driver|Owner[\s-]*Driver.*P\.?A\.?|मालिक.?चालक/i.test(t)) {
@@ -265,7 +265,7 @@ export function parseDocument(docId: string, label: string, lines: OcrLine[], ct
   if (kind === "fir") return parseFir(docId, label, lines);
   if (kind === "passbook") return parsePassbook(docId, label, lines, ctx.accidentDate);
   if (kind === "policy") return parsePolicy(docId, label, lines, ctx.accidentDate, ctx.victimName);
-  return { docId, kind: "other", label, facts: {}, provenance: {}, narrative: lines.map((l) => l.text).join("\n"), notes: ["Unrecognised document — text kept for the AI reader."] };
+  return { docId, kind: "other", label, facts: {}, provenance: {}, narrative: lines.map((l) => l.text).join("\n"), notes: ["Unrecognised document: text kept for the AI reader."] };
 }
 
 /** Days between the last card use and the accident, for display. */

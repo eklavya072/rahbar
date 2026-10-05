@@ -27,7 +27,7 @@ export interface IncomeEvidence {
 
 function payerOf(text: string): string {
   const m = text.match(/(?:SALARY|SAL(?:\s*CR)?|NEFT\s*CR|IMPS\s*CR|UPI\/CR|PAYOUT)\s*[/|:-]?\s*([A-Z][A-Z .&]{2,40})/i);
-  return (m?.[1] ?? "").replace(/\s*\|.*$/, "").replace(/^(?:CR|DR)\s+/i, "").replace(/\s+/g, " ").trim() || "—";
+  return (m?.[1] ?? "").replace(/\s*\|.*$/, "").replace(/^(?:CR|DR)\s+/i, "").replace(/\s+/g, " ").trim() || "-";
 }
 
 export function extractIncome(lines: OcrLine[], before: string | null): IncomeEvidence {

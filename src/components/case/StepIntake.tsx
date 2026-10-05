@@ -124,8 +124,8 @@ export function StepTell() {
       </ActionBar>
 
       <section className="mt-12 border-t border-line pt-8">
-        <h2 className="step-label !text-muted">{hi ? "बस देख रहे हैं?" : "Just looking?"}</h2>
-        <p className="mt-2 text-ink-2">{hi ? "एक सैंपल परिवार का केस खोलें — सारे नाम और काग़ज़ काल्पनिक हैं।" : "Open a sample family's case. All names and papers are made up."}</p>
+        <h2 className="h-sec">{hi ? "बस देख रहे हैं?" : "Just looking?"}</h2>
+        <p className="mt-1.5 text-ink-2">{hi ? "एक सैंपल परिवार का केस खोलें। सारे नाम और काग़ज़ काल्पनिक हैं।" : "Open a sample family's case. All names and papers are made up."}</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {SAMPLE_CASES.map((c) => (
             <button key={c.id} onClick={() => loadSample(c.id)} className="card group p-4 text-left transition hover:-translate-y-0.5 hover:border-line-strong">
@@ -173,7 +173,7 @@ export function StepDocs() {
     <div>
       <StepIntro
         title={hi ? "अपने काग़ज़ों की फ़ोटो दें" : "Add photos of your papers"}
-        lead={hi ? "जो है, बस वही। जो नहीं है, छोड़ दें — उसकी जगह हम एक सवाल पूछ लेंगे।" : "Whatever you have. Skip what you don't — we'll ask a question instead."}
+        lead={hi ? "जो है, बस वही। जो नहीं है, छोड़ दें, उसकी जगह हम एक सवाल पूछ लेंगे।" : "Whatever you have. Skip what you don't and we'll ask a question instead."}
       />
 
       {busy ? (
@@ -193,7 +193,7 @@ export function StepDocs() {
           )}
 
           <div>
-            <h2 className="step-label !text-muted">{hi ? "सबसे काम के काग़ज़" : "What helps most"}</h2>
+            <h2 className="t-label">{hi ? "सबसे काम के काग़ज़" : "The papers that help most"}</h2>
             <ul className="mt-3 grid gap-2 sm:grid-cols-3">
               {kinds.map((k) => (
                 <li key={k.en} className="flex items-start gap-3 rounded-xl border border-line bg-surface p-3.5">
@@ -234,7 +234,7 @@ export function StepDocs() {
 
           {state.docs.length > 0 && (
             <div>
-              <h2 className="step-label !text-muted">{hi ? `जोड़े गए काग़ज़ · ${state.docs.length}` : `Added · ${state.docs.length}`}</h2>
+              <h2 className="t-label">{hi ? `${state.docs.length} काग़ज़ जोड़े गए` : `${state.docs.length} paper${state.docs.length > 1 ? "s" : ""} added`}</h2>
               <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {state.docs.map((d) => (
                   <li key={d.id} className="card overflow-hidden">
@@ -275,7 +275,7 @@ export function StepDocs() {
           </button>
         ) : (
           <button className="btn btn-primary btn-lg" onClick={() => go("check")}>
-            {hi ? "काग़ज़ नहीं हैं — सवालों से आगे" : "No papers — answer questions instead"} <ArrowRight size={18} />
+            {hi ? "काग़ज़ नहीं हैं? सवालों से आगे" : "No papers? Answer questions instead"} <ArrowRight size={18} />
           </button>
         )}
       </ActionBar>

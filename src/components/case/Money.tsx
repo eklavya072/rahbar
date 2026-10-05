@@ -8,6 +8,7 @@ import { auditOffer, estimateDeath, offerReply, type Employment, type MactInput,
 import { formatDate, formatINR } from "@/lib/engine/dates";
 import type { Evidence } from "@/lib/engine/types";
 import { DocViewer } from "./DocViewer";
+import { Money } from "../Type";
 
 const EMP: { v: Employment; en: string; hi: string }[] = [
   { v: "permanent", en: "Permanent job", hi: "स्थायी नौकरी" },
@@ -28,7 +29,7 @@ export function IncomeEvidenceCard({ bare = false }: { bare?: boolean }) {
 
   return (
     <section className={bare ? "" : "card p-4"}>
-      {!bare && <div className="flex items-center gap-2 font-semibold"><TrendingUp size={17} className="text-accent" /> {hi ? "आय का सबूत — पासबुक से" : "Income evidence — from the passbook"}</div>}
+      {!bare && <div className="flex items-center gap-2 font-semibold"><TrendingUp size={17} className="text-accent" /> {hi ? "पासबुक से आय का सबूत" : "Income evidence from the passbook"}</div>}
       <p className={`${bare ? "" : "mt-1 "}text-sm text-muted`}>
         {hi
           ? "बिना सैलरी स्लिप के ट्रिब्यूनल अक्सर न्यूनतम मज़दूरी मान लेते हैं। नियमित क्रेडिट असली कमाई का सबूत हैं (दिल्ली HC, 2026: न्यूनतम मज़दूरी सिर्फ़ एक पैमाना है)।"
@@ -37,7 +38,7 @@ export function IncomeEvidenceCard({ bare = false }: { bare?: boolean }) {
       <div className="mt-3 flex flex-wrap items-end gap-x-6 gap-y-2">
         <div>
           <div className="text-xs text-muted">{hi ? "औसत मासिक आय" : "Monthly income shown"}</div>
-          <div className="num-serif text-3xl">{formatINR(income.monthly)}</div>
+          <Money value={income.monthly} className="money-lg" />
         </div>
         <div className="text-sm text-ink-2">
           {income.credits.length} {hi ? "क्रेडिट" : "credits"} · {income.months.length} {hi ? "महीने" : "months"} · {income.payers.join(", ")}
@@ -136,12 +137,12 @@ export function MactPanel({ standalone = false, bare = false }: { standalone?: b
                   <div className="mono mt-0.5 text-[11px] text-muted">{h.working}</div>
                   <a href={h.basis.url} target="_blank" rel="noreferrer" className="mt-0.5 inline-flex items-center gap-1 text-[11px] text-muted underline">{h.basis.title} <ExternalLink size={10} /></a>
                 </td>
-                <td className="p-3 text-right font-semibold tabular-nums">{formatINR(h.amount)}</td>
+                <td className="p-3 text-right"><Money value={h.amount} className="text-[1.15rem]" /></td>
               </tr>
             ))}
             <tr className="bg-accent-soft">
               <td className="p-3 font-semibold text-accent">{hi ? "अनुमानित उचित मुआवज़ा" : "Estimated just compensation"}</td>
-              <td className="num-serif p-3 text-right text-xl text-accent">{formatINR(est.total)}</td>
+              <td className="p-3 text-right text-accent"><Money value={est.total} className="money-md" /></td>
             </tr>
           </tbody>
         </table>
@@ -172,7 +173,7 @@ export function MactPanel({ standalone = false, bare = false }: { standalone?: b
           <div className="mt-4 space-y-3">
             <div className={`rounded-xl p-3 text-sm ${audit.verdict === "fair" ? "bg-accent-soft text-accent" : audit.verdict === "low" ? "bg-amber-soft text-amber" : "bg-rose-soft text-rose"}`}>
               <b>
-                {audit.verdict === "fair" ? (hi ? "प्रस्ताव अनुमान के क़रीब है" : "The offer is close to the estimate") : audit.verdict === "low" ? (hi ? "प्रस्ताव कम है" : "The offer looks low") : hi ? "प्रस्ताव बहुत कम है — जल्दबाज़ी में न मानें" : "The offer is far too low — don't accept under pressure"}
+                {audit.verdict === "fair" ? (hi ? "प्रस्ताव अनुमान के क़रीब है" : "The offer is close to the estimate") : audit.verdict === "low" ? (hi ? "प्रस्ताव कम है" : "The offer looks low") : hi ? "प्रस्ताव बहुत कम है। जल्दबाज़ी में न मानें" : "The offer is far too low. Don't accept under pressure"}
               </b>{" "}
               · {Math.round(audit.ratio * 100)}% {hi ? "अनुमान का" : "of the estimate"} · {hi ? "अंतर" : "gap"} {formatINR(Math.max(0, audit.gap))}
             </div>

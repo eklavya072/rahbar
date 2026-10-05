@@ -16,10 +16,10 @@ export default function RulesPage() {
     <>
       <Header />
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-10 px-4 py-10 sm:px-5 md:py-14">
-        <PageIntro kicker={hi ? "नियम" : "Rules"} title={hi ? "हर नियम, उसका स्रोत और उसकी समय-सीमा" : "Every rule, its source, and its clock"}>
+        <PageIntro title={hi ? "हर नियम, उसका स्रोत और उसकी समय-सीमा" : "Every rule, its source, and its clock"}>
             {hi
-              ? "Rahbar में पात्रता और राशि यहीं के नियमों से तय होती है — AI से नहीं। हर नियम पर स्रोत और अंतिम जाँच की तारीख है। मशीन-पठनीय रूप:"
-              : "Eligibility and amounts in Rahbar come only from these rules — never from the AI. Each carries its legal source and the date it was last verified. Machine-readable:"}{" "}
+              ? "Rahbar में पात्रता और राशि यहीं के नियमों से तय होती है, AI से नहीं। हर नियम पर स्रोत और अंतिम जाँच की तारीख है। मशीन-पठनीय रूप:"
+              : "Eligibility and amounts in Rahbar come only from these rules, never from the AI. Each carries its legal source and the date it was last verified. Machine-readable:"}{" "}
             <a className="underline" href="/api/v1/rules">/api/v1/rules</a> · v{RULES_VERSION}
         </PageIntro>
 

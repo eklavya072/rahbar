@@ -10,26 +10,26 @@ export function FirstHours() {
   const hi = lang === "hi";
   const items = hi
     ? [
-        "इलाज: नामित अस्पताल में पहले 7 दिन ₹1.5 लाख तक कैशलेस (पीएम राहत) — पैसे के लिए इलाज न रुकने दें।",
-        "एफ़आईआर की मुफ़्त कॉपी लें (BNSS धारा 173(2)) — परिवार को भी अधिकार है।",
+        "इलाज: नामित अस्पताल में पहले 7 दिन ₹1.5 लाख तक कैशलेस (पीएम राहत)। पैसे के लिए इलाज न रुकने दें।",
+        "एफ़आईआर की मुफ़्त कॉपी लें (BNSS धारा 173(2))। परिवार को भी अधिकार है।",
         "पोस्टमार्टम रिपोर्ट और मृत्यु प्रमाण पत्र की कई प्रतियाँ माँगें।",
         "जगह, वाहन और चोटों की फ़ोटो; गवाहों के नाम-नंबर लिखें।",
         "किसी अनजान व्यक्ति के कोरे काग़ज़ या वकालतनामे पर हस्ताक्षर न करें; मुआवज़े का कोई प्रतिशत न लिखें।",
-        "पुलिस को 10 दिन में 'पीड़ित के अधिकार' (फ़ॉर्म II) देना होता है — माँगें।",
+        "पुलिस को 10 दिन में 'पीड़ित के अधिकार' (फ़ॉर्म II) देना होता है। माँगें।",
         "मदद करने वाले राहगीर कानूनी रूप से सुरक्षित हैं (धारा 134A) और ₹25,000 इनाम (राह-वीर) के हक़दार हैं।",
       ]
     : [
-        "Treatment: up to ₹1.5 lakh cashless for the first 7 days at a designated hospital (PM RAHAT) — don't let money delay care.",
-        "Get a free copy of the FIR (BNSS s.173(2)) — the family has this right too.",
+        "Treatment: up to ₹1.5 lakh cashless for the first 7 days at a designated hospital (PM RAHAT). Don't let money delay care.",
+        "Get a free copy of the FIR (BNSS s.173(2)). The family has this right too.",
         "Ask for several copies of the post-mortem report and death certificate.",
         "Photograph the spot, vehicles and injuries; note witnesses' names and numbers.",
         "Never sign blank papers or a vakalatnama from a stranger; never sign over a share of the compensation.",
-        "Police must give you the 'rights of victims' notice (Form II) within 10 days — ask for it.",
+        "Police must give you the 'rights of victims' notice (Form II) within 10 days. Ask for it.",
         "Bystanders who helped are legally protected (s.134A) and eligible for a ₹25,000 Rah-Veer reward.",
       ];
   return (
     <section className="rounded-2xl border border-amber/30 bg-amber-soft p-4">
-      <div className="flex items-center gap-2 font-semibold text-amber"><Siren size={17} /> {hi ? "पहले 48 घंटे — सबसे ज़रूरी बातें" : "The first 48 hours — what matters most"}</div>
+      <div className="flex items-center gap-2 font-semibold text-amber"><Siren size={17} /> {hi ? "पहले 48 घंटे: सबसे ज़रूरी बातें" : "The first 48 hours: what matters most"}</div>
       <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-ink-2">{items.map((x) => <li key={x}>{x}</li>)}</ol>
     </section>
   );

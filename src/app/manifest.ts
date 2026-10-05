@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Rahbar (रहबर) — the way forward after a road accident",
+    name: "Rahbar (रहबर): the way forward after a road accident",
     short_name: "Rahbar",
     description: "Finds every compensation and insurance claim after a road accident in India and prepares the paperwork. Works offline.",
     start_url: "/",

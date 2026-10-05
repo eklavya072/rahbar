@@ -11,7 +11,7 @@ import { useLang } from "@/lib/i18n";
 import { formatDate } from "@/lib/engine/dates";
 import { assembleLetter, caseFactsSentence, firNumber, templateParagraphs, type Letter, type LetterContext } from "@/lib/case/letters";
 import { buildIcs, encodeCase, googleCalendarLink, whatsappText } from "@/lib/case/outputs";
-import { DaysLeft } from "../ui";
+import { Amount, Deadline } from "../Type";
 
 function LetterView({ l, approved, onApprove }: { l: Letter; approved: boolean; onApprove: (v: boolean) => void }) {
   const { lang } = useLang();
@@ -97,8 +97,8 @@ function Manifest({ letters, bare = false }: { letters: Record<string, Letter>; 
       {!bare && <div className="flex items-center gap-2 font-semibold"><Fingerprint size={16} className="text-accent" /> {hi ? "छेड़छाड़-रोधी सूची (SHA-256)" : "Tamper-evident packet manifest (SHA-256)"}</div>}
       <p className={`${bare ? "" : "mt-1 "}text-xs text-muted`}>
         {hi
-          ? "हर दस्तावेज़ और पत्र का डिजिटल फ़िंगरप्रिंट। कोई भी फ़ाइल दोबारा हैश करके पुष्टि कर सकता है कि कुछ बदला नहीं गया — असली दावों को फ़र्ज़ी दावों से अलग दिखाने में मदद।"
-          : "A digital fingerprint of every document and letter. Anyone can re-hash a file to confirm nothing was altered — helping genuine claims stand apart from fabricated ones."}
+          ? "हर दस्तावेज़ और पत्र का डिजिटल फ़िंगरप्रिंट। कोई भी फ़ाइल दोबारा हैश करके पुष्टि कर सकता है कि कुछ बदला नहीं गया, असली दावों को फ़र्ज़ी दावों से अलग दिखाने में मदद।"
+          : "A digital fingerprint of every document and letter. Anyone can re-hash a file to confirm nothing was altered, helping genuine claims stand apart from fabricated ones."}
       </p>
       <div className="mt-3 flex flex-wrap items-start gap-4">
         <ul className="min-w-0 flex-1 space-y-1">
@@ -162,7 +162,7 @@ export function StepPlan() {
             ? j.critic.revised
               ? `critic (${j.critic.model}) found ${j.critic.unsupported.length} unsupported claim(s) → redrafted · placeholders only`
               : `critic (${j.critic.model}) found no unsupported claims · placeholders only`
-            : "placeholders only — real names filled in on this device",
+            : "placeholders only, real names filled in on this device",
         });
       } catch (e) {
         letter = assembleLetter(r, ctx, templateParagraphs(r, ctx), "template");
@@ -198,7 +198,7 @@ export function StepPlan() {
   const showQr = async () => {
     const shareUrl = `${window.location.origin}/case#c=${encodeCase(facts)}`;
     setQr(await QRCode.toDataURL(shareUrl, { margin: 1, width: 220 }));
-    trace("Human", "Created a caseworker handoff QR — facts only, no names or documents, nothing stored on a server", { status: "done" });
+    trace("Human", "Created a caseworker handoff QR: facts only, no names or documents, nothing stored on a server", { status: "done" });
   };
 
   const canManifest = state.docs.some((d) => state.docHashes[d.id]) || state.approvedLetters.length > 0;
@@ -222,15 +222,14 @@ export function StepPlan() {
               <span className="tl-n">{i + 1}</span>
               <div className="min-w-0 pt-1">
                 <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-                  <span className="font-semibold">{b(c.title)}</span>
-                  <span className="num-serif text-lg text-ink-2">{b(c.amountLabel)}</span>
+                  <span className="text-[1.05rem] font-semibold">{b(c.title)}</span>
                   {c.status === "possible" && <span className="chip bg-amber-soft text-amber">{hi ? "पहले पुष्टि करें" : "confirm first"}</span>}
                 </div>
-                <div className="mt-1.5 flex flex-wrap items-center gap-2 text-sm">
-                  {c.deadlineDate ? <b>{formatDate(c.deadlineDate, lang)}</b> : null}
-                  <DaysLeft days={c.daysLeft} />
-                  <span className="text-muted">{b(c.deadlineLabel)}</span>
+                <div className="mt-2 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+                  <Amount value={c.amountValue} label={b(c.amountLabel)} size="md" />
+                  <Deadline days={c.daysLeft} date={c.deadlineDate ? formatDate(c.deadlineDate, lang) : null} compact />
                 </div>
+                <div className="mt-2 text-sm text-muted">{b(c.deadlineLabel)}</div>
                 <div className="mt-1 text-sm text-ink-2">{b(c.office)}</div>
                 {c.deadlineDate && (
                   <a className="link-swipe mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-key" target="_blank" rel="noreferrer" href={googleCalendarLink(`Rahbar: ${c.title[lang]}`, c.deadlineDate, c.office[lang])}>
@@ -259,7 +258,7 @@ export function StepPlan() {
 
       <section className="no-print mt-10">
         <h2 className="h-sec">{hi ? "इकट्ठा करने वाले काग़ज़" : "Papers to collect"}</h2>
-        <p className="mt-1 text-sm text-muted">{hi ? "हर काग़ज़ एक बार — कितनी प्रतियाँ, कहाँ से।" : "Each paper once — how many copies, and where to get it."}</p>
+        <p className="mt-1 text-sm text-muted">{hi ? "हर काग़ज़ एक बार: कितनी प्रतियाँ, कहाँ से।" : "Each paper once: how many copies, and where to get it."}</p>
         <ul className="card mt-4 divide-y divide-line">
           {(allDocs ? plan.documents : plan.documents.slice(0, 5)).map((d) => (
             <li key={d.doc.key} className="flex items-start gap-3 px-4 py-3 text-sm">
@@ -307,8 +306,8 @@ export function StepPlan() {
               <img src={qr} alt="Case handoff QR code" className="h-32 w-32 rounded-lg border border-line" />
               <p className="text-sm text-muted">
                 {hi
-                  ? "इसमें सिर्फ़ तथ्य हैं — कोई नाम, नंबर या काग़ज़ नहीं। डेटा लिंक के # हिस्से में है, जो किसी सर्वर पर नहीं जाता।"
-                  : "Facts only — no names, numbers or papers. The data lives in the link's # part, which browsers never send to a server."}
+                  ? "इसमें सिर्फ़ तथ्य हैं: कोई नाम, नंबर या काग़ज़ नहीं। डेटा लिंक के # हिस्से में है, जो किसी सर्वर पर नहीं जाता।"
+                  : "Facts only: no names, numbers or papers. The data lives in the link's # part, which browsers never send to a server."}
               </p>
             </div>
           )}

@@ -7,8 +7,8 @@ import { useLang } from "@/lib/i18n";
 import { formatDate, formatINR, formatINRShort } from "@/lib/engine/dates";
 import { DOCS } from "@/lib/engine/documents";
 import type { EntitlementResult, Facts, Status } from "@/lib/engine/types";
-import { DaysLeft, SourceBadge } from "../ui";
-import { CountUp } from "../landing/TextEffects";
+import { SourceBadge } from "../ui";
+import { Amount, Deadline, Odometer } from "../Type";
 import { ActionBar, Extras, More, StepIntro } from "./Flow";
 import { IncomeEvidenceCard, MactPanel } from "./Money";
 import { ReadAloud, SupportCard } from "./Support";
@@ -34,12 +34,16 @@ export function EntitlementCard({ r }: { r: EntitlementResult }) {
         <div className="min-w-0 flex-1">
           <h3 className="text-[1.05rem] font-semibold leading-snug">{b(r.name)}</h3>
           <div className="mt-0.5 text-sm text-muted">{b(r.payer)}</div>
-          <div className={`num-serif mt-2 text-2xl ${r.status === "not_eligible" ? "text-muted line-through decoration-1" : ""}`}>{b(r.amount.label)}</div>
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            {r.status !== "not_eligible" && <DaysLeft days={r.daysLeft} />}
-            {r.status === "eligible" && r.evidenceBacked && <span className="chip bg-accent-soft text-accent">{hi ? "काग़ज़ से साबित" : "proved by your papers"}</span>}
-            {r.informational && <span className="chip bg-slate-soft text-ink-2">{hi ? "इलाज · कुल में नहीं" : "treatment · not in total"}</span>}
+          <div className="mt-3">
+            <Amount value={r.amount.value} label={b(r.amount.label)} struck={r.status === "not_eligible"} />
           </div>
+          {(r.status !== "not_eligible" && r.daysLeft !== null) || (r.status === "eligible" && r.evidenceBacked) || r.informational ? (
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+              {r.status !== "not_eligible" && <Deadline days={r.daysLeft} date={r.deadline.date ? formatDate(r.deadline.date, lang) : null} compact />}
+              {r.status === "eligible" && r.evidenceBacked && <span className="chip bg-accent-soft text-accent">{hi ? "काग़ज़ से साबित" : "proved by your papers"}</span>}
+              {r.informational && <span className="chip bg-slate-soft text-ink-2">{hi ? "इलाज · कुल में नहीं" : "treatment, not in total"}</span>}
+            </div>
+          ) : null}
         </div>
         <span className="mt-1 inline-flex shrink-0 items-center gap-1 text-sm font-medium text-key">
           <span className="hidden sm:inline">{open ? (hi ? "बंद करें" : "Close") : hi ? "क्यों और कैसे" : "Why & how"}</span>
@@ -50,7 +54,7 @@ export function EntitlementCard({ r }: { r: EntitlementResult }) {
       {open && (
         <div className="step-enter space-y-4 border-t border-line bg-surface-2/70 p-4 text-sm sm:px-5">
           <div>
-            <div className="step-label mb-2 !text-muted">{t("why")}</div>
+            <div className="t-label mb-2">{t("why")}</div>
             <ul className="space-y-1.5">
               {r.conditions.map((c) => (
                 <li key={c.id} className="flex items-start gap-2">
@@ -64,15 +68,15 @@ export function EntitlementCard({ r }: { r: EntitlementResult }) {
           {r.status !== "not_eligible" && (
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <div className="step-label mb-1 !text-muted">{t("deadline")}</div>
-                <div>{r.deadline.date ? <b>{formatDate(r.deadline.date, lang)} — </b> : null}{b(r.deadline.label)}</div>
+                <div className="t-label mb-1">{t("deadline")}</div>
+                <div>{r.deadline.date ? <b>{formatDate(r.deadline.date, lang)}: </b> : null}{b(r.deadline.label)}</div>
               </div>
               <div>
-                <div className="step-label mb-1 flex items-center gap-1.5 !text-muted"><Landmark size={12} /> {t("whereToApply")}</div>
+                <div className="t-label mb-1 flex items-center gap-1.5"><Landmark size={14} /> {t("whereToApply")}</div>
                 <div>{b(r.office)}</div>
               </div>
               <div className="sm:col-span-2">
-                <div className="step-label mb-1.5 !text-muted">{t("documents")}</div>
+                <div className="t-label mb-1.5">{t("documents")}</div>
                 <div className="flex flex-wrap gap-1.5">{r.documents.map((d) => <span key={d} className="chip bg-surface text-ink-2 ring-1 ring-line">{b(DOCS[d].name)}</span>)}</div>
               </div>
             </div>
@@ -142,7 +146,7 @@ export function AskAgent({ bare = false }: { bare?: boolean }) {
   return (
     <section className={bare ? "" : "card p-4"}>
       {!bare && <h3 className="font-semibold">{hi ? "अपने केस के बारे में पूछें" : "Ask about your case"}</h3>}
-      <p className={`${bare ? "" : "mt-0.5 "}text-xs text-muted`}>{hi ? "एजेंट पैसे का हिसाब ख़ुद नहीं लगाता — वह नियम-इंजन को टूल की तरह चलाता है।" : "The agent never does the money maths itself — it calls the rules engine as a tool."}</p>
+      <p className={`${bare ? "" : "mt-0.5 "}text-xs text-muted`}>{hi ? "एजेंट पैसे का हिसाब ख़ुद नहीं लगाता। वह नियम-इंजन को टूल की तरह चलाता है।" : "The agent never does the money maths itself. It calls the rules engine as a tool."}</p>
       <div className="mt-3 space-y-3">
         {msgs.map((m, i) => (
           <div key={i} className={m.role === "user" ? "ml-8 rounded-xl bg-ink px-3 py-2 text-sm text-white" : "mr-4 space-y-1.5"}>
@@ -189,34 +193,48 @@ export function StepResults() {
         lead={hi ? "हर दावे के साथ उसका कारण, डेडलाइन और कहाँ जमा करना है। किसी पर भी टैप करके 'क्यों' देखें।" : "Each claim comes with its reason, deadline and where to apply. Tap any one to see why."}
       />
 
-      <section className="panel-ink step-enter p-6 sm:p-8" aria-label={t("totalFound")}>
+      <section className="panel-ink step-enter p-6 sm:p-9" aria-label={t("totalFound")}>
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="step-label !text-[#cea850]">{hi ? "काग़ज़ों और जवाबों से पक्का" : "Confirmed from your papers and answers"}</div>
+          <p className="panel-lead">{hi ? "आपके काग़ज़ों और जवाबों से हमें मिला" : "From your papers and answers, we found"}</p>
           <ReadAloud
             className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-white/20 px-3 text-sm text-white/80 hover:bg-white/10"
             text={(hi ? `अब तक पक्का: ${formatINR(summary.confirmedTotal)}। ` : `Confirmed so far: ${formatINR(summary.confirmedTotal)}. `) + by("eligible").filter((r) => !r.informational).map((r) => `${b(r.short)}: ${b(r.amount.label)}.`).join(" ")}
           />
         </div>
-        <div className="num-serif mt-3 text-[clamp(2.9rem,9vw,4.8rem)] leading-none text-[#f2f1ec]">
-          <CountUp to={summary.confirmedTotal} active prefix="₹" ms={1600} />
+        <div className="mt-2 text-[#f2f1ec]">
+          <Odometer value={summary.confirmedTotal} className="money-xl" />
         </div>
-        {summary.possibleTotal > 0 && (
-          <div className="mt-2 text-white/75">+ {formatINRShort(summary.possibleTotal, lang)} {hi ? "और मिल सकता है — एक जाँच के बाद" : "more possible, after one more check"}</div>
-        )}
-        <div className="rule-brass mt-6" />
-        <dl className="mt-5 grid grid-cols-3 gap-3 text-sm">
-          <div><dt className="text-white/60">{hi ? "दावा करें" : "Ready to claim"}</dt><dd className="num-serif text-3xl text-[#f2f1ec]">{summary.counts.eligible}</dd></div>
-          <div><dt className="text-white/60">{hi ? "जाँच बाकी" : "To check"}</dt><dd className="num-serif text-3xl text-[#cea850]">{summary.counts.possible}</dd></div>
-          <div><dt className="text-white/60">{hi ? "नहीं मिलेगा" : "Not available"}</dt><dd className="num-serif text-3xl text-white/50">{summary.counts.not_eligible}</dd></div>
-        </dl>
-        <p className="mt-4 text-xs text-white/50">{hi ? `${docsRead} काग़ज़ और ${answered} जवाबों से · पैसा नियम तय करते हैं, AI नहीं` : `From ${docsRead} papers and ${answered} answers · amounts come from the rules, never the AI`}</p>
+        <p className="panel-lead mt-3">
+          {hi ? "जिसका दावा आपका परिवार अभी कर सकता है" : "that your family can claim now"}
+          {summary.possibleTotal > 0 && (
+            <>
+              {hi ? ", और एक जाँच के बाद " : ", and "}
+              <b className="font-semibold text-[#cea850]">{formatINRShort(summary.possibleTotal, lang)}</b>
+              {hi ? " और।" : " more after one more check."}
+            </>
+          )}
+          {summary.possibleTotal > 0 ? null : hi ? "।" : "."}
+        </p>
+        <div className="rule-brass mt-7" />
+        <p className="mt-5 max-w-[56ch] text-[1.02rem] leading-relaxed text-white/75">
+          {hi ? (
+            <>
+              <b className="panel-n">{summary.counts.eligible}</b> दावे जमा करने के लिए तैयार, <b className="panel-n is-key">{summary.counts.possible}</b> की जाँच बाकी, और <b className="panel-n is-dim">{summary.counts.not_eligible}</b> नहीं मिलेंगे (कारण सहित)।
+            </>
+          ) : (
+            <>
+              <b className="panel-n">{summary.counts.eligible}</b> {summary.counts.eligible === 1 ? "claim is" : "claims are"} ready to file, <b className="panel-n is-key">{summary.counts.possible}</b> {summary.counts.possible === 1 ? "needs" : "need"} one more check, and <b className="panel-n is-dim">{summary.counts.not_eligible}</b> {summary.counts.not_eligible === 1 ? "is" : "are"} not available, with the reason why.
+            </>
+          )}
+        </p>
+        <p className="mt-4 text-xs text-white/50">{hi ? `${docsRead} काग़ज़ और ${answered} जवाबों से। पैसा नियम तय करते हैं, AI नहीं।` : `From ${docsRead} papers and ${answered} answers. Amounts come from the rules, never the AI.`}</p>
       </section>
 
       <div className="mt-10 space-y-10">
         <Bucket title={hi ? "दावा करने के लिए तैयार" : "Ready to claim"} hint={hi ? "सबसे नज़दीकी डेडलाइन पहले देखें" : "Watch the nearest deadline first"} items={by("eligible")} />
         <Bucket title={hi ? "एक और जाँच चाहिए" : "Needs one more check"} hint={hi ? "'क्यों' में देखें क्या बाकी है" : "Open 'Why' to see what's missing"} items={by("possible")} />
         {notAvail.length > 0 && (
-          <More icon={<X size={18} />} title={hi ? `नहीं मिलेगा · ${notAvail.length}` : `Not available · ${notAvail.length}`} hint={hi ? "और क्यों — ताकि कोई आपको गुमराह न कर सके" : "And why — so no one can mislead you"}>
+          <More icon={<X size={18} />} title={hi ? `नहीं मिलेगा · ${notAvail.length}` : `Not available · ${notAvail.length}`} hint={hi ? "और क्यों, ताकि कोई आपको गुमराह न कर सके" : "And why, so no one can mislead you"}>
             <div className="space-y-3">{notAvail.map((r) => <EntitlementCard key={r.id} r={r} />)}</div>
           </More>
         )}

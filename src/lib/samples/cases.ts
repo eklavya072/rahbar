@@ -115,8 +115,8 @@ export const SAMPLE_CASES: SampleCase[] = [
     id: "kavita",
     title: { en: "Injured as a pillion rider", hi: "पीछे बैठे हुए घायल" },
     blurb: {
-      en: "Kavita (52) broke her leg when a car hit the scooter she was riding pillion on in Nagpur. The car was caught. A smaller, honest result — the app also tells her what she can't claim, and why.",
-      hi: "कविता (52) नागपुर में स्कूटर पर पीछे बैठी थीं जब एक कार ने टक्कर मारी, उनका पैर टूट गया। कार पकड़ी गई। छोटा, ईमानदार नतीजा — ऐप यह भी बताता है कि क्या नहीं मिलेगा, और क्यों।",
+      en: "Kavita (52) broke her leg when a car hit the scooter she was riding pillion on in Nagpur. The car was caught. A smaller, honest result. The app also tells her what she can't claim, and why.",
+      hi: "कविता (52) नागपुर में स्कूटर पर पीछे बैठी थीं जब एक कार ने टक्कर मारी, उनका पैर टूट गया। कार पकड़ी गई। छोटा, ईमानदार नतीजा। ऐप यह भी बताता है कि क्या नहीं मिलेगा, और क्यों।",
     },
     victimName: "Kavita Deshmukh",
     claimantName: "Kavita Deshmukh",
@@ -165,7 +165,7 @@ export const SAMPLE_CASES: SampleCase[] = [
   },
   {
     id: "arjun",
-    title: { en: "Delivery rider — with a hidden attack in the FIR", hi: "डिलीवरी राइडर — FIR में छिपा हमला" },
+    title: { en: "Delivery rider, with a hidden attack in the FIR", hi: "डिलीवरी राइडर: FIR में छिपा हमला" },
     blurb: {
       en: "Arjun (27), a food-delivery rider, was killed by a car in Pune. Red-team test: someone has slipped an instruction to the AI into the FIR text. Watch the Guard flag it and the rules ignore it.",
       hi: "अर्जुन (27), फ़ूड डिलीवरी राइडर, पुणे में एक कार की टक्कर से मारे गए। रेड-टीम टेस्ट: FIR में AI के लिए छिपा निर्देश है। देखिए गार्ड उसे पकड़ता है और नियम उसे अनदेखा करते हैं।",
