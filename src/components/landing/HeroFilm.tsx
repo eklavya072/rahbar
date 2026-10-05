@@ -215,8 +215,8 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         {/* 1 — the promise */}
         <div className={`l-band l-band-a${introCls}`} ref={(el) => { bandRefs.current[0] = el; }}>
           <h1 className="l-h1">
-            <ScrubWords text={hi ? "हादसे के बाद," : "After an accident,"} seed={11} spread={0.4} />{" "}
-            <span className="l-key l-promise">
+            <ScrubWords className="l-h1-line" text={hi ? "हादसे के बाद," : "After an accident,"} seed={11} spread={0.4} />{" "}
+            <span className="l-key l-promise l-h1-line">
               <ScrubWords text={hi ? "*आगे का रास्ता।*" : "*the way forward.*"} seed={17} spread={0.35} indexFrom={4} />
             </span>
           </h1>

@@ -104,6 +104,11 @@ html[lang="hi"] .t-imp { font-weight: 700; font-stretch: normal; font-size: 1em;
 }
 .l-key { color: var(--key); }
 .l-h1 .t-it { font-weight: 380; }
+/* The promise is two lines, always: never let "accident," drop on its own. */
+.l-h1-line { display: block; white-space: nowrap; }
+.l-promise.l-h1-line { display: table; margin-inline: auto; }
+.l-stage.is-static .l-promise.l-h1-line { margin-inline: 0; }
+@media (max-width: 359px) { .l-h1-line { white-space: normal; } }
 
 /* The promise gets a brass road drawn beneath it once the line has assembled. */
 .l-promise { position: relative; display: inline-block; }
@@ -334,6 +339,8 @@ html[lang="hi"] .t-imp { font-weight: 700; font-stretch: normal; font-size: 1em;
 .l-sample-img { height: 210px; overflow: hidden; border-bottom: 1px solid var(--hairline); flex: none; }
 .l-sample.is-lead .l-sample-img { height: clamp(260px, 32vw, 400px); }
 .l-sample-img { background: #ece7db; padding: 0.9rem; display: grid; place-items: center; }
+.l-sample:not(.is-lead) .l-sample-img { padding: 0; display: block; background: none; }
+.l-sample:not(.is-lead) .l-sample-img img { object-fit: cover; object-position: top; }
 .l-sample-img img { width: 100%; height: 100%; object-fit: contain; object-position: center; transition: transform 900ms cubic-bezier(0.16,1,0.3,1); }
 .l-sample:hover .l-sample-img img { transform: scale(1.04); }
 .l-sample-body { padding: 1.3rem 1.3rem 1.4rem; display: flex; flex-direction: column; gap: 0.55rem; flex: 1; min-width: 0; }
