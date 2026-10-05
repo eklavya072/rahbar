@@ -236,7 +236,8 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         {/* 2 — the finding */}
         <div className="l-band l-band-b" ref={(el) => { bandRefs.current[1] = el; }}>
           <p className="l-lede">
-            <ScrubWords text={hi ? "लाखों का हक़ बनता है, पर ज़्यादातर परिवार एक रुपया भी नहीं ले पाते।" : "Lakhs are owed, yet most families never claim a rupee."} seed={29} spread={0.5} />
+            <ScrubWords className="l-stmt-line" text={hi ? "पैसा मौजूद है।" : "The money exists."} seed={29} spread={0.5} />
+            <ScrubWords className="l-stmt-line" text={hi ? "परिवार उस तक नहीं पहुँचते।" : "Families never reach it."} seed={31} spread={0.5} />
           </p>
           <ul className="l-find">
             {[
@@ -287,9 +288,9 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         {/* 5 — the close */}
         <div className="l-band l-band-e" ref={(el) => { bandRefs.current[4] = el; }}>
           <p className="l-stmt l-close-head">
-            <ScrubWords text={hi ? "देखिए आपके परिवार का" : "Find what your family"} seed={83} spread={0.3} />{" "}
+            <ScrubWords text={hi ? "रहबर को" : "Let Rahbar"} seed={83} spread={0.3} />{" "}
             <span className="l-key">
-              <ScrubWords text={hi ? "क्या हक़ बनता है।" : "is owed."} seed={89} spread={0.25} />
+              <ScrubWords text={hi ? "रास्ता दिखाने दें।" : "show the way."} seed={89} spread={0.25} />
             </span>
           </p>
           <p className="l-note">{hi ? "कोई साइन-अप नहीं। मुफ़्त। आपके काग़ज़ आपके फ़ोन से बाहर नहीं जाते।" : "No sign-up. Free. Your papers never leave your phone."}</p>

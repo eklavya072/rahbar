@@ -9,10 +9,10 @@
   --hairline: rgba(242, 241, 236, 0.12);
   --key: #cea850;
   --key-line: rgba(206, 168, 80, 0.55);
-  --t-hero: clamp(2.1rem, 4.2vw, 3.9rem);
-  --t-h2: clamp(2.3rem, 5.2vw, 4.5rem);
-  --t-h3: clamp(1.45rem, 2.4vw, 2rem);
-  --t-body: clamp(1.02rem, 1.1vw, 1.12rem);
+  --t-hero: clamp(1.85rem, 3.3vw, 3rem);
+  --t-h2: clamp(1.7rem, 3vw, 2.6rem);
+  --t-h3: clamp(1.2rem, 1.7vw, 1.5rem);
+  --t-body: clamp(0.98rem, 1vw, 1.05rem);
   --gutter: clamp(1.25rem, 5vw, 4.5rem);
   --measure: 76rem;
   --s-sec: clamp(5rem, 12vh, 9rem);
@@ -101,8 +101,8 @@
 .l-band-a.is-intro-pending .l-cta-a { opacity: 0; transform: translate3d(0, 14px, 0); }
 .l-band-a.is-intro-play .l-cta-a { transition: opacity 700ms ease 1100ms, transform 900ms cubic-bezier(0.16,1,0.3,1) 1100ms; }
 .l-src { margin-top: 0.9rem; font-size: 0.82rem; color: var(--ink-3); opacity: clamp(0, calc((var(--k, 1) - 0.6) * 4), 1); }
-.l-h1-sub { max-width: 46ch; font-size: clamp(1.02rem, 1.4vw, 1.22rem); color: var(--ink-2); line-height: 1.6; font-family: var(--font-sans-face), var(--font-deva), sans-serif; }
-.l-lede, .l-stmt { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 340; font-size: clamp(2rem, 4.4vw, 3.8rem); line-height: 1.05; letter-spacing: -0.025em; max-width: 18ch; }
+.l-h1-sub { max-width: 46ch; font-size: clamp(0.98rem, 1.1vw, 1.08rem); color: var(--ink-2); line-height: 1.6; font-family: var(--font-sans-face), var(--font-deva), sans-serif; }
+.l-lede, .l-stmt { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 340; font-size: clamp(1.6rem, 2.9vw, 2.5rem); line-height: 1.12; letter-spacing: -0.02em; max-width: 20ch; }
 .l-stmt-line { display: block; }
 .l-note { max-width: 50ch; color: var(--ink-2); font-size: var(--t-body); line-height: 1.65; font-family: var(--font-sans-face), var(--font-deva), sans-serif; }
 .l-find { list-style: none; padding: 0; margin: 0.5rem 0 0; width: min(36rem, 100%); }
@@ -113,7 +113,7 @@
   transform: translateY(calc((1 - clamp(0, (var(--k, 1) - var(--th, 0)) * 4, 1)) * 12px));
 }
 .l-band .l-find-row { opacity: clamp(0, calc((var(--k, 1) - var(--th, 0)) * 4), 1); }
-.l-find-qty { font-family: var(--font-mono-face), monospace; font-size: 1.3rem; color: var(--ink); }
+.l-find-qty { font-family: var(--font-mono-face), monospace; font-size: 1.1rem; color: var(--ink); }
 .l-find-text { color: var(--ink-2); }
 .l-find-row.is-gap { border-top-color: var(--key-line); }
 .l-find-row.is-gap .l-find-qty { color: var(--key); }
@@ -124,7 +124,7 @@
   opacity: clamp(0, calc((var(--k, 1) - var(--th, 0)) * 4), 1);
 }
 .l-rung-n { font-family: var(--font-mono-face), monospace; font-size: 0.78rem; color: var(--ink-3); padding-top: 0.2rem; }
-.l-rung-name { font-size: 1.1rem; }
+.l-rung-name { font-size: 1rem; }
 .l-rung.is-top { border-bottom-color: var(--key-line); }
 .l-rung.is-top .l-rung-n, .l-rung.is-top .l-rung-name { color: var(--key); }
 .l-close-head { max-width: 22ch; text-shadow: 0 2px 28px rgba(0,0,0,0.5); }
@@ -191,10 +191,10 @@
 .l-sec { position: relative; z-index: 1; padding: var(--s-sec) var(--gutter); }
 .l-sec-tight { padding-block: clamp(4rem, 9vh, 6.5rem); }
 .l-wrap { position: relative; max-width: var(--measure); margin: 0 auto; }
-.l-h2 { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 330; font-size: var(--t-h2); line-height: 1.02; letter-spacing: -0.032em; max-width: 18ch; color: var(--ink); text-wrap: balance; }
+.l-h2 { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 330; font-size: var(--t-h2); line-height: 1.06; letter-spacing: -0.028em; max-width: 26ch; color: var(--ink); text-wrap: balance; }
 .l-em { font-style: italic; font-weight: 300; color: var(--key); padding-right: 0.06em; }
 .l-h3 { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 400; font-size: var(--t-h3); line-height: 1.1; letter-spacing: -0.02em; color: var(--ink); }
-.l-lead { margin-top: 1.1rem; max-width: 52ch; font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.65; color: var(--ink-2); }
+.l-lead { margin-top: 0.9rem; max-width: 56ch; font-size: clamp(0.98rem, 1.1vw, 1.08rem); line-height: 1.65; color: var(--ink-2); }
 .l-body { margin-top: 0.9rem; max-width: 46ch; font-size: var(--t-body); line-height: 1.7; color: var(--ink-2); }
 .l-link { color: var(--ink-2); font-weight: 500; }
 .l-link:hover { color: var(--ink); }
@@ -218,7 +218,7 @@
 }
 .l-step-n {
   display: block; margin-bottom: 0.4rem;
-  font-family: var(--font-serif), Georgia, serif; font-weight: 300; font-size: clamp(4.5rem, 9vw, 7rem); line-height: 0.9; letter-spacing: -0.04em;
+  font-family: var(--font-serif), Georgia, serif; font-weight: 300; font-size: clamp(2.8rem, 4.6vw, 4rem); line-height: 0.9; letter-spacing: -0.04em;
   font-variant-numeric: lining-nums;
   color: transparent; -webkit-text-stroke: 1.25px var(--key-line);
   transition: color 900ms cubic-bezier(0.16,1,0.3,1) 200ms, -webkit-text-stroke-color 900ms ease 200ms;
@@ -257,7 +257,7 @@
 .f-scan.is-on .f-d2 { opacity: 1; transform: none; transition-delay: 2s; }
 .f-total { padding: 1.4rem 1.2rem 1rem; background: #15171c; color: #f2f1ec; }
 .f-total-label { font-size: 0.8rem; color: #c0beb6; }
-.f-total-num { font-size: clamp(2.4rem, 4.4vw, 3.4rem); color: #cea850; margin-top: 0.25rem; }
+.f-total-num { font-size: clamp(1.9rem, 3vw, 2.5rem); color: #cea850; margin-top: 0.25rem; }
 .f-rows { list-style: none; margin: 0; padding: 0.4rem 0.9rem 0.9rem; }
 .f-rows li { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0; border-bottom: 1px solid rgba(21,23,28,0.08); font-size: 0.9rem; opacity: 0; transform: translateX(-8px); transition: opacity 500ms ease, transform 600ms cubic-bezier(0.16,1,0.3,1); }
 .f-owed.is-on .f-rows li { opacity: 1; transform: none; }
@@ -284,26 +284,26 @@
   background: radial-gradient(420px circle at var(--mx, 50%) var(--my, -40%), rgba(206,168,80,0.09), transparent 60%);
 }
 /* Trust fits one screen: a smaller heading, the slip, four short promises, one line of proof. */
-.l-trust { padding-block: clamp(3rem, 7vh, 4.5rem); }
-.l-h2-sm { font-size: clamp(1.9rem, 3.4vw, 2.8rem); max-width: none; }
-.l-trust .l-h2::after { margin-top: 0.8rem; }
+.l-trust { padding-block: clamp(2.6rem, 6vh, 3.6rem); }
+.l-h2-sm { font-size: clamp(1.5rem, 2.4vw, 2rem); max-width: none; }
+.l-trust .l-h2::after { margin-top: 0.6rem; }
 .l-close .l-h2::after { margin-inline: auto; }
 .l-band-c .l-stmt { max-width: 24ch; }
 /* Four promises, set as an editorial list: the promise large, the proof beside it. */
-.l-trust-grid { margin-top: 1.4rem; list-style: none; padding: 0; border-top: 1px solid var(--hairline); }
-.l-trust-item { display: grid; gap: 0.25rem; padding: 0.8rem 0; border-bottom: 1px solid var(--hairline); }
+.l-trust-grid { margin-top: 1.1rem; list-style: none; padding: 0; border-top: 1px solid var(--hairline); }
+.l-trust-item { display: grid; gap: 0.2rem; padding: 0.6rem 0; border-bottom: 1px solid var(--hairline); }
 @media (min-width: 860px) { .l-trust-item { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 3rem; align-items: baseline; } }
-.l-trust-t { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 360; font-size: clamp(1.2rem, 1.9vw, 1.45rem); line-height: 1.2; letter-spacing: -0.012em; color: var(--ink); }
-.l-trust-b { color: var(--ink-2); line-height: 1.65; max-width: 46ch; }
+.l-trust-t { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 360; font-size: clamp(1.02rem, 1.3vw, 1.15rem); line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); }
+.l-trust-b { color: var(--ink-2); font-size: 0.92rem; line-height: 1.55; max-width: 50ch; }
 /* A slip of the FIR: identifiers are struck out in front of you and replaced by tokens. */
-.l-slip { margin-top: 1.5rem; max-width: 52rem; border-radius: 10px; background: #f3f0e8; color: #15171c; padding: 1rem 1.3rem 1.1rem; box-shadow: 0 30px 60px -40px rgba(0,0,0,0.8); }
-.l-slip-cap { font-size: 0.88rem; font-weight: 600; color: #6a665d; }
-.l-slip-line { margin-top: 0.55rem; font-family: var(--font-mono-face), monospace; font-size: clamp(0.92rem, 1.6vw, 1.12rem); line-height: 1.8; color: #15171c; }
+.l-slip { margin-top: 1.2rem; max-width: 52rem; border-radius: 10px; background: #f3f0e8; color: #15171c; padding: 0.8rem 1.1rem 0.9rem; box-shadow: 0 30px 60px -40px rgba(0,0,0,0.8); }
+.l-slip-cap { font-size: 0.8rem; font-weight: 600; color: #6a665d; }
+.l-slip-line { margin-top: 0.4rem; font-family: var(--font-mono-face), monospace; font-size: clamp(0.84rem, 1.1vw, 0.95rem); line-height: 1.75; color: #15171c; }
 .l-slip .rd-tok { color: #7a5b1e; background: #f1e8d3; border-radius: 4px; padding: 0 0.25em; font-size: 0.92em; }
 .l-slip .rd::after { background: #15171c; }
 /* The proof, set as prose: numbers carry the weight, words carry the meaning. */
-.l-proof { margin-top: 1.4rem; max-width: 52ch; font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 340; font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.4; letter-spacing: -0.012em; color: var(--ink-2); text-wrap: pretty; }
-.l-proof-n { color: var(--key); font-size: 1.25em; font-weight: 400; letter-spacing: -0.03em; font-variant-numeric: lining-nums tabular-nums; line-height: 1; }
+.l-proof { margin-top: 1.1rem; max-width: 60ch; font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 340; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.5; letter-spacing: -0.005em; color: var(--ink-2); text-wrap: pretty; }
+.l-proof-n { color: var(--key); font-size: 1.2em; font-weight: 400; letter-spacing: -0.03em; font-variant-numeric: lining-nums tabular-nums; line-height: 1; }
 
 /* ── Samples: one lead case and two beside it, each led by its outcome ── */
 .l-samples { margin-top: 3rem; display: grid; gap: 1.2rem; }
@@ -321,12 +321,12 @@
 .l-sample:hover .l-sample-img img { transform: scale(1.04); }
 .l-sample-body { padding: 1.3rem 1.3rem 1.4rem; display: flex; flex-direction: column; gap: 0.55rem; flex: 1; min-width: 0; }
 .l-sample-out { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.2rem 0.6rem; }
-.l-sample-money { font-size: 1.9rem; color: var(--ink); line-height: 1; }
-.l-sample.is-lead .l-sample-money { font-size: clamp(2.4rem, 4.4vw, 3.4rem); color: var(--key); }
+.l-sample-money { font-size: 1.5rem; color: var(--ink); line-height: 1; }
+.l-sample.is-lead .l-sample-money { font-size: clamp(1.9rem, 3vw, 2.4rem); color: var(--key); }
 .l-sample-out-l { font-size: 0.88rem; font-weight: 600; color: var(--ink-3); }
-.l-sample-t { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-size: 1.3rem; line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); }
-.l-sample.is-lead .l-sample-t { font-size: clamp(1.5rem, 2.4vw, 1.9rem); }
-.l-sample-b { color: var(--ink-2); font-size: 0.95rem; line-height: 1.6; flex: 1; }
+.l-sample-t { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-size: 1.15rem; line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); }
+.l-sample.is-lead .l-sample-t { font-size: clamp(1.25rem, 1.8vw, 1.45rem); }
+.l-sample-b { color: var(--ink-2); font-size: 0.92rem; line-height: 1.6; flex: 1; }
 .l-sample:not(.is-lead) .l-sample-b { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .l-sample-go { display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600; color: var(--key); }
 
@@ -343,8 +343,8 @@
 .l-tool:hover .l-tool-t { text-decoration: underline; text-underline-offset: 4px; }
 
 /* ── Close ── */
-.l-close { min-height: 80vh; display: grid; place-items: center; }
-.l-close-h { margin-inline: auto; max-width: 16ch; font-size: clamp(2.6rem, 6.4vw, 5.6rem); transition: opacity 900ms ease, transform 1100ms cubic-bezier(0.16,1,0.3,1); }
+.l-close { min-height: 64vh; display: grid; place-items: center; }
+.l-close-h { margin-inline: auto; max-width: 18ch; font-size: clamp(1.9rem, 3.6vw, 3rem); transition: opacity 900ms ease, transform 1100ms cubic-bezier(0.16,1,0.3,1); }
 .landing.is-armed .l-close:not(.is-in-view) .l-close-h { opacity: 0; transform: translateY(24px); }
 .l-close::after { content: ""; position: absolute; left: 50%; bottom: 0; width: min(60rem, 90vw); height: 40%; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 100%, rgba(206,168,80,0.16), transparent 70%); pointer-events: none; }
 

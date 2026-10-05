@@ -89,7 +89,7 @@ function Trust() {
             </p>
           )}
         </div>
-        <Link href="/evals" className="l-link link-swipe mt-5 inline-flex items-center gap-2">
+        <Link href="/evals" className="l-link link-swipe mt-3 inline-flex items-center gap-2 text-sm">
           <FlaskConical size={15} /> {hi ? "जाँच ख़ुद चलाकर देखें" : "Run the tests yourself"} <ArrowRight size={14} />
         </Link>
       </div>
@@ -254,9 +254,9 @@ export default function Landing() {
         <div className="l-wrap text-center">
           <h2 className="l-h2 l-close-h">
             {hi ? (
-              <>न फ़ीस, न एजेंट, <em className="l-em">न इंतज़ार।</em></>
+              <>आपको यह <em className="l-em">अकेले</em> नहीं करना है।</>
             ) : (
-              <>No fees, no agents, <em className="l-em">no waiting.</em></>
+              <>You don&apos;t have to do this <em className="l-em">alone.</em></>
             )}
           </h2>
           <p className="l-lead mx-auto">{hi ? "उसी फ़ोन पर, दो मिनट में शुरू। कोई साइन-अप नहीं।" : "Start in two minutes, on the phone you already have. No sign-up."}</p>
