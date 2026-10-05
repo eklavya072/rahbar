@@ -5,9 +5,9 @@
  * where you are (StepIntro), the one thing to do (ActionBar), and anything
  * optional tucked into a plainly named drawer (More).
  */
-import { Fragment, type ReactNode } from "react";
-import { usePathname } from "next/navigation";
-import { ArrowLeft, Check, Loader2, Plus } from "lucide-react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { ArrowLeft, Check, Loader2, Lock, Plus, RotateCcw } from "lucide-react";
 import { STEPS, stepPath, type Step } from "@/lib/case/state";
 import { useCase } from "@/lib/case/CaseProvider";
 import { useLang } from "@/lib/i18n";
@@ -146,5 +146,81 @@ export function PageIntro({ title, children }: { title: string; children?: React
       </h1>
       {children && <div className="lead step-enter mt-3" style={{ animationDelay: "240ms" }}>{children}</div>}
     </header>
+  );
+}
+
+/**
+ * Start a new case. Clearing wipes this case from the phone, so it asks first
+ * and offers to save the current one under lock before starting over.
+ */
+export function NewCaseButton({ variant = "link" }: { variant?: "link" | "icon" | "bar" }) {
+  const { newCase, state } = useCase();
+  const { lang } = useLang();
+  const hi = lang === "hi";
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const box = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => {
+      if (box.current && !box.current.contains(e.target as Node)) setOpen(false);
+    };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", esc);
+    };
+  }, [open]);
+  const label = hi ? "नया केस" : "New case";
+  const trigger =
+    variant === "icon" ? (
+      <button className="grid h-10 w-10 place-items-center rounded-lg border border-line bg-surface" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={hi ? "नया केस शुरू करें" : "Start a new case"}>
+        <RotateCcw size={16} />
+      </button>
+    ) : variant === "bar" ? (
+      <button className="btn btn-ghost btn-lg" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <RotateCcw size={17} /> {hi ? "नया केस शुरू करें" : "Start a new case"}
+      </button>
+    ) : (
+      <button className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <RotateCcw size={14} /> {label}
+      </button>
+    );
+  return (
+    <div ref={box} className="relative">
+      {trigger}
+      {open && (
+        <div role="dialog" aria-label={hi ? "नया केस" : "New case"} className={`newcase-pop ${variant === "bar" ? "is-up" : ""}`}>
+          <div className="font-semibold">{hi ? "नया केस शुरू करें?" : "Start a new case?"}</div>
+          <p className="mt-1 text-sm text-muted">
+            {hi ? "इससे यह केस इस फ़ोन से हट जाएगा। चाहें तो पहले इसे ताले में सेव कर लें।" : "This clears the current case from this phone. You can save it under lock first."}
+          </p>
+          <div className="mt-3 grid gap-2">
+            {!state.sampleId && (
+              <button
+                className="btn btn-ghost !min-h-10 justify-start"
+                onClick={() => {
+                  setOpen(false);
+                  router.push("/case/track#vault");
+                }}
+              >
+                <Lock size={15} /> {hi ? "पहले सेव करें" : "Save it first"}
+              </button>
+            )}
+            <button
+              className="btn !min-h-10 justify-start bg-rose text-white hover:opacity-90"
+              onClick={() => {
+                setOpen(false);
+                newCase();
+              }}
+            >
+              <RotateCcw size={15} /> {hi ? "हटाएँ और नया शुरू करें" : "Clear and start new"}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

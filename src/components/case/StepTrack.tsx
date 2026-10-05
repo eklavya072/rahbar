@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AlarmClock, Download, KeyRound, Lock, Save, Trash2, Upload } from "lucide-react";
-import { ActionBar, Extras, More, StepIntro } from "./Flow";
+import { ActionBar, Extras, More, NewCaseButton, StepIntro } from "./Flow";
 import { useCase } from "@/lib/case/CaseProvider";
 import { useLang } from "@/lib/i18n";
 import { CLOCKS, escalationLetter, payoutWindow, trackStatus, type Stage } from "@/lib/engine/tracker";
@@ -257,18 +257,25 @@ function Vault({ bare = false }: { bare?: boolean }) {
   );
 }
 
+/** Open the encrypted-vault drawer and bring it into view. */
+function openVault() {
+  const el = document.getElementById("vault") as HTMLDetailsElement | null;
+  if (!el) return;
+  el.open = true;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export function StepTrack() {
   const { summary } = useCase();
   const { lang } = useLang();
   const hi = lang === "hi";
   const items = summary.results.filter((r) => r.status !== "not_eligible" && (r.id === "BANK_BALANCE" || !r.informational));
   const total = summary.confirmedTotal;
-  const openVault = () => {
-    const el = document.getElementById("vault") as HTMLDetailsElement | null;
-    if (!el) return;
-    el.open = true;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  useEffect(() => {
+    if (window.location.hash !== "#vault") return;
+    const t = setTimeout(openVault, 300);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <div>
@@ -290,6 +297,7 @@ export function StepTrack() {
         <button className="btn btn-primary btn-lg" onClick={openVault}>
           <Lock size={17} /> {hi ? "केस सुरक्षित सेव करें" : "Save this case safely"}
         </button>
+        <div className="hidden sm:block"><NewCaseButton variant="bar" /></div>
       </ActionBar>
 
       <Extras title={hi ? "बाद के लिए" : "For later"}>

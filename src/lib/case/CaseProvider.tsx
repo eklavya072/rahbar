@@ -31,6 +31,8 @@ interface Ctx {
   autoPlay: () => Promise<void>;
   /** Navigate to a step page (and unlock it). */
   go: (s: Step) => void;
+  /** Clear this case from the device and start again at the first step. */
+  newCase: () => void;
   hydrated: boolean;
   trace: (agent: AgentName, title: string, patch?: Partial<TraceEvent>) => string;
   traceUpdate: (id: string, patch: Partial<TraceEvent>) => void;
@@ -83,6 +85,14 @@ export function CaseProvider({ children }: { children: ReactNode }) {
     },
     [router],
   );
+
+  const newCase = useCallback(() => {
+    dispatch({ type: "reset", state: { hydrated: true } });
+    try {
+      sessionStorage.removeItem(SESSION_KEY);
+    } catch {}
+    router.push(stepPath("story"));
+  }, [router]);
 
   const sample = state.sampleId ? SAMPLE_CASES.find((c) => c.id === state.sampleId) ?? null : null;
   const today = sample?.today ?? todayISO();
@@ -308,8 +318,8 @@ export function CaseProvider({ children }: { children: ReactNode }) {
   }, [readDocuments, confirmFacts, trace, go]);
 
   const value = useMemo<Ctx>(
-    () => ({ state, dispatch, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, go, hydrated: !!state.hydrated, trace, traceUpdate }),
-    [state, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, go, trace, traceUpdate],
+    () => ({ state, dispatch, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, go, newCase, hydrated: !!state.hydrated, trace, traceUpdate }),
+    [state, facts, provenance, summary, plan, income, today, loadSample, addFiles, readDocuments, confirmFacts, autoPlay, go, newCase, trace, traceUpdate],
   );
   return <C.Provider value={value}>{children}</C.Provider>;
 }

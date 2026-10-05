@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Check, EyeOff, FileText, Play, Workflow, X } from "lucide-react";
 import { CaseProvider, useCase } from "@/lib/case/CaseProvider";
 import { STEPS, stepPath, type Step } from "@/lib/case/state";
-import { useCurrentStep } from "./Flow";
+import { NewCaseButton, useCurrentStep } from "./Flow";
 import { useLang } from "@/lib/i18n";
 import type { Bilingual } from "@/lib/engine/types";
 import { Header } from "../ui";
@@ -106,6 +106,8 @@ function Shell({ children }: { children: ReactNode }) {
     <>
       <Header
         right={
+          <>
+          <div className="md:hidden"><NewCaseButton variant="icon" /></div>
           <button
             className="no-print grid h-10 min-w-10 grid-flow-col place-items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 text-xs md:hidden"
             onClick={() => setDrawer(true)}
@@ -115,9 +117,11 @@ function Shell({ children }: { children: ReactNode }) {
             <Workflow size={14} />
             <span className="mono text-muted">{state.trace.length}</span>
           </button>
+          </>
         }
       />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-6 pt-5 sm:px-5 md:pt-8">
+        <div className="mb-3 hidden justify-end md:flex"><NewCaseButton /></div>
         <Progress />
         <div className={`mt-7 md:mt-10 ${showTrace ? "grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]" : ""}`}>
           <div key={step} className={`step-enter min-w-0 ${showTrace ? "" : "mx-auto max-w-3xl"}`}>{children}</div>
