@@ -217,7 +217,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
           <h1 className="l-h1">
             <ScrubWords text={hi ? "हादसे के बाद," : "After an accident,"} seed={11} spread={0.4} />{" "}
             <span className="l-key l-promise">
-              <ScrubWords text={hi ? "^आगे का रास्ता।^" : "^the way forward.^"} seed={17} spread={0.35} indexFrom={4} />
+              <ScrubWords text={hi ? "*आगे का रास्ता।*" : "*the way forward.*"} seed={17} spread={0.35} indexFrom={4} />
             </span>
           </h1>
           <p className="l-h1-sub">
@@ -260,7 +260,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         <div className="l-band l-band-c" ref={(el) => { bandRefs.current[2] = el; }}>
           <p className="l-stmt">
             <ScrubWords className="l-stmt-line" text={hi ? "बैंक की ₹20 की एक कटौती" : "A ₹20 debit in a passbook"} seed={53} spread={0.3} />
-            <ScrubWords className="l-stmt-line" text={hi ? "^₹2 लाख^ का बीमा हो सकती है।" : "can be ^₹2 lakh^ of insurance."} seed={59} spread={0.3} />
+            <ScrubWords className="l-stmt-line" text={hi ? "*₹2 लाख* का बीमा हो सकती है।" : "can be *₹2 lakh* of insurance."} seed={59} spread={0.3} />
           </p>
           <p className="l-note">
             {hi

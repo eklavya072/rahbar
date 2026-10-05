@@ -103,8 +103,8 @@ html[lang="hi"] .t-imp { font-weight: 700; font-stretch: normal; font-size: 1em;
   max-width: 20ch; text-shadow: 0 2px 30px rgba(0,0,0,0.45);
 }
 .l-key { color: var(--key); }
-.l-h1 .t-imp { font-size: 1.32em; line-height: 0.95; }
-.l-band-c .t-imp { color: var(--key); }
+.l-h1 .t-it { font-weight: 380; }
+
 /* The promise gets a brass road drawn beneath it once the line has assembled. */
 .l-promise { position: relative; display: inline-block; }
 .l-promise::after {
@@ -300,25 +300,25 @@ html[lang="hi"] .t-imp { font-weight: 700; font-stretch: normal; font-size: 1em;
   background: radial-gradient(420px circle at var(--mx, 50%) var(--my, -40%), rgba(206,168,80,0.09), transparent 60%);
 }
 /* Trust fits one screen: a smaller heading, the slip, four short promises, one line of proof. */
-.l-trust { padding-block: clamp(3rem, 7vh, 4.5rem); }
-.l-h2-sm { font-size: clamp(1.75rem, 3vw, 2.5rem); max-width: none; }
+.l-trust { padding-block: clamp(3.6rem, 8vh, 5.4rem); }
+.l-h2-sm { font-size: clamp(2rem, 3.6vw, 3rem); max-width: none; }
 .l-trust .l-h2::after { margin-top: 0.8rem; }
 .l-close .l-h2::after { margin-inline: auto; }
 .l-band-c .l-stmt { max-width: 24ch; font-size: clamp(1.8rem, 3.6vw, 3.1rem); }
 /* Four promises, set as an editorial list: the promise large, the proof beside it. */
-.l-trust-grid { margin-top: 1.4rem; list-style: none; padding: 0; border-top: 1px solid var(--hairline); }
-.l-trust-item { display: grid; gap: 0.25rem; padding: 0.7rem 0; border-bottom: 1px solid var(--hairline); }
+.l-trust-grid { margin-top: 1.8rem; list-style: none; padding: 0; border-top: 1px solid var(--hairline); }
+.l-trust-item { display: grid; gap: 0.3rem; padding: 0.95rem 0; border-bottom: 1px solid var(--hairline); }
 @media (min-width: 860px) { .l-trust-item { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 3rem; align-items: baseline; } }
-.l-trust-t { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 360; font-size: clamp(1.1rem, 1.7vw, 1.32rem); line-height: 1.2; letter-spacing: -0.012em; color: var(--ink); }
-.l-trust-b { color: var(--ink-2); line-height: 1.65; max-width: 46ch; }
+.l-trust-t { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 360; font-size: clamp(1.22rem, 2vw, 1.55rem); line-height: 1.2; letter-spacing: -0.012em; color: var(--ink); }
+.l-trust-b { color: var(--ink-2); font-size: 1.04rem; line-height: 1.65; max-width: 48ch; }
 /* A slip of the FIR: identifiers are struck out in front of you and replaced by tokens. */
-.l-slip { margin-top: 1.5rem; max-width: 52rem; border-radius: 10px; background: #f3f0e8; color: #15171c; padding: 1rem 1.3rem 1.1rem; box-shadow: 0 30px 60px -40px rgba(0,0,0,0.8); }
+.l-slip { margin-top: 1.9rem; max-width: 52rem; border-radius: 10px; background: #f3f0e8; color: #15171c; padding: 1rem 1.3rem 1.1rem; box-shadow: 0 30px 60px -40px rgba(0,0,0,0.8); }
 .l-slip-cap { font-size: 0.88rem; font-weight: 600; color: #6a665d; }
-.l-slip-line { margin-top: 0.5rem; font-family: var(--font-mono-face), monospace; font-size: clamp(0.88rem, 1.3vw, 1.02rem); line-height: 1.75; color: #15171c; }
+.l-slip-line { margin-top: 0.55rem; font-family: var(--font-mono-face), monospace; font-size: clamp(0.95rem, 1.5vw, 1.12rem); line-height: 1.8; color: #15171c; }
 .l-slip .rd-tok { color: #7a5b1e; background: #f1e8d3; border-radius: 4px; padding: 0 0.25em; font-size: 0.92em; }
 .l-slip .rd::after { background: #15171c; }
 /* The proof, set as prose: numbers carry the weight, words carry the meaning. */
-.l-proof { margin-top: 1.4rem; max-width: 52ch; font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 340; font-size: clamp(1.1rem, 1.7vw, 1.4rem); line-height: 1.4; letter-spacing: -0.012em; color: var(--ink-2); text-wrap: pretty; }
+.l-proof { margin-top: 1.9rem; max-width: 52ch; font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 340; font-size: clamp(1.25rem, 2vw, 1.65rem); line-height: 1.4; letter-spacing: -0.012em; color: var(--ink-2); text-wrap: pretty; }
 .l-proof-n { color: var(--key); font-family: var(--font-impact-face), Georgia, serif; font-stretch: 62%; font-weight: 800; font-size: 1.5em; letter-spacing: 0; font-variant-numeric: lining-nums tabular-nums; line-height: 1; }
 
 /* ── Samples: one lead case and two beside it, each led by its outcome ── */
@@ -331,9 +331,10 @@ html[lang="hi"] .t-imp { font-weight: 700; font-stretch: normal; font-size: 1em;
 }
 .l-sample { display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; background: #fbfaf6; border: 1px solid var(--hairline); transition: transform 500ms cubic-bezier(0.16,1,0.3,1), box-shadow 500ms ease, border-color 300ms ease; }
 .l-sample:hover { transform: translateY(-4px); box-shadow: 0 26px 50px -30px rgba(21,23,28,0.5); border-color: var(--key-line); }
-.l-sample-img { height: 150px; overflow: hidden; border-bottom: 1px solid var(--hairline); flex: none; }
-.l-sample.is-lead .l-sample-img { height: clamp(180px, 26vw, 300px); }
-.l-sample-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 900ms cubic-bezier(0.16,1,0.3,1); }
+.l-sample-img { height: 210px; overflow: hidden; border-bottom: 1px solid var(--hairline); flex: none; }
+.l-sample.is-lead .l-sample-img { height: clamp(260px, 32vw, 400px); }
+.l-sample-img { background: #ece7db; padding: 0.9rem; display: grid; place-items: center; }
+.l-sample-img img { width: 100%; height: 100%; object-fit: contain; object-position: center; transition: transform 900ms cubic-bezier(0.16,1,0.3,1); }
 .l-sample:hover .l-sample-img img { transform: scale(1.04); }
 .l-sample-body { padding: 1.3rem 1.3rem 1.4rem; display: flex; flex-direction: column; gap: 0.55rem; flex: 1; min-width: 0; }
 .l-sample-out { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.2rem 0.6rem; }

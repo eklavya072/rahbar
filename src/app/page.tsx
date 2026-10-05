@@ -51,7 +51,7 @@ function Trust() {
   return (
     <section ref={spot} data-surface="ink" className="l-sec l-trust">
       <div className="l-wrap">
-        <RollWords as="h2" className="l-h2 l-h2-sm" text={hi ? "सबसे ~कठिन~ दिन पर भी भरोसेमंद" : "Safe to use on your ~hardest~ day"} />
+        <RollWords as="h2" className="l-h2 l-h2-sm" text={hi ? "सबसे *कठिन* दिन पर भी भरोसेमंद" : "Safe to use on your *hardest* day"} />
 
         {/* What actually leaves the phone: a line from the sample FIR, redacted in front of you. */}
         <div ref={slipRef} className="l-slip">
