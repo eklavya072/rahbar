@@ -63,7 +63,7 @@ The **header** on every page has: the Rahbar logo (→ home), **Offer check / Ru
 | **Take a photo** (phones) / **Choose photos** / drag-and-drop | Adds photos. Nothing is uploaded |
 | Trash icon | Removes a photo |
 | **Read my N papers** | Runs the agent pipeline (below) and opens step 3. While it runs, a **"Rahbar is working"** checklist ticks through the same pipeline in plain words: reading the photos on this phone → hiding names and numbers → checking for hidden tricks → understanding the papers → matching against 10 kinds of claims |
-| **Auto-play** (samples only, in the gold banner) | Runs the entire case in ~20 s: reads the papers, confirms facts, answers the questions with the sample family's scripted answers, and lands on "What you're owed". It also opens *Behind the scenes* |
+| **Auto-play** (samples only, in the gold banner) | Runs the entire case in ~20 s: reads the papers, confirms facts, answers the questions with the sample family's scripted answers, and lands on "What you're owed". |
 | No papers? **Answer questions instead** | Skips to step 3; the app works from answers alone |
 
 **What happens under the hood when you press Read my papers** (watch it live in *Behind the scenes*):
@@ -139,8 +139,8 @@ A Hindi, English and Hinglish guide, by voice (mic) or text, that can read its r
 
 On a case, **"Ask me the questions by voice"** turns the intake into a conversation: Saathi asks the single most valuable next question, takes "haan" / "nahin" or a tap, saves it, and says what it unlocked ("That just confirmed ₹2,00,000 more").
 
-### Behind the scenes (hidden by default; a pill bottom-right on desktop, a small button in the header on phones)
-A live trace of every agent step: who ran (Reader, Parser, Shield, Guard, Extractor, Rules, Questioner, Planner, Drafter, Verifier, Human, Case Agent), what it did, the model used, time, tokens, and **cost ₹0**. The pill shows the step count and pulses while agents work. Families never need it, so it starts closed; **Auto-play** opens it for judges, and **Hide / Show** remembers your choice.
+### Agent log (internal)
+Every agent step (Reader, Parser, Shield, Guard, Extractor, Rules, Questioner, Planner, Drafter, Verifier, Case Agent) is still recorded with its model, time and token count, but it is not shown to families: the screens stay focused on their task. The same pipeline is explained in plain words while papers are read ("Rahbar is working…").
 
 ### Other pages
 - **`/offer`** — the compensation and offer checker on its own, for families, lawyers and paralegals who already have an offer.
@@ -184,7 +184,7 @@ On-device OCR (Tesseract.js + table-line removal + row rebuild) · deterministic
 
 ## 4. Three-minute demo path
 1. Home → point at the highlighted passbook (5 s).
-2. Scroll the film once (night → dawn) → **Watch a sample case** → **Auto-play** (it opens *Behind the scenes*): OCR, masking, Prompt Guard, AI extraction, ₹0 cost.
+2. Scroll the film once (night → dawn) → **Watch a sample case** → **Auto-play** and watch the "Rahbar is working" checklist.
 3. **What you're owed** → ₹21,00,000 counts up; open the owner-driver card → **Why & how**; back on *Check*, tap the policy quote to show the highlight.
 4. Open the **Court compensation estimate & insurer offer check** drawer → type ₹9,00,000 / ₹7,000 / multiplier 15 → "far too low, 32%" + reply.
 5. **Ask anything about your case**: "What if the police find the truck?" → tool chip `simulateWhatIf`.

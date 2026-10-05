@@ -5,7 +5,6 @@ import { ArrowRight, BookOpen, Camera, FileText, ImagePlus, Loader2, Lock, Mic, 
 import { useCase } from "@/lib/case/CaseProvider";
 import { useLang } from "@/lib/i18n";
 import { SAMPLE_CASES } from "@/lib/samples/cases";
-import { writeTracePref } from "./CaseShell";
 import { ActionBar, More, StepIntro, WorkingSteps } from "./Flow";
 import { FirstHours } from "./Support";
 
@@ -155,7 +154,6 @@ export function StepDocs() {
   const run = async (auto: boolean) => {
     setSince(Date.now());
     setBusy(true);
-    if (auto) writeTracePref(true);
     try {
       await (auto ? autoPlay() : readDocuments());
     } finally {

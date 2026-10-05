@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useSyncExternalStore, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import Link from "next/link";
-import { Check, EyeOff, FileText, Play, Workflow, X } from "lucide-react";
+import { Check, FileText, Play } from "lucide-react";
 import { CaseProvider, useCase } from "@/lib/case/CaseProvider";
 import { STEPS, stepPath, type Step } from "@/lib/case/state";
 import { NewCaseButton, useCurrentStep } from "./Flow";
 import { useLang } from "@/lib/i18n";
 import type { Bilingual } from "@/lib/engine/types";
 import { Header } from "../ui";
-import { TracePanel } from "./TracePanel";
 import { Saathi } from "../guide/Saathi";
 
 export const STEP_META: Record<Step, { title: Bilingual; hint: Bilingual }> = {
@@ -68,98 +67,19 @@ function Progress() {
   );
 }
 
-// "Behind the scenes" preference, remembered per browser. Hidden by default so a
-// family sees only their task; judges and caseworkers open it from the pill.
-const TRACE_KEY = "rahbar-trace";
-const traceListeners = new Set<() => void>();
-function readTracePref(): boolean {
-  try {
-    return localStorage.getItem(TRACE_KEY) === "shown";
-  } catch {
-    return false;
-  }
-}
-export function writeTracePref(show: boolean) {
-  try {
-    localStorage.setItem(TRACE_KEY, show ? "shown" : "hidden");
-  } catch {}
-  traceListeners.forEach((f) => f());
-}
-
 function Shell({ children }: { children: ReactNode }) {
-  const { state } = useCase();
-  const { lang } = useLang();
-  const hi = lang === "hi";
   const step = useCurrentStep();
-  const showTrace = useSyncExternalStore(
-    (cb) => {
-      traceListeners.add(cb);
-      return () => traceListeners.delete(cb);
-    },
-    readTracePref,
-    () => false,
-  );
-  const [drawer, setDrawer] = useState(false);
-  const working = state.trace.some((e) => e.status === "running");
-
   return (
     <>
-      <Header
-        right={
-          <>
-          <div className="md:hidden"><NewCaseButton variant="icon" /></div>
-          <button
-            className="no-print grid h-10 min-w-10 grid-flow-col place-items-center gap-1.5 rounded-full border border-line bg-surface px-2.5 text-xs md:hidden"
-            onClick={() => setDrawer(true)}
-            aria-label={hi ? "पर्दे के पीछे" : "Behind the scenes"}
-          >
-            <span className={`h-1.5 w-1.5 rounded-full ${working ? "pulse bg-key-bright" : "bg-accent"}`} aria-hidden />
-            <Workflow size={14} />
-            <span className="mono text-muted">{state.trace.length}</span>
-          </button>
-          </>
-        }
-      />
+      <Header right={<div className="md:hidden"><NewCaseButton variant="icon" /></div>} />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-6 pt-5 sm:px-5 md:pt-8">
         <div className="mb-3 hidden justify-end md:flex"><NewCaseButton /></div>
         <Progress />
-        <div className={`mt-7 md:mt-10 ${showTrace ? "grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]" : ""}`}>
-          <div key={step} className={`step-enter min-w-0 ${showTrace ? "" : "mx-auto max-w-3xl"}`}>{children}</div>
-          {showTrace && (
-            <div className="no-print hidden lg:block">
-              <div className="sticky top-20 space-y-2">
-                <button className="flex items-center gap-1.5 text-xs font-medium text-muted hover:text-ink" onClick={() => writeTracePref(false)}>
-                  <EyeOff size={13} /> {hi ? "पर्दे के पीछे: छिपाएँ" : "Hide behind the scenes"}
-                </button>
-                <TracePanel />
-              </div>
-            </div>
-          )}
+        <div className="mt-7 md:mt-10">
+          <div key={step} className="step-enter mx-auto min-w-0 max-w-3xl">{children}</div>
         </div>
       </main>
-
-      {/* The pill: how many agent steps ran, pulsing while they work. */}
-      <button
-        className={`no-print fixed bottom-6 left-6 z-30 hidden items-center gap-2 rounded-full border border-line bg-surface/95 px-3.5 py-2 text-sm font-medium shadow-[0_12px_28px_-16px_rgba(21,23,28,.55)] backdrop-blur md:flex ${showTrace ? "lg:hidden" : ""}`}
-        onClick={() => (window.innerWidth >= 1024 ? writeTracePref(true) : setDrawer(true))}
-      >
-        <span className={`h-2 w-2 rounded-full ${working ? "pulse bg-key-bright" : "bg-accent"}`} aria-hidden />
-        <Workflow size={14} />
-        <span>{hi ? "पर्दे के पीछे" : "Behind the scenes"}</span>
-        <span className="mono text-xs text-muted">{state.trace.length}</span>
-      </button>
       <Saathi />
-      {drawer && (
-        <div className="no-print fixed inset-0 z-50 flex flex-col bg-black/40 lg:hidden" onClick={() => setDrawer(false)}>
-          <div className="rise mt-auto max-h-[85vh] rounded-t-2xl bg-bg p-3" onClick={(e) => e.stopPropagation()}>
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-semibold">{hi ? "पर्दे के पीछे: हर एजेंट का काम" : "Behind the scenes: every agent step"}</span>
-              <button className="btn btn-ghost !p-2" onClick={() => setDrawer(false)} aria-label="Close"><X size={16} /></button>
-            </div>
-            <TracePanel />
-          </div>
-        </div>
-      )}
     </>
   );
 }
