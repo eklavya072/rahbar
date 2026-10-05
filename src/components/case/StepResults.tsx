@@ -193,7 +193,7 @@ export function StepResults() {
         lead={hi ? "हर दावे के साथ उसका कारण, डेडलाइन और कहाँ जमा करना है। किसी पर भी टैप करके 'क्यों' देखें।" : "Each claim comes with its reason, deadline and where to apply. Tap any one to see why."}
       />
 
-      <section className="panel-ink step-enter p-5 sm:p-7" aria-label={t("totalFound")}>
+      <section className="panel-ink step-enter p-6 sm:p-9" aria-label={t("totalFound")}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <p className="panel-lead">{hi ? "आपके काग़ज़ों और जवाबों से हमें मिला" : "From your papers and answers, we found"}</p>
           <ReadAloud

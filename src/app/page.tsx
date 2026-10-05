@@ -89,7 +89,7 @@ function Trust() {
             </p>
           )}
         </div>
-        <Link href="/evals" className="l-link link-swipe mt-3 inline-flex items-center gap-2 text-sm">
+        <Link href="/evals" className="l-link link-swipe mt-5 inline-flex items-center gap-2">
           <FlaskConical size={15} /> {hi ? "जाँच ख़ुद चलाकर देखें" : "Run the tests yourself"} <ArrowRight size={14} />
         </Link>
       </div>
