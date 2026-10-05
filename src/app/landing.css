@@ -203,8 +203,8 @@
 /* RollWords: masked rise, armed on JS, played when the block is seen. */
 /* Focus pull (ours): words come into focus one after another, like a lens settling. */
 .l-roll { display: inline-block; }
-.l-roll-in { display: inline-block; transition: opacity 900ms ease, filter 1000ms cubic-bezier(0.16,1,0.3,1), letter-spacing 1100ms cubic-bezier(0.16,1,0.3,1); }
-.landing.is-armed .l-sec:not(.is-in-view) .l-roll-in { opacity: 0.12; filter: blur(9px); letter-spacing: 0.06em; }
+.l-roll-in { display: inline-block; transition: opacity 900ms ease, filter 1000ms cubic-bezier(0.16,1,0.3,1); }
+.landing.is-armed .l-sec:not(.is-in-view) .l-roll-in { opacity: 0.12; filter: blur(9px); }
 /* and a brass rule draws beneath the section's heading */
 .l-sec > .l-wrap > .l-h2::after, .l-tools .l-h2::after { content: ""; display: block; width: 3.2rem; height: 2px; margin-top: 1.1rem; background: var(--key); transform-origin: left; transform: scaleX(1); transition: transform 1100ms cubic-bezier(0.65,0,0.35,1) 500ms; }
 .landing.is-armed .l-sec:not(.is-in-view) .l-h2::after { transform: scaleX(0); }
@@ -229,7 +229,7 @@
 .landing mark.hl { animation-delay: 900ms; }
 .landing.is-armed .l-step .l-step-frame { opacity: 0; transform: translateY(24px) scale(0.985); transition: opacity 800ms ease, transform 1000ms cubic-bezier(0.16,1,0.3,1); }
 .landing.is-armed .l-step.is-in .l-step-frame { opacity: 1; transform: none; }
-.landing.is-armed .l-step:not(.is-in) .l-roll-in { opacity: 0.12; filter: blur(9px); letter-spacing: 0.06em; }
+.landing.is-armed .l-step:not(.is-in) .l-roll-in { opacity: 0.12; filter: blur(9px); }
 .landing.is-armed .l-step .l-body { transition: opacity 700ms ease 250ms, transform 800ms cubic-bezier(0.16,1,0.3,1) 250ms; }
 .landing.is-armed .l-step:not(.is-in) .l-body { opacity: 0; transform: translateY(10px); }
 
@@ -283,22 +283,27 @@
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(420px circle at var(--mx, 50%) var(--my, -40%), rgba(206,168,80,0.09), transparent 60%);
 }
+/* Trust fits one screen: a smaller heading, the slip, four short promises, one line of proof. */
+.l-trust { padding-block: clamp(3rem, 7vh, 4.5rem); }
+.l-h2-sm { font-size: clamp(1.9rem, 3.4vw, 2.8rem); max-width: none; }
+.l-trust .l-h2::after { margin-top: 0.8rem; }
+.l-close .l-h2::after { margin-inline: auto; }
+.l-band-c .l-stmt { max-width: 24ch; }
 /* Four promises, set as an editorial list: the promise large, the proof beside it. */
-.l-trust-grid { margin-top: 3.2rem; list-style: none; padding: 0; border-top: 1px solid var(--hairline); }
-.l-trust-item { display: grid; gap: 0.5rem; padding: 1.6rem 0; border-bottom: 1px solid var(--hairline); }
+.l-trust-grid { margin-top: 1.4rem; list-style: none; padding: 0; border-top: 1px solid var(--hairline); }
+.l-trust-item { display: grid; gap: 0.25rem; padding: 0.8rem 0; border-bottom: 1px solid var(--hairline); }
 @media (min-width: 860px) { .l-trust-item { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 3rem; align-items: baseline; } }
-.l-trust-t { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 360; font-size: clamp(1.35rem, 2.4vw, 1.85rem); line-height: 1.2; letter-spacing: -0.015em; color: var(--ink); }
+.l-trust-t { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 360; font-size: clamp(1.2rem, 1.9vw, 1.45rem); line-height: 1.2; letter-spacing: -0.012em; color: var(--ink); }
 .l-trust-b { color: var(--ink-2); line-height: 1.65; max-width: 46ch; }
 /* A slip of the FIR: identifiers are struck out in front of you and replaced by tokens. */
-.l-slip { margin-top: 2.6rem; max-width: 52rem; border-radius: 10px; background: #f3f0e8; color: #15171c; padding: 1.2rem 1.4rem 1.35rem; box-shadow: 0 30px 60px -40px rgba(0,0,0,0.8); }
+.l-slip { margin-top: 1.5rem; max-width: 52rem; border-radius: 10px; background: #f3f0e8; color: #15171c; padding: 1rem 1.3rem 1.1rem; box-shadow: 0 30px 60px -40px rgba(0,0,0,0.8); }
 .l-slip-cap { font-size: 0.88rem; font-weight: 600; color: #6a665d; }
 .l-slip-line { margin-top: 0.55rem; font-family: var(--font-mono-face), monospace; font-size: clamp(0.92rem, 1.6vw, 1.12rem); line-height: 1.8; color: #15171c; }
 .l-slip .rd-tok { color: #7a5b1e; background: #f1e8d3; border-radius: 4px; padding: 0 0.25em; font-size: 0.92em; }
 .l-slip .rd::after { background: #15171c; }
 /* The proof, set as prose: numbers carry the weight, words carry the meaning. */
-.l-proof { margin-top: 3.2rem; max-width: 30ch; font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 340; font-size: clamp(1.6rem, 3.3vw, 2.6rem); line-height: 1.32; letter-spacing: -0.018em; color: var(--ink-2); text-wrap: pretty; }
-@media (min-width: 900px) { .l-proof { max-width: 34ch; } }
-.l-proof-n { color: var(--key); font-size: 1.32em; font-weight: 400; letter-spacing: -0.03em; font-variant-numeric: lining-nums tabular-nums; line-height: 1; }
+.l-proof { margin-top: 1.4rem; max-width: 52ch; font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 340; font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.4; letter-spacing: -0.012em; color: var(--ink-2); text-wrap: pretty; }
+.l-proof-n { color: var(--key); font-size: 1.25em; font-weight: 400; letter-spacing: -0.03em; font-variant-numeric: lining-nums tabular-nums; line-height: 1; }
 
 /* ── Samples: one lead case and two beside it, each led by its outcome ── */
 .l-samples { margin-top: 3rem; display: grid; gap: 1.2rem; }

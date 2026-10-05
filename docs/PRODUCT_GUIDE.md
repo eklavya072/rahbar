@@ -37,13 +37,13 @@ The **header** on every page has: the Rahbar logo (→ home), **Offer check / Ru
 ### Home (`/`)
 | Element | What it does |
 |---|---|
-| Entrance | The mark rises, "Rahbar" sets letter by letter, a brass line draws like a road, then seven dark slabs sweep up and away like stairs to reveal the film (skipped with *reduce motion*; never shown twice in a visit) |
-| **The film (hero)** | A night road drawn live on a canvas and *scrubbed by scrolling*: rain and red tail-lights at night; as you scroll, street lamps switch on one by one (claims found), the lane dashes turn brass, and dawn rises at the end. Five captions assemble word by word over it: **After an accident, the way forward** → **The money exists. Families never reach it** (205 · 70% · 90%, sourced) → **One accident. Up to ten claims** → **Every rupee comes with a reason** (the 5-step pipeline) → **Let Rahbar show the way** with **Start — it's free** and **Watch a sample case**. On phones (and with reduced motion) the five captions stack over a still dawn frame |
-| **Three steps. That's all.** | Each step beside the product's own screen animating itself: the passbook being scanned with the ₹20 PMSBY line and the card swipe lighting up; the "What you're owed" total counting up to ₹21,00,000; a claim letter writing itself with "checked by a second AI" ticks |
-| **Built so you can trust it** (dark) | Four promises (papers stay on the phone, the law decides the money, every letter checked twice, nothing happens without you) under a cursor spotlight, and counters: 21/21 facts read correctly in live AI tests, 40 automated tests, 10 kinds of claims, ₹0 cost. **Run the tests yourself** → `/evals` |
-| Sample case cards (3) | **Hit-and-run** (₹21 lakh found), **injured pillion rider** (small, honest result), **red-team** (an FIR with a hidden attack on the AI) |
+| Entrance | The mark rises and "Rahbar" sets letter by letter with a brass line drawn like a road. Then two headlights appear far down that road, approach and flood the screen with warm light that clears to the film (skipped with *reduce motion*; never shown twice in a visit) |
+| **The film (hero)** | A night road drawn live on a canvas and *scrubbed by scrolling*: rain and red tail-lights at night; street lamps switch on one by one, lane dashes turn brass and dawn rises. Each caption is lit by a headlight beam sweeping across it and blurs out of focus as you drive past: **After an accident, the way forward** (with **Start your case** / **Watch a sample case**) → **Lakhs are owed, yet most families never claim a rupee** (205 · 70% · 90%, sourced) → **A ₹20 debit in a passbook can be ₹2 lakh of insurance** → **From a phone photo to a signed letter** (the 5-step pipeline) → **Find what your family is owed**. On phones the captions stack over a still dawn frame |
+| **Three steps from papers to payment** | Each step beside the product's own screen animating itself; outline numerals fill with brass as you arrive and a highlighter sweeps the key phrase |
+| **Safe to use on your hardest day** (dark, fits one screen) | A line from a fictional sample FIR is redacted live (names, account and vehicle become tokens), four short promises, and one line of proof: 21/21 facts read right in live AI tests, 40 automated tests, ₹0 cost. **Run the tests yourself** → `/evals` |
+| **Three test cases you can play** | Fictional families and papers (no real people): a hit-and-run (₹21,00,000 found by the rules), an injured passenger (smaller, honest result), and an attack hidden in an FIR (₹7,00,000, not ₹50 lakh). Totals come from the deterministic rules engine and are checked by the golden tests |
 | **Helping someone else?** | For paralegals, hospital helpdesks, NGOs and lawyers: Offer check, Rules, API |
-| Close | "You don't have to do this alone." **Start** and tap-to-call **free legal aid 15100** |
+| Close | "No fees, no agents, no waiting." **Start your case** and tap-to-call **free legal aid 15100** |
 | Footer | Links + tap-to-call **NALSA 15100** (free legal aid) and **Tele-MANAS 14416** (mental health) |
 
 ### Step 1 — Your story (`/case/story`)
@@ -128,6 +128,16 @@ The **header** on every page has: the Rahbar logo (→ home), **Offer check / Ru
 | Filed on (date) | Starts that institution's **legal clock** (e.g. insurer 30 days; hit-and-run 30+15+15; bank 15 days) and shows "due …" or "N days overdue", plus late-payment interest where the law gives it |
 | **Next escalation** + **Draft the escalation** | Unlocks when the deadline passes; drafts a letter to the next level (e.g. insurer's grievance officer → Bima Bharosa / Ombudsman; bank → RBI Ombudsman; DAR not filed → RTI to police; → free DLSA lawyer), citing the rule and days of delay |
 | **Save this case safely** → **Save the case under lock** drawer | Name + passphrase → **Save on this device** or **Encrypted file** (AES-256-GCM, PBKDF2 310k). **Open a file** / **Unlock** restores a case on any device. Our server never sees it |
+
+### Saathi (साथी), the guide (button bottom-right on every page)
+A Hindi, English and Hinglish guide, by voice (mic) or text, that can read its replies aloud. Every message goes through layers, cheapest and safest first:
+1. **Distress** words go straight to Tele-MANAS 14416 and 112, before any AI.
+2. **Touts and scams** ("an agent wants 30%", blank papers, advance fees) get a clear warning and the free lawyer number, NALSA 15100.
+3. **Glossary**: 13 legal and scheme terms (FIR, MACT, DAR, PMSBY, RuPay cover, owner-driver PA cover, PM RAHAT…) explained in plain language, instantly, without AI.
+4. **Page help**: "What do I do here?" answers for the exact step.
+5. **The AI** (Groq), with names and numbers masked on the phone first ("2 details hidden before sending"). Every amount comes from rules-engine tools (all claims, deadline plan, what-if, glossary), shown under the reply.
+
+On a case, **"Ask me the questions by voice"** turns the intake into a conversation: Saathi asks the single most valuable next question, takes "haan" / "nahin" or a tap, saves it, and says what it unlocked ("That just confirmed ₹2,00,000 more").
 
 ### Behind the scenes (hidden by default; a pill bottom-right on desktop, a small button in the header on phones)
 A live trace of every agent step: who ran (Reader, Parser, Shield, Guard, Extractor, Rules, Questioner, Planner, Drafter, Verifier, Human, Case Agent), what it did, the model used, time, tokens, and **cost ₹0**. The pill shows the step count and pulses while agents work. Families never need it, so it starts closed; **Auto-play** opens it for judges, and **Hide / Show** remembers your choice.

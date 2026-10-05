@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Lenis from "lenis";
-import { ArrowRight, Code2, FileCheck2, FlaskConical, Lock, Phone, Play, Scale, ScrollText, UserCheck } from "lucide-react";
+import { ArrowRight, Code2, FlaskConical, Phone, Play, Scale, ScrollText } from "lucide-react";
 import { Footer, Header } from "@/components/ui";
 import { HeroFilm, type HeroIntro } from "@/components/landing/HeroFilm";
 import { Preloader } from "@/components/landing/Preloader";
@@ -38,10 +38,10 @@ function Trust() {
   const { ref, seen } = useSeen<HTMLDivElement>(0.85);
   const { ref: slipRef, seen: slipSeen } = useSeen<HTMLDivElement>(0.8);
   const items = [
-    { icon: <Lock size={18} />, t: hi ? "काग़ज़ आपके फ़ोन पर रहते हैं" : "Your papers stay on your phone", b: hi ? "फ़ोटो इसी डिवाइस पर पढ़ी जाती हैं। AI तक सिर्फ़ नाम-नंबर छिपा हुआ पाठ जाता है।" : "Photos are read on this device. Only text with names and numbers hidden ever reaches the AI." },
-    { icon: <Scale size={18} />, t: hi ? "पैसे का हिसाब क़ानून से, AI से नहीं" : "The law decides the money, not the AI", b: hi ? "हर हक़ एक नियम है जिसके साथ उसका स्रोत लिखा है। AI सिर्फ़ पढ़ता और लिखता है।" : "Every claim is a written rule with its source. The AI only reads and writes; it never decides amounts." },
-    { icon: <FileCheck2 size={18} />, t: hi ? "हर पत्र दो बार जाँचा जाता है" : "Every letter is checked twice", b: hi ? "दूसरा AI तथ्य जाँचता है, फिर हर राशि और तारीख़ नियमों से मिलाई जाती है।" : "A second AI checks the facts, then every amount and date must match the rules." },
-    { icon: <UserCheck size={18} />, t: hi ? "आपकी मंज़ूरी के बिना कुछ नहीं" : "Nothing happens without you", b: hi ? "हर तथ्य, हर पत्र, हर क़दम: आप पुष्टि करते हैं।" : "You confirm every fact, approve every letter and take every step yourself." },
+    { t: hi ? "फ़ोटो फ़ोन पर ही रहती हैं" : "Photos stay on the phone", b: hi ? "AI तक सिर्फ़ नाम-नंबर छिपा पाठ जाता है।" : "Only text with names and numbers hidden reaches the AI." },
+    { t: hi ? "राशि क़ानून तय करता है" : "The law sets every amount", b: hi ? "हर रुपया एक लिखे नियम और उसके स्रोत से आता है, AI से नहीं।" : "Each rupee comes from a written rule and its source, never the AI." },
+    { t: hi ? "हर पत्र दो बार जाँचा जाता है" : "Every letter is checked twice", b: hi ? "दूसरा AI तथ्य जाँचता है, फिर हर राशि और तारीख़ नियमों से मिलती है।" : "A second AI checks the facts, then each amount and date is matched to the rules." },
+    { t: hi ? "फ़ैसला हमेशा आपका" : "You approve everything", b: hi ? "आपकी मंज़ूरी के बिना कुछ जमा या भेजा नहीं जाता।" : "Nothing is filed or sent without your yes." },
   ];
   const n = (to: number, prefix = "") => (
     <span className="l-proof-n">
@@ -51,11 +51,11 @@ function Trust() {
   return (
     <section ref={spot} data-surface="ink" className="l-sec l-trust">
       <div className="l-wrap">
-        <RollWords as="h2" className="l-h2" text={hi ? "भरोसे के लिए बना।" : "Built so you can trust it."} />
+        <RollWords as="h2" className="l-h2 l-h2-sm" text={hi ? "सबसे कठिन दिन पर भी भरोसेमंद" : "Safe to use on your hardest day"} />
 
         {/* What actually leaves the phone: a line from the sample FIR, redacted in front of you. */}
         <div ref={slipRef} className="l-slip">
-          <div className="l-slip-cap">{hi ? "AI तक यही पहुँचता है" : "This is all the AI ever sees"}</div>
+          <div className="l-slip-cap">{hi ? "एक काल्पनिक सैंपल FIR की लाइन। AI तक बस इतना पहुँचता है:" : "A line from a fictional sample FIR. This is all the AI ever sees:"}</div>
           <p className="l-slip-line">
             <Redact
               active={slipSeen}
@@ -81,15 +81,15 @@ function Trust() {
         <div ref={ref}>
           {hi ? (
             <p className="l-proof">
-              लाइव AI जाँच में {n(21)} में से 21 तथ्य सही पढ़े। हर बदलाव पर {n(40)} स्वचालित परीक्षण। {n(10)} तरह के हक़ की जाँच। और परिवार का ख़र्च {n(0, "₹")}।
+              लाइव AI जाँच में {n(21)}/21 तथ्य सही पढ़े, हर बदलाव पर {n(40)} स्वचालित परीक्षण, और परिवार का ख़र्च {n(0, "₹")}।
             </p>
           ) : (
             <p className="l-proof">
-              {n(21)} of 21 facts read correctly in live AI tests. {n(40)} automated tests on every change. {n(10)} kinds of claims checked. And {n(0, "₹")} cost to the family.
+              {n(21)}/21 facts read right in live AI tests, {n(40)} automated tests on every change, and {n(0, "₹")} cost to the family.
             </p>
           )}
         </div>
-        <Link href="/evals" className="l-link link-swipe mt-8 inline-flex items-center gap-2">
+        <Link href="/evals" className="l-link link-swipe mt-5 inline-flex items-center gap-2">
           <FlaskConical size={15} /> {hi ? "जाँच ख़ुद चलाकर देखें" : "Run the tests yourself"} <ArrowRight size={14} />
         </Link>
       </div>
@@ -165,7 +165,7 @@ export default function Landing() {
 
       <section data-surface="paper" className="l-sec" id="how">
         <div className="l-wrap">
-          <RollWords as="h2" className="l-h2" text={hi ? "तीन क़दम। बस इतना।" : "Three steps. That's all."} />
+          <RollWords as="h2" className="l-h2" text={hi ? "काग़ज़ से भुगतान तक, तीन क़दम" : "Three steps from papers to payment"} />
           <p className="l-lead">{hi ? "न कोई फ़ॉर्म भरने की उलझन, न वकील की ज़रूरत पहले दिन। जो काग़ज़ आपके पास हैं, उन्हीं से शुरू।" : "No maze of forms, no lawyer needed on day one. Start with the papers you already have."}</p>
           <div className="l-steps">
             <StepRow
@@ -199,8 +199,8 @@ export default function Landing() {
 
       <section data-surface="paper" className="l-sec">
         <div className="l-wrap">
-          <RollWords as="h2" className="l-h2" text={hi ? "तीन परिवार। तीन अलग नतीजे।" : "Three families. Three honest outcomes."} />
-          <p className="l-lead">{hi ? "सभी नाम और काग़ज़ काल्पनिक हैं। हर केस 20 सेकंड में अपने-आप चलकर दिखाता है।" : "All names and papers are synthetic. Each case can play itself in about 20 seconds."}</p>
+          <RollWords as="h2" className="l-h2" text={hi ? "तीन टेस्ट केस, ख़ुद चलाकर देखें" : "Three test cases you can play"} />
+          <p className="l-lead">{hi ? "काल्पनिक परिवार और काग़ज़, हर रास्ते को परखने के लिए बने, FIR में छिपे हमले समेत। राशि नियम-इंजन तय करता है, AI नहीं। हर केस लगभग 20 सेकंड में चलता है।" : "Fictional families and papers, built to test every path, including an attack hidden in an FIR. The amounts come from the rules engine, not the AI. Each plays itself in about 20 seconds."}</p>
           <div className="l-samples">
             {SAMPLE_CASES.map((c, i) => (
               <Link key={c.id} href={`/case?sample=${c.id}`} className={`l-sample${i === 0 ? " is-lead" : ""}`}>
@@ -211,7 +211,7 @@ export default function Landing() {
                 <div className="l-sample-body">
                   <div className="l-sample-out">
                     <Money value={c.expectedConfirmedTotal} className="l-sample-money" />
-                    <span className="l-sample-out-l">{c.redTeam ? (hi ? "पक्का, ₹50 लाख नहीं" : "confirmed, not ₹50 lakh") : hi ? "पक्का मिला" : "confirmed"}</span>
+                    <span className="l-sample-out-l">{c.redTeam ? (hi ? "नियमों से, ₹50 लाख नहीं" : "found by the rules, not ₹50 lakh") : hi ? "नियमों से मिला" : "found by the rules"}</span>
                   </div>
                   <div className="l-sample-t">{b(c.title)}</div>
                   <p className="l-sample-b">{b(c.blurb)}</p>
@@ -254,12 +254,12 @@ export default function Landing() {
         <div className="l-wrap text-center">
           <h2 className="l-h2 l-close-h">
             {hi ? (
-              <>आपको यह <em className="l-em">अकेले</em> नहीं करना है।</>
+              <>न फ़ीस, न एजेंट, <em className="l-em">न इंतज़ार।</em></>
             ) : (
-              <>You don&apos;t have to do this <em className="l-em">alone.</em></>
+              <>No fees, no agents, <em className="l-em">no waiting.</em></>
             )}
           </h2>
-          <p className="l-lead mx-auto">{hi ? "शुरू करने में दो मिनट लगते हैं। कोई साइन-अप नहीं।" : "It takes two minutes to start. No sign-up."}</p>
+          <p className="l-lead mx-auto">{hi ? "उसी फ़ोन पर, दो मिनट में शुरू। कोई साइन-अप नहीं।" : "Start in two minutes, on the phone you already have. No sign-up."}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/case" className="l-btn l-btn-primary">{hi ? "अपना केस शुरू करें" : "Start your case"} <ArrowRight size={17} /></Link>
             <a href="tel:15100" className="l-btn l-btn-quiet"><Phone size={15} /> {hi ? "मुफ़्त कानूनी सहायता 15100" : "Free legal aid 15100"}</a>

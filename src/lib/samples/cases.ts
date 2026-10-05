@@ -34,10 +34,10 @@ export interface SampleCase {
 export const SAMPLE_CASES: SampleCase[] = [
   {
     id: "sunita",
-    title: { en: "Hit-and-run on the way home", hi: "घर लौटते समय हिट-एंड-रन" },
+    title: { en: "Test case 1: a hit-and-run", hi: "टेस्ट केस 1: हिट-एंड-रन" },
     blurb: {
-      en: "Ramesh (34) was killed by an unidentified truck while riding his own motorcycle home from work in Lucknow. His wife Sunita was told 'the truck ran away, nothing can be done.'",
-      hi: "रमेश (34) लखनऊ में काम से अपनी मोटरसाइकिल पर घर लौट रहे थे, तभी एक अज्ञात ट्रक ने उन्हें कुचल दिया। पत्नी सुनीता से कहा गया 'ट्रक भाग गया, कुछ नहीं हो सकता।'",
+      en: "A rider is killed by a truck that drives away, and the family is told nothing can be done. Tests the hidden ₹20 insurance in a passbook and the owner-driver cover in a vehicle policy.",
+      hi: "एक बाइक सवार को ट्रक टक्कर मारकर भाग जाता है, और परिवार से कहा जाता है कि कुछ नहीं हो सकता। पासबुक में छिपे ₹20 के बीमे और वाहन पॉलिसी के मालिक-चालक कवर की जाँच।",
     },
     victimName: "Ramesh Kumar Verma",
     claimantName: "Sunita Verma",
@@ -113,10 +113,10 @@ export const SAMPLE_CASES: SampleCase[] = [
   },
   {
     id: "kavita",
-    title: { en: "Injured as a pillion rider", hi: "पीछे बैठे हुए घायल" },
+    title: { en: "Test case 2: an injured passenger", hi: "टेस्ट केस 2: घायल सवारी" },
     blurb: {
-      en: "Kavita (52) broke her leg when a car hit the scooter she was riding pillion on in Nagpur. The car was caught. A smaller, honest result. The app also tells her what she can't claim, and why.",
-      hi: "कविता (52) नागपुर में स्कूटर पर पीछे बैठी थीं जब एक कार ने टक्कर मारी, उनका पैर टूट गया। कार पकड़ी गई। छोटा, ईमानदार नतीजा। ऐप यह भी बताता है कि क्या नहीं मिलेगा, और क्यों।",
+      en: "A pillion rider breaks a leg and the car is caught. Tests a smaller, honest result that also explains what cannot be claimed, and why.",
+      hi: "पीछे बैठी सवारी का पैर टूटता है और कार पकड़ी जाती है। छोटे, ईमानदार नतीजे की जाँच, जो यह भी बताता है कि क्या नहीं मिलेगा और क्यों।",
     },
     victimName: "Kavita Deshmukh",
     claimantName: "Kavita Deshmukh",
@@ -165,10 +165,10 @@ export const SAMPLE_CASES: SampleCase[] = [
   },
   {
     id: "arjun",
-    title: { en: "Delivery rider, with a hidden attack in the FIR", hi: "डिलीवरी राइडर: FIR में छिपा हमला" },
+    title: { en: "Test case 3: an attack hidden in the FIR", hi: "टेस्ट केस 3: FIR में छिपा हमला" },
     blurb: {
-      en: "Arjun (27), a food-delivery rider, was killed by a car in Pune. Red-team test: someone has slipped an instruction to the AI into the FIR text. Watch the Guard flag it and the rules ignore it.",
-      hi: "अर्जुन (27), फ़ूड डिलीवरी राइडर, पुणे में एक कार की टक्कर से मारे गए। रेड-टीम टेस्ट: FIR में AI के लिए छिपा निर्देश है। देखिए गार्ड उसे पकड़ता है और नियम उसे अनदेखा करते हैं।",
+      en: "A delivery rider is killed by a car, and someone has slipped an instruction to the AI into the FIR. Tests that the guard flags it and the amount still comes only from the rules.",
+      hi: "एक डिलीवरी राइडर कार की टक्कर से मारा जाता है, और FIR में AI के लिए एक निर्देश छिपाया गया है। जाँच कि गार्ड उसे पकड़ता है और राशि सिर्फ़ नियमों से आती है।",
     },
     victimName: "Arjun Mehta",
     claimantName: "Meena Mehta",

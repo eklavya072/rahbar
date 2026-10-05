@@ -236,7 +236,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         {/* 2 — the finding */}
         <div className="l-band l-band-b" ref={(el) => { bandRefs.current[1] = el; }}>
           <p className="l-lede">
-            <ScrubWords text={hi ? "पैसा मौजूद है। परिवार उस तक नहीं पहुँचते।" : "The money exists. Families never reach it."} seed={29} spread={0.5} />
+            <ScrubWords text={hi ? "लाखों का हक़ बनता है, पर ज़्यादातर परिवार एक रुपया भी नहीं ले पाते।" : "Lakhs are owed, yet most families never claim a rupee."} seed={29} spread={0.5} />
           </p>
           <ul className="l-find">
             {[
@@ -256,20 +256,20 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         {/* 3 — the scale */}
         <div className="l-band l-band-c" ref={(el) => { bandRefs.current[2] = el; }}>
           <p className="l-stmt">
-            <ScrubWords className="l-stmt-line" text={hi ? "एक हादसा।" : "One accident."} seed={53} spread={0.3} />
-            <ScrubWords className="l-stmt-line l-key" text={hi ? "दस तक हक़।" : "Up to ten claims."} seed={59} spread={0.3} />
+            <ScrubWords className="l-stmt-line" text={hi ? "बैंक की ₹20 की एक कटौती" : "A ₹20 debit in a passbook"} seed={53} spread={0.3} />
+            <ScrubWords className="l-stmt-line l-key" text={hi ? "₹2 लाख का बीमा हो सकती है।" : "can be ₹2 lakh of insurance."} seed={59} spread={0.3} />
           </p>
           <p className="l-note">
             {hi
-              ? "बीमा, सरकारी योजनाएँ, मुआवज़ा, नियोक्ता का कवर, यहाँ तक कि खाते की बचत: हर एक का अलग दफ़्तर, अलग फ़ॉर्म, अलग समय-सीमा।"
-              : "Insurance, government schemes, compensation, employer cover, even the savings in their account. Each has its own office, form and deadline."}
+              ? "दुर्घटना बीमा, सरकारी योजनाएँ और मुआवज़ा उन्हीं काग़ज़ों में छिपे होते हैं जो परिवार के पास पहले से हैं। रहबर दस तरह के हक़ ढूँढता है, हर एक के दफ़्तर और समय-सीमा के साथ।"
+              : "Accident cover, government schemes and compensation hide in papers families already keep. Rahbar looks for ten kinds of claims, each with its office and deadline."}
           </p>
         </div>
 
         {/* 4 — how it is different */}
         <div className="l-band l-band-d" ref={(el) => { bandRefs.current[3] = el; }}>
           <p className="l-stmt">
-            <ScrubWords text={hi ? "हर रुपये के साथ उसकी वजह।" : "Every rupee comes with a reason."} seed={71} spread={0.5} />
+            <ScrubWords text={hi ? "फ़ोन की फ़ोटो से हस्ताक्षर वाले पत्र तक।" : "From a phone photo to a signed letter."} seed={71} spread={0.5} />
           </p>
           <ol className="l-ladder">
             {(hi
@@ -287,9 +287,9 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         {/* 5 — the close */}
         <div className="l-band l-band-e" ref={(el) => { bandRefs.current[4] = el; }}>
           <p className="l-stmt l-close-head">
-            <ScrubWords text={hi ? "रहबर को" : "Let Rahbar"} seed={83} spread={0.3} />{" "}
+            <ScrubWords text={hi ? "देखिए आपके परिवार का" : "Find what your family"} seed={83} spread={0.3} />{" "}
             <span className="l-key">
-              <ScrubWords text={hi ? "रास्ता दिखाने दें।" : "show the way."} seed={89} spread={0.25} />
+              <ScrubWords text={hi ? "क्या हक़ बनता है।" : "is owed."} seed={89} spread={0.25} />
             </span>
           </p>
           <p className="l-note">{hi ? "कोई साइन-अप नहीं। मुफ़्त। आपके काग़ज़ आपके फ़ोन से बाहर नहीं जाते।" : "No sign-up. Free. Your papers never leave your phone."}</p>
