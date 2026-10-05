@@ -16,6 +16,7 @@ import Link from "next/link";
 import { ArrowRight, Play } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { drawScene, makeScene, smoothstep } from "./roadScene";
+import { parseMarks } from "./TextEffects";
 
 const HERO_VH = 620;
 const BANDS = [
@@ -35,16 +36,17 @@ function rng(seed: number) {
 
 /** Splits a line into masked words, each with its own assembly threshold (--th). */
 function ScrubWords({ text, seed, spread = 0.5, className = "", indexFrom = 0 }: { text: string; seed: number; spread?: number; className?: string; indexFrom?: number }) {
-  const words = text.split(" ");
+  const { words: marked, plain } = parseMarks(text);
+  const words = marked.map((m) => m.w);
   const rand = rng(seed);
   return (
     <span className={className}>
-      <span className="l-sr">{text}</span>
+      <span className="l-sr">{plain}</span>
       <span aria-hidden="true">
         {words.map((w, i) => (
           <Fragment key={`${w}-${i}`}>
             <span className="l-sw">
-              <span className="l-sw-in" style={{ ["--th" as string]: ((i / Math.max(1, words.length - 1)) * spread + rand() * 0.05).toFixed(3), ["--wi" as string]: indexFrom + i }}>
+              <span className={`l-sw-in ${marked[i].cls}`} style={{ ["--th" as string]: ((i / Math.max(1, words.length - 1)) * spread + rand() * 0.05).toFixed(3), ["--wi" as string]: indexFrom + i }}>
                 {w}
               </span>
             </span>
@@ -215,7 +217,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
           <h1 className="l-h1">
             <ScrubWords text={hi ? "हादसे के बाद," : "After an accident,"} seed={11} spread={0.4} />{" "}
             <span className="l-key l-promise">
-              <ScrubWords text={hi ? "आगे का रास्ता।" : "the way forward."} seed={17} spread={0.35} indexFrom={4} />
+              <ScrubWords text={hi ? "^आगे का रास्ता।^" : "^the way forward.^"} seed={17} spread={0.35} indexFrom={4} />
             </span>
           </h1>
           <p className="l-h1-sub">
@@ -237,7 +239,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         <div className="l-band l-band-b" ref={(el) => { bandRefs.current[1] = el; }}>
           <p className="l-lede">
             <ScrubWords className="l-stmt-line" text={hi ? "पैसा मौजूद है।" : "The money exists."} seed={29} spread={0.5} />
-            <ScrubWords className="l-stmt-line" text={hi ? "परिवार उस तक नहीं पहुँचते।" : "Families never reach it."} seed={31} spread={0.5} />
+            <ScrubWords className="l-stmt-line" text={hi ? "परिवार उस तक ~नहीं~ पहुँचते।" : "Families ~never~ reach it."} seed={31} spread={0.5} />
           </p>
           <ul className="l-find">
             {[
@@ -258,7 +260,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         <div className="l-band l-band-c" ref={(el) => { bandRefs.current[2] = el; }}>
           <p className="l-stmt">
             <ScrubWords className="l-stmt-line" text={hi ? "बैंक की ₹20 की एक कटौती" : "A ₹20 debit in a passbook"} seed={53} spread={0.3} />
-            <ScrubWords className="l-stmt-line l-key" text={hi ? "₹2 लाख का बीमा हो सकती है।" : "can be ₹2 lakh of insurance."} seed={59} spread={0.3} />
+            <ScrubWords className="l-stmt-line" text={hi ? "^₹2 लाख^ का बीमा हो सकती है।" : "can be ^₹2 lakh^ of insurance."} seed={59} spread={0.3} />
           </p>
           <p className="l-note">
             {hi
@@ -270,7 +272,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         {/* 4 — how it is different */}
         <div className="l-band l-band-d" ref={(el) => { bandRefs.current[3] = el; }}>
           <p className="l-stmt">
-            <ScrubWords text={hi ? "फ़ोन की फ़ोटो से हस्ताक्षर वाले पत्र तक।" : "From a phone photo to a signed letter."} seed={71} spread={0.5} />
+            <ScrubWords text={hi ? "फ़ोन की फ़ोटो से *हस्ताक्षर* वाले पत्र तक।" : "From a phone photo to a *signed* letter."} seed={71} spread={0.5} />
           </p>
           <ol className="l-ladder">
             {(hi
@@ -289,9 +291,7 @@ export function HeroFilm({ intro = "none" }: { intro?: HeroIntro }) {
         <div className="l-band l-band-e" ref={(el) => { bandRefs.current[4] = el; }}>
           <p className="l-stmt l-close-head">
             <ScrubWords text={hi ? "रहबर को" : "Let Rahbar"} seed={83} spread={0.3} />{" "}
-            <span className="l-key">
-              <ScrubWords text={hi ? "रास्ता दिखाने दें।" : "show the way."} seed={89} spread={0.25} />
-            </span>
+            <ScrubWords text={hi ? "*रास्ता दिखाने दें।*" : "*show the way.*"} seed={89} spread={0.25} />
           </p>
           <p className="l-note">{hi ? "कोई साइन-अप नहीं। मुफ़्त। आपके काग़ज़ आपके फ़ोन से बाहर नहीं जाते।" : "No sign-up. Free. Your papers never leave your phone."}</p>
           <div className="l-cta">

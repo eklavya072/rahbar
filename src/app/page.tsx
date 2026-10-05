@@ -51,7 +51,7 @@ function Trust() {
   return (
     <section ref={spot} data-surface="ink" className="l-sec l-trust">
       <div className="l-wrap">
-        <RollWords as="h2" className="l-h2 l-h2-sm" text={hi ? "सबसे कठिन दिन पर भी भरोसेमंद" : "Safe to use on your hardest day"} />
+        <RollWords as="h2" className="l-h2 l-h2-sm" text={hi ? "सबसे ~कठिन~ दिन पर भी भरोसेमंद" : "Safe to use on your ~hardest~ day"} />
 
         {/* What actually leaves the phone: a line from the sample FIR, redacted in front of you. */}
         <div ref={slipRef} className="l-slip">
@@ -165,7 +165,7 @@ export default function Landing() {
 
       <section data-surface="paper" className="l-sec" id="how">
         <div className="l-wrap">
-          <RollWords as="h2" className="l-h2" text={hi ? "काग़ज़ से भुगतान तक, तीन क़दम" : "Three steps from papers to payment"} />
+          <RollWords as="h2" className="l-h2" text={hi ? "काग़ज़ से *भुगतान* तक, तीन क़दम" : "Three steps from papers to *payment*"} />
           <p className="l-lead">{hi ? "न कोई फ़ॉर्म भरने की उलझन, न वकील की ज़रूरत पहले दिन। जो काग़ज़ आपके पास हैं, उन्हीं से शुरू।" : "No maze of forms, no lawyer needed on day one. Start with the papers you already have."}</p>
           <div className="l-steps">
             <StepRow
@@ -199,7 +199,7 @@ export default function Landing() {
 
       <section data-surface="paper" className="l-sec">
         <div className="l-wrap">
-          <RollWords as="h2" className="l-h2" text={hi ? "तीन टेस्ट केस, ख़ुद चलाकर देखें" : "Three test cases you can play"} />
+          <RollWords as="h2" className="l-h2" text={hi ? "तीन टेस्ट केस, ख़ुद *चलाकर* देखें" : "Three test cases you can *play*"} />
           <p className="l-lead">{hi ? "काल्पनिक परिवार और काग़ज़, हर रास्ते को परखने के लिए बने, FIR में छिपे हमले समेत। राशि नियम-इंजन तय करता है, AI नहीं। हर केस लगभग 20 सेकंड में चलता है।" : "Fictional families and papers, built to test every path, including an attack hidden in an FIR. The amounts come from the rules engine, not the AI. Each plays itself in about 20 seconds."}</p>
           <div className="l-samples">
             {SAMPLE_CASES.map((c, i) => (
@@ -226,7 +226,7 @@ export default function Landing() {
       <section data-surface="paper-2" className="l-sec l-sec-tight">
         <div className="l-wrap l-tools">
           <div>
-            <RollWords as="h2" className="l-h2" text={hi ? "किसी और की मदद कर रहे हैं?" : "Helping someone else?"} />
+            <RollWords as="h2" className="l-h2" text={hi ? "किसी *और* की मदद कर रहे हैं?" : "Helping *someone else?*"} />
             <p className="l-lead">{hi ? "पैरालीगल, अस्पताल हेल्पडेस्क, NGO और वकीलों के लिए।" : "For paralegals, hospital helpdesks, NGOs and lawyers."}</p>
           </div>
           <ul className="l-tool-list">

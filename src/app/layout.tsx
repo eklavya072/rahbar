@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Noto_Sans_Devanagari, Tiro_Devanagari_Hindi } from "next/font/google";
+import { Archivo, Noto_Sans_Devanagari, Tiro_Devanagari_Hindi } from "next/font/google";
 import "./globals.css";
 import { LangProvider } from "@/lib/i18n";
 import { RegisterSW } from "@/components/RegisterSW";
@@ -34,6 +34,8 @@ const mono = localFont({
 const brand = localFont({ src: "./fonts/unbounded.woff2", weight: "200 900", variable: "--font-brand-face", display: "swap" });
 const devaSans = Noto_Sans_Devanagari({ variable: "--font-deva", subsets: ["devanagari"], weight: ["400", "500", "600", "700"] });
 const devaSerif = Tiro_Devanagari_Hindi({ variable: "--font-deva-serif", subsets: ["devanagari"], weight: "400" });
+// Archivo, squeezed on its width axis: the punch face for figures and the few words that must land.
+const impact = Archivo({ variable: "--font-impact-face", subsets: ["latin"], axes: ["wdth"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "Rahbar (रहबर): the way forward after a road accident",
@@ -47,7 +49,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${serif.variable} ${sans.variable} ${grotesk.variable} ${mono.variable} ${brand.variable} ${devaSans.variable} ${devaSerif.variable} h-full antialiased`}
+      className={`${serif.variable} ${sans.variable} ${grotesk.variable} ${mono.variable} ${brand.variable} ${devaSans.variable} ${devaSerif.variable} ${impact.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <LangProvider>

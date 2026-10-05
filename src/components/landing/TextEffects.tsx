@@ -31,17 +31,44 @@ export function useSeen<T extends HTMLElement>(margin = 0.84) {
   return { ref, seen };
 }
 
-/** Words rise from behind a mask edge in reading order (Meridian's RollWords). */
+/**
+ * Inline emphasis markup for display lines: *word* is italic serif in brass,
+ * ~word~ italic in vermilion, ^word^ the heavy condensed impact face. Marks may
+ * span several words. Returns each word with its class, and the plain text.
+ */
+export function parseMarks(text: string): { words: { w: string; cls: string }[]; plain: string } {
+  const out: { w: string; cls: string }[] = [];
+  let open: string | null = null;
+  const CLS: Record<string, string> = { "*": "t-it", "~": "t-it is-red", "^": "t-imp" };
+  for (const raw of text.split(" ")) {
+    let w = raw;
+    let cls = open ? CLS[open] : "";
+    const start = w[0];
+    if (!open && CLS[start]) {
+      open = start;
+      cls = CLS[start];
+      w = w.slice(1);
+    }
+    if (open && w.includes(open)) {
+      w = w.replace(open, "");
+      open = null;
+    }
+    out.push({ w, cls });
+  }
+  return { words: out, plain: out.map((x) => x.w).join(" ") };
+}
+
+/** Words come into focus in reading order; marked words take their own face. */
 export function RollWords({ text, className = "", as: Tag = "span", stagger = 55 }: { text: string; className?: string; as?: "span" | "h2" | "h3" | "p"; stagger?: number }) {
-  const words = text.split(" ");
+  const { words, plain } = parseMarks(text);
   return (
     <Tag className={className}>
-      <span className="l-sr">{text}</span>
+      <span className="l-sr">{plain}</span>
       <span aria-hidden="true">
-        {words.map((w, i) => (
+        {words.map(({ w, cls }, i) => (
           <Fragment key={`${w}-${i}`}>
             <span className="l-roll">
-              <span className="l-roll-in" style={{ transitionDelay: `${i * stagger}ms` }}>
+              <span className={`l-roll-in ${cls}`} style={{ transitionDelay: `${i * stagger}ms` }}>
                 {w}
               </span>
             </span>

@@ -25,6 +25,19 @@
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
+/* ── Type cast: the roman serif carries a sentence, one word turns italic (brass, or
+      vermilion when it should sting), and the punch is condensed heavy caps. ── */
+.landing { --red: #ef5a3c; }
+.landing [data-surface="paper"], .landing [data-surface="paper-2"] { --red: #c2361f; }
+.t-it { font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-style: italic; font-weight: 400; color: var(--key); padding-right: 0.05em; }
+.t-it.is-red { color: var(--red); }
+.t-imp {
+  font-family: var(--font-impact-face), var(--font-deva), sans-serif; font-stretch: 62%; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.004em; font-size: 1.12em; line-height: 0.92;
+}
+html[lang="hi"] .t-it { font-style: normal; }
+html[lang="hi"] .t-imp { font-weight: 700; font-stretch: normal; font-size: 1em; }
+
 /* ── The surface ladder: each section declares the room it stands in ── */
 .landing [data-surface] { position: relative; background: var(--canvas); color: var(--ink); }
 .landing [data-surface="void"] { --canvas: #0a0c10; }
@@ -85,10 +98,13 @@
 .l-stage:not(.is-static) .l-band { will-change: opacity; }
 
 .l-h1 {
-  font-size: var(--t-hero); line-height: 1.04; letter-spacing: -0.035em; font-weight: 500;
+  font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif;
+  font-size: var(--t-hero); line-height: 1.04; letter-spacing: -0.025em; font-weight: 380;
   max-width: 20ch; text-shadow: 0 2px 30px rgba(0,0,0,0.45);
 }
 .l-key { color: var(--key); }
+.l-h1 .t-imp { font-size: 1.32em; line-height: 0.95; }
+.l-band-c .t-imp { color: var(--key); }
 /* The promise gets a brass road drawn beneath it once the line has assembled. */
 .l-promise { position: relative; display: inline-block; }
 .l-promise::after {
@@ -113,7 +129,7 @@
   transform: translateY(calc((1 - clamp(0, (var(--k, 1) - var(--th, 0)) * 4, 1)) * 12px));
 }
 .l-band .l-find-row { opacity: clamp(0, calc((var(--k, 1) - var(--th, 0)) * 4), 1); }
-.l-find-qty { font-family: var(--font-mono-face), monospace; font-size: 1.3rem; color: var(--ink); }
+.l-find-qty { font-family: var(--font-impact-face), monospace; font-stretch: 62%; font-weight: 800; font-size: 2.1rem; line-height: 1; color: var(--ink); }
 .l-find-text { color: var(--ink-2); }
 .l-find-row.is-gap { border-top-color: var(--key-line); }
 .l-find-row.is-gap .l-find-qty { color: var(--key); }
@@ -218,7 +234,7 @@
 }
 .l-step-n {
   display: block; margin-bottom: 0.4rem;
-  font-family: var(--font-serif), Georgia, serif; font-weight: 300; font-size: clamp(4.5rem, 9vw, 7rem); line-height: 0.9; letter-spacing: -0.04em;
+  font-family: var(--font-impact-face), Georgia, serif; font-stretch: 62%; font-weight: 800; font-size: clamp(4.5rem, 9vw, 7rem); line-height: 0.9; letter-spacing: 0;
   font-variant-numeric: lining-nums;
   color: transparent; -webkit-text-stroke: 1.25px var(--key-line);
   transition: color 900ms cubic-bezier(0.16,1,0.3,1) 200ms, -webkit-text-stroke-color 900ms ease 200ms;
@@ -303,7 +319,7 @@
 .l-slip .rd::after { background: #15171c; }
 /* The proof, set as prose: numbers carry the weight, words carry the meaning. */
 .l-proof { margin-top: 1.4rem; max-width: 52ch; font-family: var(--font-serif), var(--font-deva-serif), Georgia, serif; font-weight: 340; font-size: clamp(1.1rem, 1.7vw, 1.4rem); line-height: 1.4; letter-spacing: -0.012em; color: var(--ink-2); text-wrap: pretty; }
-.l-proof-n { color: var(--key); font-size: 1.25em; font-weight: 400; letter-spacing: -0.03em; font-variant-numeric: lining-nums tabular-nums; line-height: 1; }
+.l-proof-n { color: var(--key); font-family: var(--font-impact-face), Georgia, serif; font-stretch: 62%; font-weight: 800; font-size: 1.5em; letter-spacing: 0; font-variant-numeric: lining-nums tabular-nums; line-height: 1; }
 
 /* ── Samples: one lead case and two beside it, each led by its outcome ── */
 .l-samples { margin-top: 3rem; display: grid; gap: 1.2rem; }
@@ -344,7 +360,7 @@
 
 /* ── Close ── */
 .l-close { min-height: 80vh; display: grid; place-items: center; }
-.l-close-h { margin-inline: auto; max-width: 16ch; font-size: clamp(2.6rem, 6.4vw, 5.6rem); transition: opacity 900ms ease, transform 1100ms cubic-bezier(0.16,1,0.3,1); }
+.l-close-h { margin-inline: auto; max-width: 16ch; font-size: clamp(2.3rem, 5.2vw, 4.4rem); transition: opacity 900ms ease, transform 1100ms cubic-bezier(0.16,1,0.3,1); }
 .landing.is-armed .l-close:not(.is-in-view) .l-close-h { opacity: 0; transform: translateY(24px); }
 .l-close::after { content: ""; position: absolute; left: 50%; bottom: 0; width: min(60rem, 90vw); height: 40%; transform: translateX(-50%); background: radial-gradient(ellipse at 50% 100%, rgba(206,168,80,0.16), transparent 70%); pointer-events: none; }
 
