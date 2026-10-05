@@ -1,19 +1,17 @@
 "use client";
 
 /**
- * Entrance (after Meridian's Preloader): on a black field the Rahbar mark rises,
- * the wordmark sets letter by letter, "रहबर · the way forward" follows, and a brass
- * hairline draws like a road to the horizon. Seven slabs sweep up over it like
- * stairs, hold, then drop away in the same stepped order — revealing the film
- * as the hero line assembles beneath them. Reduced motion skips it; a CSS
- * failsafe removes it after six seconds if scripts never run.
+ * Entrance: on a black field the Rahbar mark rises and the wordmark sets letter
+ * by letter, with a brass line drawn like a road to the horizon. Then two
+ * headlights appear far down that road, grow as they approach, and flood the
+ * screen with warm light that clears to reveal the film. Reduced motion skips
+ * it; a CSS failsafe removes it after six seconds if scripts never run.
  */
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { RahbarMark } from "../ui";
 
 const WORD = "Rahbar";
-const STAIRS = 7;
 const EASE = [0.16, 1, 0.3, 1] as const;
 type Phase = "name" | "cover" | "lift" | "gone";
 
@@ -52,11 +50,11 @@ export function Preloader({ reduced, onReveal, onDone }: { reduced: boolean; onR
     <motion.div
       className="l-preloader fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-void"
       initial={{ opacity: 1 }}
-      animate={{ opacity: phase === "gone" ? 0 : 1 }}
-      transition={{ duration: 0.4, ease: EASE }}
+      animate={{ opacity: phase === "lift" || phase === "gone" ? 0 : 1 }}
+      transition={{ duration: 0.85, ease: [0.33, 1, 0.68, 1] }}
       aria-hidden
     >
-      <div className="relative z-10 px-6 text-center text-[#f2f1ec]">
+      <motion.div className="relative z-10 px-6 text-center text-[#f2f1ec]" animate={{ opacity: phase === "name" ? 1 : 0, scale: phase === "name" ? 1 : 0.96 }} transition={{ duration: 0.5, ease: EASE }}>
         <motion.div initial={{ opacity: 0, y: 10, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.6, ease: EASE, delay: 0.1 }} className="mb-6 flex justify-center">
           <RahbarMark size={64} tone="void" />
         </motion.div>
@@ -73,23 +71,31 @@ export function Preloader({ reduced, onReveal, onDone }: { reduced: boolean; onR
             </motion.span>
           ))}
         </div>
-        <motion.div className="mt-5 text-sm tracking-[0.3em] text-[#f2f1ec]/70" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE, delay: 0.95 }}>
-          <span lang="hi" className="font-display tracking-normal">रहबर</span> · THE WAY FORWARD
+        <motion.div className="mt-5 font-display text-lg text-[#f2f1ec]/70" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE, delay: 0.95 }}>
+          <span lang="hi" className="font-display tracking-normal">रहबर</span> · the way forward
         </motion.div>
         {/* A brass road drawn to the horizon */}
         <motion.div className="mx-auto mt-8 h-px w-48 origin-center bg-[#cea850]" initial={{ scaleX: 0, opacity: 0.4 }} animate={{ scaleX: 1, opacity: 1 }} transition={{ duration: 1.2, ease: EASE, delay: 0.45 }} />
-      </div>
+      </motion.div>
 
-      {Array.from({ length: STAIRS }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute bottom-0 z-20 h-full bg-[#06080b]"
-          style={{ left: `${(i / STAIRS) * 100}%`, width: `${100 / STAIRS + 0.2}%` }}
-          initial={{ y: "100%" }}
-          animate={{ y: phase === "name" ? "100%" : phase === "cover" ? "0%" : "-100%" }}
-          transition={{ duration: 0.62, ease: [0.76, 0, 0.24, 1], delay: i * 0.05 }}
+      {/* Two headlights far down the road, approaching, then a flood of light */}
+      {[-1, 1].map((side) => (
+        <motion.span
+          key={side}
+          className="absolute z-20 block rounded-full"
+          style={{ left: `calc(50% + ${side * 2.2}vw)`, top: "57%", width: 10, height: 10, marginLeft: -5, marginTop: -5, background: "radial-gradient(circle, #fff7e0 0%, #f0d48a 35%, rgba(206,168,80,0) 70%)" }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={phase === "name" ? { scale: 0.6, opacity: 0.9 } : phase === "cover" ? { scale: 14, opacity: 1, x: side * 60 } : { scale: 60, opacity: 0, x: side * 140 }}
+          transition={{ duration: phase === "cover" ? 0.9 : 0.8, ease: [0.55, 0, 0.75, 0.2], delay: phase === "name" ? 0.9 : 0 }}
         />
       ))}
+      <motion.div
+        className="absolute inset-0 z-30"
+        style={{ background: "radial-gradient(circle at 50% 57%, #fff6dc 0%, #e8c879 40%, #0a0c10 100%)" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: phase === "cover" ? 0.85 : 0 }}
+        transition={{ duration: 0.9, ease: [0.55, 0, 0.75, 0.2] }}
+      />
     </motion.div>
   );
 }

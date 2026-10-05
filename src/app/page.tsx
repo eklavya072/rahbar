@@ -68,17 +68,14 @@ function Trust() {
           </p>
         </div>
 
-        <div className="l-trust-grid">
+        <ul className="l-trust-grid">
           {items.map((x) => (
-            <div key={x.t} className="l-trust-item">
-              <span className="l-trust-icon">{x.icon}</span>
-              <div>
-                <div className="l-trust-t">{x.t}</div>
-                <p className="l-trust-b">{x.b}</p>
-              </div>
-            </div>
+            <li key={x.t} className="l-trust-item">
+              <div className="l-trust-t">{x.t}</div>
+              <p className="l-trust-b">{x.b}</p>
+            </li>
           ))}
-        </div>
+        </ul>
 
         {/* The proof, set as a sentence rather than a row of stat tiles. */}
         <div ref={ref}>
