@@ -1,17 +1,26 @@
 // Rahbar service worker: offline app shell, sample documents and the OCR engine.
 // API calls are never cached (they may carry case facts).
-const VERSION = "rahbar-v1";
+const VERSION = "rahbar-v2";
+// On a developer's machine file names don't change between edits, so caching them
+// would serve yesterday's styles. Here the worker steps aside and clears itself.
+const DEV_HOST = ["localhost", "127.0.0.1", "[::1]"].includes(self.location.hostname);
 const SHELL = ["/", "/case", "/offer", "/rules", "/evals", "/icon.svg", "/samples/manifest.json"];
 
 self.addEventListener("install", (e) => {
+  if (DEV_HOST) return void self.skipWaiting();
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL).catch(() => {})).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {
+  if (DEV_HOST) {
+    e.waitUntil(caches.keys().then((keys) => Promise.all(keys.map((k) => caches.delete(k)))).then(() => self.registration.unregister()));
+    return;
+  }
   e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
 });
 
 self.addEventListener("fetch", (e) => {
+  if (DEV_HOST) return;
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
